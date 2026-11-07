@@ -1,0 +1,1861 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Rumbo, your payments compass: see which payment providers and local payment methods to launch with in a new market, based on how similar merchants really perform. Class prototype with synthetic data.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#4338CA">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Rumbo · Your payments compass">
+<meta property="og:description" content="Choose payment providers on evidence. A class prototype for IE Business School (synthetic data).">
+<meta property="og:image" content="/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<title>Rumbo · Your payments compass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a product site with two pages. Overview (public homepage) and Workspace (profile rail + decision lifecycle stepper). Calm instrument panel: hairline panels, mono numerals with their uncertainty, one indigo accent, mint for confirmed gains, amber only for synthetic data. */
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --surface-2:#f0f2f6; --line:#e1e4ea; --line-strong:#7d869b;
+  --ink:#0e1424; --ink-2:#465066; --ink-3:#5f677c;
+  --accent:#4338ca; --accent-soft:#e8e9fb; --accent-ink:#ffffff;
+  --brand:#f08a24; --brand-strong:#c2410c; --brand-soft:#fff1e6; --brand-ink:#ffffff; --logo-ink:#3730a3;
+  --good:#0f766e; --good-soft:#dcf2ee; --warn:#7a5a00; --warn-soft:#fbf3d0; --bad:#b42335; --bad-soft:#fbe4e7;
+  --gridline:rgba(14,20,36,.045); --bar-track:#e6e9f0; --today:#b9c0d2; --rb-a:#c7d2fe; --rb-b:#a5b4fc; --rb-c:#6366f1; --rb-d:#4338ca; --rb-e:#3730a3; --rb-edge:rgba(255,255,255,.6);
+  --side-bg:#0e1424; --side-ink:#d3d8e4; --side-ink-2:#8d96ab; --side-hover:rgba(255,255,255,.06); --side-active:#232c47; --side-line:rgba(255,255,255,.09);
+  --f-display:"Geist", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Geist", "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono:"Geist Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0b0e15; --surface:#121722; --surface-2:#182030; --line:#232b3d; --line-strong:#66718a;
+  --ink:#eef1f7; --ink-2:#b3bccd; --ink-3:#97a0b6;
+  --accent:#a5b4fc; --accent-soft:#1c2147; --accent-ink:#0b0e15;
+  --brand:#fb923c; --brand-strong:#fdba74; --brand-soft:#3a2412; --brand-ink:#0b0e15; --logo-ink:#e0e7ff;
+  --good:#2dd4bf; --good-soft:#0f2e2b; --warn:#facc15; --warn-soft:#2e2908; --bad:#fb7185; --bad-soft:#3a1720;
+  --gridline:rgba(255,255,255,.035); --bar-track:#222a3b; --today:#4b556e; --rb-a:#1c2147; --rb-b:#272d6b; --rb-c:#3f46b8; --rb-d:#6366f1; --rb-e:#4338ca; --rb-edge:rgba(165,180,252,.22);
+  --side-bg:#070a10; --side-ink:#d3d8e4; --side-ink-2:#8d96ab; --side-hover:rgba(255,255,255,.05); --side-active:#1c2438; --side-line:rgba(255,255,255,.07);
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0b0e15; --surface:#121722; --surface-2:#182030; --line:#232b3d; --line-strong:#66718a;
+  --ink:#eef1f7; --ink-2:#b3bccd; --ink-3:#97a0b6;
+  --accent:#a5b4fc; --accent-soft:#1c2147; --accent-ink:#0b0e15;
+  --brand:#fb923c; --brand-strong:#fdba74; --brand-soft:#3a2412; --brand-ink:#0b0e15; --logo-ink:#e0e7ff;
+  --good:#2dd4bf; --good-soft:#0f2e2b; --warn:#facc15; --warn-soft:#2e2908; --bad:#fb7185; --bad-soft:#3a1720;
+  --gridline:rgba(255,255,255,.035); --bar-track:#222a3b; --today:#4b556e; --rb-a:#1c2147; --rb-b:#272d6b; --rb-c:#3f46b8; --rb-d:#6366f1; --rb-e:#4338ca; --rb-edge:rgba(165,180,252,.22);
+  --side-bg:#070a10; --side-ink:#d3d8e4; --side-ink-2:#8d96ab; --side-hover:rgba(255,255,255,.05); --side-active:#1c2438; --side-line:rgba(255,255,255,.07);
+  color-scheme:dark; }
+*{box-sizing:border-box}
+html{scroll-padding-top:76px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:31;background:var(--surface)}
+a{color:var(--accent)}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* app bar */
+.appbar{position:sticky;top:env(safe-area-inset-top, 0px);z-index:30;background:color-mix(in srgb, var(--surface) 92%, transparent);backdrop-filter:saturate(1.4) blur(8px);-webkit-backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
+.appbar .wrap{display:flex;align-items:center;gap:12px 20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.brand svg{flex:none}
+.brand{flex-direction:column;align-items:flex-start;gap:3px}
+.brand .wordmark{display:block;height:20px;width:auto;color:var(--logo-ink)}
+.bdesc{font-size:11px;font-weight:500;color:var(--ink-3);line-height:1}
+.topnav{display:flex;gap:4px;margin-right:auto}
+.topnav a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;padding:6px 10px;border-radius:8px}
+.topnav a:hover{color:var(--ink);background:var(--surface-2)}
+.topnav a[aria-current=page]{color:var(--ink);background:var(--surface-2)}
+.synth{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em;padding:4px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn);white-space:nowrap}
+.synth i{width:6px;height:6px;border-radius:50%;background:currentColor}
+@media (max-width:760px){ .bdesc{display:none} .appbar .cta{display:none} }
+.synth .short{display:none}
+@media (max-width:480px){ .synth .long{display:none} .synth .short{display:inline} .appbar .wrap{gap:8px} .topnav a{padding:6px 8px} .synth{padding:4px 8px} .topnav a[data-nav=home]{display:none} }
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:600;font-size:14px;line-height:1;padding:10px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.sm{padding:8px 12px;font-size:13.5px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
+.btn:hover{filter:brightness(1.08)} .btn.ghost:hover{background:var(--surface-2);filter:none}
+.btn:active{filter:brightness(.95)}
+.btn svg{flex:none}
+
+/* ---------- homepage ---------- */
+.hero{position:relative;border-bottom:1px solid var(--line);background-image:linear-gradient(to right,var(--gridline) 1px,transparent 1px),linear-gradient(to bottom,var(--gridline) 1px,transparent 1px);background-size:32px 32px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;align-items:center;padding-block:56px 64px}
+@media (max-width:960px){ .hero .wrap{grid-template-columns:minmax(0,1fr);padding-block:36px 44px;gap:28px} }
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.04em;color:var(--accent);text-transform:uppercase;margin:0 0 14px}
+.eyebrow{color:var(--brand-strong)}
+.hero h1{font-size:clamp(38px,5.6vw,68px);line-height:1.02;letter-spacing:-.04em;font-weight:700;margin:0;text-wrap:balance;max-width:12ch}
+.hero .lede{font-size:18px;line-height:1.5;color:var(--ink-2);max-width:40ch;margin:22px 0 0;text-wrap:pretty}
+.btn.btn-lg{padding:13px 20px;font-size:15px}
+.hero .wrap{padding-block:88px 96px}
+@media (max-width:960px){ .hero .wrap{padding-block:44px 52px} }
+.hero .ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:22px;font-size:13px;color:var(--ink-3)}
+.hero .meta span{display:inline-flex;align-items:center;gap:6px}
+.preview{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0;box-shadow:0 1px 0 var(--line),0 12px 32px -18px rgba(14,20,36,.25)}
+.preview-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.preview-head b{display:block;font-size:14px}
+.preview-head small{color:var(--ink-3);font-size:12.5px}
+.cmp{display:grid;gap:14px;padding:16px 0}
+.cmp-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:baseline}
+.cmp-row .lab{font-size:13px;color:var(--ink-2)}
+.cmp-row .val{font-family:var(--f-mono);font-size:13px;text-align:right;white-space:nowrap}
+.cmp-row .val b{font-weight:600;color:var(--ink)}
+.cmp-row .val s{color:var(--ink-3);text-decoration:none;margin-right:6px}
+.bars{grid-column:1/-1;display:grid;gap:3px}
+.bars i{display:block;height:6px;border-radius:3px;background:var(--bar-track);position:relative;overflow:hidden}
+.bars i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);border-radius:3px;background:var(--line-strong)}
+.bars i.new::after{background:var(--brand)}
+.pv-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pv-big{display:flex;align-items:baseline;gap:14px;margin:22px 0 4px;font-family:var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.04em;line-height:1}
+.pv-big s{text-decoration:none;color:var(--ink-3);font-size:36px}
+.pv-big span{color:var(--ink-3);font-size:28px}
+.pv-big b{font-size:64px;font-weight:500;color:var(--ink)}
+.pv-lab{margin:0 0 16px;color:var(--ink-2);font-size:14px}
+.pv-bars i{height:8px}
+.pv-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.pv-stats span{display:block;font-size:12.5px;color:var(--ink-3)}
+.pv-stats b{display:block;font-family:var(--f-mono);font-weight:500;font-size:22px;letter-spacing:-.02em;margin:2px 0}
+.pv-stats small{font-size:12px;color:var(--ink-3);font-family:var(--f-mono)}
+.pv-foot{margin:16px 0 0;font-size:13px;color:var(--ink-2)}
+.preview{padding:22px 24px;max-width:440px;justify-self:end;width:100%}
+@media (max-width:960px){ .preview{justify-self:stretch;max-width:none} }
+.preview-foot{display:grid;gap:8px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.route{display:flex;flex-wrap:wrap;gap:6px}
+.home-sec{padding-block:64px;border-bottom:1px solid var(--line)}
+.home-sec:last-of-type{border-bottom:0}
+.sec-head{max-width:640px;margin-bottom:28px}
+.sec-head h2{font-size:clamp(24px,2.6vw,32px);letter-spacing:-.025em;line-height:1.15;margin:6px 0 10px;text-wrap:balance}
+.sec-head p{color:var(--ink-2);margin:0;font-size:16px}
+.today{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){ .today{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:520px){ .today{grid-template-columns:minmax(0,1fr)} }
+.today div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.today b{display:block;margin-bottom:4px}
+.today p{margin:0;color:var(--ink-2);font-size:14px}
+.verdict{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px 24px;font-size:14px;color:var(--ink-2)}
+.verdict span{display:inline-flex;align-items:center;gap:8px}
+.verdict svg{color:var(--bad)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:st;margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+@media (max-width:900px){ .steps{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:520px){ .steps{grid-template-columns:minmax(0,1fr)} }
+.steps li{counter-increment:st;padding:18px;border-right:1px solid var(--line);min-width:0}
+.steps li:last-child{border-right:0}
+@media (max-width:900px){ .steps li{border-bottom:1px solid var(--line)} }
+.steps li::before{content:"0" counter(st);font-family:var(--f-mono);font-size:12px;color:var(--ink-3);display:block;margin-bottom:10px}
+.steps li.human::before{content:"0" counter(st) " · people";color:var(--good)}
+.steps b{display:block;font-size:15px;margin-bottom:4px}
+.steps p{margin:0;color:var(--ink-2);font-size:14px}
+.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){ .principles{grid-template-columns:minmax(0,1fr)} }
+.principles article{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px}
+.principles .ico{grid-row:span 2}
+.principles h3{margin:0;font-size:16px}
+.principles p{margin:0;color:var(--ink-2);font-size:14px}
+.principles .eg{grid-column:2;margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.ico{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.ico.good{background:var(--good-soft);color:var(--good)} .ico.warn{background:var(--warn-soft);color:var(--warn)}
+.measure{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+@media (max-width:760px){ .measure{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.measure div{padding:18px 16px 0 0}
+.measure b{display:block;font-size:15px}
+.measure span{color:var(--ink-2);font-size:13.5px}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between}
+.band h2{margin:0;font-size:22px;letter-spacing:-.02em}
+.band p{margin:4px 0 0;color:var(--ink-2)}
+.sitefoot{border-top:1px solid var(--line);padding-block:28px 40px;font-size:13px;color:var(--ink-3)}
+.sitefoot .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 32px}
+@media (max-width:760px){ .sitefoot .wrap{grid-template-columns:minmax(0,1fr)} }
+.sitefoot p{margin:0;max-width:90ch}
+.sitefoot nav{display:flex;gap:16px;flex-wrap:wrap}
+.sitefoot a{color:var(--ink-2)}
+
+/* ---------- workspace ---------- */
+.ws-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px;padding-block:22px 18px}
+.ws-head h1{font-size:24px;letter-spacing:-.02em;margin:0;line-height:1.2}
+.sub{color:var(--ink-2);margin:4px 0 0;max-width:72ch;font-size:14px}
+.grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start;padding-bottom:40px}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+aside.rail{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;position:sticky;top:calc(72px + env(safe-area-inset-top, 0px))}
+@media (max-width:900px){aside.rail{position:static}}
+.rail h2{font-size:15px;margin:0 0 2px}
+.rail .note{font-size:12.5px;color:var(--ink-3);margin:0 0 12px}
+.field{display:grid;gap:4px;margin-bottom:12px}
+.field label,.lbl{font-size:12px;font-weight:500;color:var(--ink-2)}
+input[type=number],input[type=text],select,textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px}
+input[type=number]{font-family:var(--f-mono);font-size:13.5px}
+textarea{min-height:56px;resize:vertical}
+[tabindex="-1"]:focus{outline:none}
+input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0}
+.chip span{display:inline-block;padding:4px 11px;border:1px solid var(--line-strong);border-radius:999px;font-size:13px;cursor:pointer;background:var(--surface);color:var(--ink-2)}
+.chip input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;margin-bottom:10px;color:var(--ink-2)}
+.check input{margin-top:3px;accent-color:var(--accent)}
+.subbox{border-left:2px solid var(--line);padding-left:10px;margin:-2px 0 12px}
+main{min-width:0}
+/* lifecycle stepper */
+.tabs{display:flex;gap:4px;margin-bottom:14px;overflow-x:auto;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.tabs button{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:500;font-size:13.5px;background:none;border:0;border-radius:8px;padding:8px 12px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.tabs button .n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--line-strong);font-family:var(--f-mono);font-size:11px;color:var(--ink-2)}
+.tabs button[aria-selected=true]{background:var(--accent-soft);color:var(--ink)}
+.tabs button[aria-selected=true] .n{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tabs button:hover{color:var(--ink);background:var(--surface-2)}
+.tabs button[aria-selected=true]:hover{background:var(--accent-soft)}
+.tabs .sep{flex:1 1 auto}
+.mkt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
+.mkt .seg{display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)}
+.mkt button{font:inherit;font-size:13px;font-weight:500;padding:5px 12px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--ink-2);cursor:pointer}
+.mkt button:hover{color:var(--ink)}
+.mkt button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line-strong);font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:14px;min-width:0}
+.panel h3{font-size:16px;margin:0 0 4px;letter-spacing:-.01em;text-wrap:balance}
+.panel .lead{color:var(--ink-2);margin:0 0 14px;max-width:75ch;font-size:14px}
+.label{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-3)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-bottom:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{padding:14px 16px;min-width:0;border-right:1px solid var(--line)}
+.kpi:last-child{border-right:0}
+@media (max-width:700px){ .kpi:nth-child(2){border-right:0} .kpi:nth-child(-n+2){border-bottom:1px solid var(--line)} }
+.kpi .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-3)}
+.kpi .v{font-family:var(--f-mono);font-weight:500;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.25;margin-top:4px}
+.kpi .d{font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums;margin-top:2px}
+.up{color:var(--good)} .down{color:var(--bad)}
+.sig{display:inline-flex;align-items:center;font-family:var(--f-mono);font-size:11.5px;font-variant-numeric:tabular-nums;padding:1px 7px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);white-space:nowrap}
+.delta{display:inline-flex;font-family:var(--f-mono);font-size:11.5px;padding:1px 7px;border-radius:5px;white-space:nowrap}
+.delta.up{background:var(--good-soft)} .delta.down{background:var(--bad-soft)}
+.reco{border-color:var(--brand-strong);box-shadow:0 0 0 3px var(--brand-soft)}
+.reco-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:flex-start;justify-content:space-between}
+.reco h3{font-size:20px;letter-spacing:-.02em;margin-top:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.03em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.pill.brand{background:var(--brand-soft);color:var(--brand-strong)}
+.pill.good{background:var(--good-soft);color:var(--good)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.mute{background:var(--surface-2);color:var(--ink-2)}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.provline{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.prov{font-family:var(--f-mono);font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
+.prov b{font-weight:500;color:var(--ink)}
+.prov.off{border-style:dashed;color:var(--ink-3)}
+.whycards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:14px}
+.whycard{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--surface);min-width:0}
+.whycard .t{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;margin-bottom:4px}
+.whycard .t .ico{width:26px;height:26px;border-radius:7px}
+.whycard p{margin:0;color:var(--ink-2);font-size:13.5px}
+.whycard.warn{border-color:color-mix(in srgb, var(--warn) 35%, var(--line))}
+.summary{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.summary h3{margin:4px 0 2px;font-size:17px}
+.summary p{margin:0;color:var(--ink-2);font-size:14px;max-width:70ch}
+.summary .acts{display:flex;flex-wrap:wrap;gap:8px}
+.tablewrap{overflow-x:auto;margin:0 -2px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-3);font-weight:500;white-space:nowrap}
+td.n{font-family:var(--f-mono);font-size:13px}
+td.n,th.n{text-align:right;white-space:nowrap}
+th.wrap{white-space:normal;line-height:1.35}
+tr.top1 td{background:var(--brand-soft)}
+tr.top1 td:first-child{box-shadow:inset 2px 0 0 var(--brand-strong)}
+tr.sq td:first-child::after{content:" (today)";color:var(--ink-3);font-size:12px;font-weight:400}
+.mini{display:inline-block;height:5px;border-radius:3px;background:var(--accent);vertical-align:middle;margin-left:8px}
+.setupname{font-weight:600;min-width:170px}
+.setupname small{display:block;font-weight:400;color:var(--ink-3);font-size:12px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-bottom:10px}
+.controls select{width:auto}
+.muted{color:var(--ink-3);font-size:12.5px}
+.cols2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:800px){.cols2{grid-template-columns:minmax(0,1fr)}}
+.canvas-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.canvas-grid{grid-template-columns:minmax(0,1fr)}}
+.cell{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--surface-2);min-width:0}
+.cell .num{font-family:var(--f-mono);font-size:11px;color:var(--accent);letter-spacing:.04em}
+.cell h4{margin:2px 0 6px;font-size:14px}
+.cell p,.cell ul{margin:0;font-size:13.5px;color:var(--ink-2)}
+.cell ul{padding-left:18px}
+.ev-win{font-weight:600;color:var(--good)}
+.callout{border-radius:8px;padding:12px 14px;background:var(--accent-soft);color:var(--ink);font-size:14px}
+.callout.warn{background:var(--warn-soft)}
+.alerts{display:grid;gap:10px}
+.alert{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.alert .t{font-weight:600} .alert .w{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);white-space:nowrap}
+.alert p{grid-column:1/-1;margin:0;color:var(--ink-2);font-size:13.5px}
+.alert .sev{display:inline-flex;font-family:var(--f-mono);font-size:10.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-right:8px;padding:2px 7px;border-radius:999px;vertical-align:1px}
+.alert.bad .sev{color:var(--bad);background:var(--bad-soft)} .alert.warn .sev{color:var(--warn);background:var(--warn-soft)} .alert.info .sev{color:var(--accent);background:var(--accent-soft)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;counter-reset:s;margin:0;padding:0;list-style:none}
+.flow li{counter-increment:s;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface-2);font-size:13.5px;color:var(--ink-2)}
+.flow li::before{content:"0" counter(s);display:block;font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);margin-bottom:6px}
+.flow li b{display:block;color:var(--ink);font-size:14px}
+.flow li.human{border-color:var(--good)} .flow li.human::before{color:var(--good)}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 20px;margin:12px 0 0;padding:0;list-style:none}
+.why li{font-size:14px;color:var(--ink-2);padding-left:14px;position:relative}
+.why li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.radio{display:flex;flex-wrap:wrap;gap:8px 18px;margin:4px 0 10px;font-size:14px}
+.radio input{accent-color:var(--accent)}
+.log{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.log li{font-size:13.5px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface-2)}
+.log .w{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+svg text{font-family:var(--f-mono);font-size:11px;fill:var(--ink-3)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px}
+button,input,select,textarea,label,summary,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.chip span:hover{border-color:var(--accent)}
+.skip{position:absolute;left:max(16px, env(safe-area-inset-left, 0px));top:-60px;background:var(--ink);color:var(--bg);padding:8px 12px;border-radius:8px;z-index:40;font-weight:600;text-decoration:none}
+.skip:focus{top:calc(8px + env(safe-area-inset-top, 0px))}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.hint{font-size:12px;color:var(--warn);margin:2px 0 0}
+details.railbox > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+details.railbox > summary::-webkit-details-marker{display:none}
+details.railbox > summary .edit{font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+details.railbox[open] > summary .edit .closed{display:none}
+details.railbox:not([open]) > summary .edit .opened{display:none}
+@media (min-width:901px){ details.railbox > summary{pointer-events:none} details.railbox > summary .edit{display:none} }
+.headline{font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.015em;font-weight:600;margin:10px 0 16px;max-width:60ch;text-wrap:pretty}
+.kpis3{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:16px;background:var(--surface-2)}
+@media (max-width:700px){ .kpis3{grid-template-columns:minmax(0,1fr)} .kpis3 .kpi{border-right:0;border-bottom:1px solid var(--line)} .kpis3 .kpi:last-child{border-bottom:0} }
+.kpi .v small{font-size:14px;color:var(--ink-3);font-family:var(--f-body);letter-spacing:0}
+h3.setup{font-size:16px;margin:4px 0 0}
+h3.setup small{display:block;font-weight:400;font-size:12.5px;color:var(--ink-3);margin-top:2px}
+details.more > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+details.more > summary::-webkit-details-marker{display:none}
+details.more > summary h3{margin:0}
+details.more > summary .muted{color:var(--accent);font-weight:600}
+details.more[open] > summary .muted::after{content:" ▴"} details.more:not([open]) > summary .muted::after{content:" ▾"}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 20px;margin:8px 0 0}
+.gloss div{min-width:0}
+.gloss dt{font-weight:600;font-size:14px}
+.gloss dd{margin:2px 0 0;color:var(--ink-2);font-size:13.5px}
+.wsfoot{font-size:12.5px;color:var(--ink-3);max-width:100ch;padding-bottom:32px;margin:0}
+h4.sub{font-family:var(--f-mono);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-3);margin:14px 0 6px}
+.infeas{margin-top:10px}
+
+
+/* ---------- homepage motion (decorative; off with reduced motion) ---------- */
+.hero{overflow:hidden;isolation:isolate}
+.ribbons{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
+.rb-edge{fill:none;stroke:var(--rb-edge);stroke-width:1.2}
+.rb-route{fill:none;stroke:var(--rb-c);stroke-opacity:.55;stroke-width:1.4}
+.rb-dot{fill:var(--rb-d)}
+.rb-orange{fill:none;stroke:var(--brand);stroke-width:3.5;stroke-linecap:round}
+.rb-disc{fill:var(--brand)}
+.hero{background:var(--bg)}
+.hero .wrap{grid-template-columns:minmax(0,1fr);padding-block:96px 120px}
+.hero h1{max-width:13ch;font-size:clamp(40px,6.2vw,84px)}
+.hero h1 .hl{color:var(--accent)}
+.ticker{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:13.5px;color:var(--ink);margin:0 0 26px;padding:6px 12px 6px 10px;border-radius:999px;background:color-mix(in srgb,var(--surface) 80%,transparent);border:1px solid var(--line)}
+.ticker i{width:8px;height:8px;border-radius:2px;background:var(--accent);flex:none}
+.proof{border-top:1px solid var(--line);background:color-mix(in srgb,var(--surface) 82%,transparent);position:relative}
+.hero .proof-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-block:0;gap:0}
+.proof-row > div{padding:22px 20px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:3px;min-width:0}
+.proof-row > div:first-child{border-left:0;padding-left:0}
+.proof-row b{font-family:var(--f-mono);font-size:22px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.proof-row span{font-size:13px;color:var(--ink-2)}
+.proof-row .proof-note{flex-direction:row;align-items:center;gap:10px;color:var(--good)}
+.proof-row .proof-note span{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.35}
+@media (max-width:960px){ .hero > .wrap{padding-block:48px 220px} .ribbons{top:auto;bottom:0;height:min(440px,60%);opacity:.85} .hero .proof-row{grid-template-columns:repeat(2,minmax(0,1fr));padding-block:0} .proof-row > div:nth-child(3){border-left:0;padding-left:0} .proof-row > div:nth-child(-n+2){border-bottom:1px solid var(--line)} }
+@media (max-width:480px){ .ticker{font-size:12px;white-space:normal} .proof-row b{font-size:19px} }
+.hero .wrap{position:relative;z-index:1}
+.hero-compass{position:absolute;z-index:0;right:max(-160px, calc((100vw - 1280px)/2 - 160px));top:50%;width:720px;height:720px;margin-top:-340px;pointer-events:none;color:var(--line-strong)}
+.hero-compass .dial{opacity:.55}
+.hero-compass .dial{transform-origin:0 0;transform:rotate(var(--dial,0deg))}
+.hero-compass .needle{transform-origin:0 0;transform:rotate(-80deg)}
+.hero-compass.set .needle{transform:rotate(0deg)}
+.hero-compass text{font-family:var(--f-mono);font-size:11px;fill:var(--ink-3)}
+@media (max-width:960px){ .hero-compass{width:460px;height:460px;margin-top:0;top:auto;bottom:-170px;right:-170px;opacity:.4} }
+.flow100{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px;align-items:center}
+@media (max-width:900px){ .flow100{grid-template-columns:minmax(0,1fr);gap:24px} }
+.dots{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:clamp(6px,1.1vw,12px);max-width:440px;width:100%}
+.dots i{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--line-strong);background:transparent;transform:scale(.82)}
+.dots i.done{background:var(--today);border-color:var(--today);transform:scale(1)}
+.dots.rumbo i.done{background:var(--accent);border-color:var(--accent)}
+.dots.rumbo i.won{background:var(--brand);border-color:var(--brand);transform:scale(1)}
+.flowtxt .big{font-family:var(--f-mono);font-size:clamp(44px,6vw,72px);font-weight:500;letter-spacing:-.04em;line-height:1;margin:18px 0 6px;font-variant-numeric:tabular-nums}
+.flowtxt .big small{font-size:.32em;letter-spacing:0;color:var(--ink-3);margin-left:8px}
+.flowtxt .cap{color:var(--ink-2);margin:0 0 18px;font-size:15px;min-height:3em}
+.mrows{display:grid;gap:8px;max-width:420px;margin-top:16px}
+.mrow{display:grid;grid-template-columns:110px minmax(0,1fr) 64px;gap:12px;align-items:center;font-size:13.5px;color:var(--ink-2)}
+.mrow .tr{height:8px;border-radius:4px;background:var(--bar-track);overflow:hidden}
+.mrow .tr i{display:block;height:100%;width:var(--w);border-radius:4px;background:var(--today)}
+.flowtxt.rumbo .mrow .tr i{width:var(--w2);background:var(--accent)}
+.mrow .v{font-family:var(--f-mono);font-size:12.5px;text-align:right}
+.lgd{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink-2);margin-top:14px}
+.lgd span{display:inline-flex;align-items:center;gap:6px}
+.lgd i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--line-strong)}
+.steps{position:relative}
+.steps .prog{position:absolute;left:0;top:0;height:3px;width:calc(var(--p,0) * 100%);background:var(--accent);z-index:1}
+.steps li::before{transition:color .3s}
+.steps li.lit::before{color:var(--accent)}
+.steps li.human.lit::before{color:var(--good)}
+.reveal{opacity:1}
+@media (prefers-reduced-motion: no-preference){
+  .js-motion .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1)}
+  .js-motion .reveal.in{opacity:1;transform:none}
+  .hero-compass .needle{transition:transform 1.6s cubic-bezier(.3,1.5,.5,1) .2s}
+  .dots i{transition:background-color .35s ease, border-color .35s ease, transform .35s cubic-bezier(.3,1.6,.5,1);transition-delay:calc(var(--d,0) * 9ms)}
+  .mrow .tr i{transition:width .7s cubic-bezier(.2,.7,.2,1), background-color .4s}
+  .steps .prog{transition:width .15s linear}
+}
+
+/* ---------- what-if sliders ---------- */
+.wi-grid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){ .wi-grid{grid-template-columns:minmax(0,1fr)} }
+.wi-ctl{display:grid;gap:22px}
+.wi-ctl label{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;font-weight:500;color:var(--ink)}
+.wi-ctl output{font-family:var(--f-mono);font-size:13px;color:var(--accent);white-space:nowrap}
+.wi-ctl input[type=range]{width:100%;accent-color:var(--accent);margin:8px 0 2px}
+.wi-ctl .scale{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+.wi-ctl .hint2{font-size:12.5px;color:var(--ink-3);margin:4px 0 0}
+.wi-verdict{font-size:15px;margin:0 0 12px;min-height:2.6em}
+.wi-verdict b{color:var(--brand-strong)}
+.wi-flip{display:inline-flex;margin-left:6px;font-family:var(--f-mono);font-size:11px;padding:2px 8px;border-radius:999px;background:var(--warn-soft);color:var(--warn);vertical-align:2px}
+.wi-ticks{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:12.5px;color:var(--ink-3)}
+.wi-ticks button{font:inherit;font-size:12.5px;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+/* ---------- profit bridge ---------- */
+.br-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:10px 16px}
+.br-head > label{min-width:0;max-width:100%}
+.br-head select{width:auto;max-width:100%;min-width:0;text-overflow:ellipsis}
+@media (max-width:560px){ .br-head > label{width:100%} .br-head select{width:100%} }
+.br-wrap{overflow-x:auto;margin-top:8px}
+.br-svg{display:block;width:100%;min-width:620px;height:auto}
+.br-svg text{font-size:12px}
+.br-svg .v{font-family:var(--f-mono);font-size:12.5px;fill:var(--ink);font-weight:500}
+.br-svg .lab{font-family:var(--f-body);fill:var(--ink-2);font-size:12px}
+/* ---------- demo tour ---------- */
+.tour{position:fixed;inset:0;z-index:70;pointer-events:none}
+.tour[hidden]{display:none}
+.tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px rgba(7,10,16,.55);outline:2px solid var(--brand);outline-offset:0;transition:all .35s cubic-bezier(.2,.7,.2,1)}
+.tour-hole.none{box-shadow:0 0 0 9999px rgba(7,10,16,.55);outline:0;width:0!important;height:0!important;left:50%!important;top:50%!important}
+.tour-card{position:fixed;pointer-events:auto;width:min(360px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;box-shadow:0 24px 48px -16px rgba(7,10,16,.45);transition:top .35s cubic-bezier(.2,.7,.2,1),left .35s cubic-bezier(.2,.7,.2,1)}
+.tour-card .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-strong)}
+.tour-card h2{font-size:18px;margin:6px 0 6px;letter-spacing:-.01em}
+.tour-card p{margin:0;color:var(--ink-2);font-size:14px}
+.tour-dots{display:flex;gap:5px;margin:14px 0 0}
+.tour-dots i{width:18px;height:4px;border-radius:2px;background:var(--line)}
+.tour-dots i.on{background:var(--accent)}
+.tour-act{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:14px}
+.tour-act .btn{padding:8px 14px;font-size:13.5px}
+.linkbtn{font:inherit;font-size:13px;color:var(--ink-3);background:none;border:0;cursor:pointer;padding:6px 2px}
+.linkbtn:hover{color:var(--ink)}
+.demo-btn{flex:none}
+@media (max-width:560px){ .demo-btn .t{display:none} }
+/* ---------- market map ---------- */
+.mapgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center}
+@media (max-width:900px){ .mapgrid{grid-template-columns:minmax(0,1fr);gap:20px} }
+.lmap{display:block;width:100%;max-width:480px;height:auto;margin:0 auto}
+.lmap path{fill:var(--surface-2);stroke:var(--line-strong);stroke-width:.6;stroke-opacity:.5;transition:fill .25s}
+.lmap path.mk{fill:var(--accent-soft);stroke:var(--accent);stroke-opacity:.6;cursor:pointer}
+.lmap path.mk:hover{fill:color-mix(in srgb,var(--accent) 35%,var(--accent-soft))}
+.lmap path.mk.on{fill:var(--accent);stroke:var(--accent)}
+.lmap text{font-family:var(--f-mono);font-size:12px;font-weight:500;fill:var(--ink);pointer-events:none;paint-order:stroke;stroke:var(--bg);stroke-width:3.5px;stroke-linejoin:round}
+.mk-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
+.mk-tabs button{font:inherit;font-size:13.5px;font-weight:500;padding:7px 14px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);cursor:pointer}
+.mk-tabs button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.mk-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+.mk-card h3{margin:0;font-size:22px;letter-spacing:-.02em}
+.mk-card .src{font-size:12px;color:var(--ink-3);margin:4px 0 16px}
+.mk-card .facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.mk-card .facts span{display:block;font-size:12.5px;color:var(--ink-3)}
+.mk-card .facts b{font-family:var(--f-mono);font-weight:500;font-size:18px}
+.mk-card .mrow .tr i{background:var(--accent)}
+/* ---------- before / after timeline ---------- */
+.tl{display:grid;gap:26px;margin-top:8px}
+.tl-row{display:grid;grid-template-columns:160px minmax(0,1fr) 200px;gap:12px 20px;align-items:start}
+.tl-row .tl-name,.tl-row .tl-total{padding-top:2px}
+@media (max-width:760px){ .tl-row{grid-template-columns:minmax(0,1fr) auto} .tl-row .tl-bar{grid-column:1/-1;grid-row:2} }
+.tl-name b{display:block;font-size:15px}
+.tl-name span{font-size:12.5px;color:var(--ink-3)}
+.tl-track{position:relative;height:44px;border-radius:10px;background:var(--bar-track);overflow:hidden;display:flex}
+.tl-seg{height:100%;display:flex;align-items:center;justify-content:center;border-right:2px solid var(--bg);flex:0 0 auto;width:0;overflow:hidden}
+.tl-seg em{font-style:normal;font-family:var(--f-mono);font-size:11.5px;white-space:nowrap;opacity:0;transition:opacity .3s}
+.tl.in .tl-seg em{opacity:1;transition-delay:1.8s}
+.tl-bar{min-width:0}
+.tl-labels{list-style:none;margin:8px 0 0;padding:0;display:flex}
+.tl-labels li{flex:0 0 var(--w);width:var(--w);text-align:center;font-size:12.5px;line-height:1.3;color:var(--ink-2);padding:0 4px;border-left:1px solid var(--line);min-width:0}
+.tl-labels li:first-child{border-left:0}
+.tl-labels .sw,.tl-labels small{display:none}
+.tl-rum .tl-labels li{font-size:12px}
+.tl-row.tl-now .tl-seg{background:var(--today);color:var(--ink)}
+.tl-row.tl-rum .tl-seg{background:var(--accent);color:var(--accent-ink)}
+.tl-row.tl-rum .tl-seg:last-child{background:var(--brand);color:#fff}
+.tl-total{font-family:var(--f-mono);font-size:21px;font-weight:500;letter-spacing:-.02em;text-align:right;white-space:nowrap}
+.tl-total small{display:block;font-size:12px;color:var(--ink-3);letter-spacing:0}
+.tl-axis{display:flex;justify-content:space-between;margin-left:180px;margin-right:220px;font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+@media (max-width:760px){ .tl-axis{margin:0} .tl-seg em{display:none}
+  .tl-labels{flex-direction:column;gap:6px;margin-top:10px}
+  .tl-labels li{flex:none;width:auto;text-align:left;border-left:0;padding:0;display:flex;align-items:center;gap:8px}
+  .tl-labels .sw{display:inline-block;width:10px;height:10px;border-radius:3px;flex:none}
+  .tl-labels .sw.now{background:var(--today)} .tl-labels .sw.rum{background:var(--accent)} .tl-labels .sw.rum.last{background:var(--brand)}
+  .tl-labels small{display:inline;color:var(--ink-3)} }
+.tl.in .tl-seg{width:var(--w)}
+@media (prefers-reduced-motion: no-preference){ .tl-seg{transition:width .9s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i,0) * .25s)} .tl-row.tl-rum .tl-seg{transition-delay:calc(.9s + var(--i,0) * .2s)} }
+/* ---------- workspace app shell (layout borrowed from merchant dashboards; Rumbo identity kept) ---------- */
+body.ws .appbar, body.ws .sitefoot{display:none}
+.shell{display:grid;grid-template-columns:256px minmax(0,1fr);min-height:100vh}
+.shell[hidden]{display:none}
+.side{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--side-bg);color:var(--side-ink);display:flex;flex-direction:column;gap:6px;padding:18px 12px 16px;--brand:#f08a24;--brand-ink:#0e1424}
+.side-brand{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:2px 10px 14px;text-decoration:none}
+.side-brand .wordmark{height:20px;width:auto;color:#e0e7ff;display:block}
+.side-brand .bdesc{color:var(--side-ink-2);display:block}
+.acct{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:inherit;background:var(--side-hover);border:1px solid var(--side-line);border-radius:10px;padding:9px 10px;cursor:pointer;margin-bottom:6px}
+.acct:hover{background:var(--side-active)}
+.acct-av{flex:none;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:#4338ca;color:#fff;font-weight:600;font-size:13px;letter-spacing:.02em}
+.acct-t{min-width:0;flex:1}
+.acct-t b{display:block;font-size:14px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acct-t small{display:block;font-size:12px;color:var(--side-ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acct svg{flex:none;color:var(--side-ink-2)}
+.side-h{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--side-ink-2);margin:14px 10px 6px}
+.side-list{display:grid;gap:2px}
+.side-link,.side-list button{display:flex;align-items:center;gap:12px;width:100%;font:inherit;font-size:14.5px;font-weight:500;text-align:left;color:var(--side-ink);text-decoration:none;background:none;border:0;border-radius:8px;padding:9px 10px;cursor:pointer}
+.side-link svg{flex:none;color:var(--side-ink-2)}
+.side-link:hover,.side-list button:hover{background:var(--side-hover);color:#fff}
+.side-link[aria-current=page],.side-list button[aria-pressed=true]{background:var(--side-active);color:#fff}
+.side-link[aria-current=page] svg{color:#a5b4fc}
+.side-list .code{flex:none;width:28px;font-family:var(--f-mono);font-size:11px;letter-spacing:.04em;color:var(--side-ink-2);border:1px solid var(--side-line);border-radius:5px;text-align:center;padding:1px 0}
+.side-list button[aria-pressed=true] .code{color:#fff;border-color:#a5b4fc}
+.side-link .badge{margin-left:auto;font-family:var(--f-mono);font-size:11px;min-width:20px;text-align:center;padding:1px 6px;border-radius:999px;background:var(--bad);color:#fff}
+.side{border-right:1px solid var(--side-line)}
+.side-foot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--side-line);font-size:12px;color:var(--side-ink-2);line-height:1.45}
+.side-foot b{color:var(--side-ink);font-weight:600}
+.side :focus-visible{outline-color:#a5b4fc}
+.shell-main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:20;height:64px;display:flex;align-items:center;gap:10px;padding:0 max(24px, env(safe-area-inset-right, 0px)) 0 32px;background:var(--surface);border-bottom:1px solid var(--line)}
+.crumb{margin:0 auto 0 0;font-size:14px;color:var(--ink-2);display:flex;align-items:center;gap:6px;min-width:0;white-space:nowrap;overflow:hidden}
+.crumb b{color:var(--ink);font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.crumb svg{flex:none;color:var(--ink-3)}
+.iconbtn{position:relative;flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:10px;border:0;background:none;color:var(--ink-2);cursor:pointer}
+.iconbtn:hover{background:var(--surface-2);color:var(--ink)}
+.iconbtn .dot{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 2px var(--surface)}
+.avatar{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--logo-ink);color:var(--surface);font-weight:600;font-size:13px;margin-left:4px}
+.menu{display:none;margin-left:-8px}
+.content{padding:28px 32px 8px;max-width:1440px;width:100%}
+.pagehead{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px 24px;margin-bottom:22px}
+.pagehead h1{font-size:28px;letter-spacing:-.025em;line-height:1.15;margin:0}
+.pagehead .sub{margin-top:6px}
+.content .panel{border-radius:12px;padding:22px 24px}
+.cards2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.cards2 > .panel{margin-bottom:0}
+@media (max-width:1100px){ .cards2{grid-template-columns:minmax(0,1fr)} }
+.card-h{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:10px 16px;margin-bottom:6px}
+.card-h h3{display:flex;align-items:center;gap:4px;font-size:18px;margin:0}
+.card-h h3 a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:2px}
+.card-h h3 a:hover{color:var(--accent)}
+.card-h h3 a svg{color:var(--ink-3)}
+.card-h .when{display:block;font-size:13px;color:var(--ink-3);margin-top:3px}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)}
+.seg button{font:inherit;font-size:13px;font-weight:500;padding:6px 12px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line-strong);font-weight:600}
+.lg{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 18px;font-size:13px;color:var(--ink-2);margin:6px 0 4px}
+.lg span{display:inline-flex;align-items:center;gap:7px}
+.lg i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chart{display:block;width:100%;height:auto}
+.chart text{font-size:11px}
+.hbars{display:grid;gap:12px;margin-top:12px}
+.hb{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:baseline}
+.hb .n{font-size:13.5px;color:var(--ink);min-width:0}
+.hb .n small{color:var(--ink-3);font-size:12px}
+.hb .v{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.hb .tr{grid-column:1/-1;height:10px;border-radius:5px;background:var(--bar-track);overflow:hidden}
+.hb .tr i{display:block;height:100%;border-radius:5px;background:var(--accent)}
+.hb.today .tr i{background:var(--today)} .hb.pick .tr i{background:var(--brand)}
+.hb.pick .n{font-weight:600} .hb.pick .v{color:var(--brand-strong);font-weight:600}
+.hb2 .tr{height:7px} .hb2 .tr + .tr{margin-top:3px}
+.hb2 .tr.peer i{background:var(--today)}
+.cardfoot{margin:12px 0 0;font-size:12.5px;color:var(--ink-3)}
+aside.rail.drawer{position:fixed;border-radius:0;top:0;right:0;bottom:0;z-index:45;width:min(400px,100vw);overflow-y:auto;background:var(--surface);border-left:1px solid var(--line);box-shadow:-24px 0 48px -24px rgba(14,20,36,.35);padding:20px 22px 28px}
+aside.rail.drawer[hidden]{display:none}
+.drawer-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px}
+.drawer-h h2{font-size:18px;margin:0}
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(7,10,16,.45)}
+.scrim[hidden]{display:none}
+.wsfoot{margin-top:8px}
+[tabindex="-1"]:focus-visible{outline:none}
+.drawer .row2{align-items:end}
+@media (max-width:900px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:0;bottom:0;z-index:46;width:min(280px,86vw);transform:translateX(-102%);visibility:hidden}
+  .side.open{transform:none;visibility:visible}
+  .menu{display:grid}
+  .topbar{padding:0 12px 0 max(16px, env(safe-area-inset-left, 0px));height:58px;gap:4px}
+  .content{padding:20px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px))}
+  .pagehead h1{font-size:23px}
+  .content .panel{padding:18px 16px}
+}
+@media (max-width:560px){ .topbar .synth{display:none} .pagehead .btn{width:100%;justify-content:center} .lg{justify-content:flex-start} }
+@media (prefers-reduced-motion: no-preference){ .side{transition:transform .2s ease, visibility .2s} }
+@media (prefers-reduced-motion: no-preference){ .panel,.whycard,.btn,.tabs button{transition:border-color .15s, background-color .15s, filter .15s} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-route" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm12-10a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM6 15V9a3 3 0 0 1 3-3h7M18 9v6a3 3 0 0 1-3 3H8"/></symbol>
+    <symbol id="i-retry" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 12a8 8 0 0 1 13.7-5.7L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 0 1-13.7 5.7L4 15.5M4 20v-4.5h4.5"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3M4 7.5V17a2 2 0 0 0 2 2h13a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H6.5A2.5 2.5 0 0 1 4 7.5ZM16 13.5h.01"/></symbol>
+    <symbol id="i-gap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 3.5h.01M10.3 4.3 2.8 17.5A2 2 0 0 0 4.5 20.5h15a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Zm0 3h16M8 3v4m8-4v4M8 14h2m4 0h2M8 17h2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v4l3 2"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 4v16M7 20h10M5 8h14M5 8l-3 6a3 3 0 0 0 6 0L5 8Zm14 0-3 6a3 3 0 0 0 6 0l-3-6ZM12 4l-1.5-1.5M12 4l1.5-1.5"/></symbol>
+    <symbol id="i-sigma" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 18c3-0 4-12 9-12s6 12 9 12M8.5 12h7M12 6v12"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0M16.5 15.5l1.5 1.5 3-3"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Zm4 4a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 0 1 1-1h5v7H4V5Zm10-1h5a1 1 0 0 1 1 1v6h-6V4ZM4 13h6v7H5a1 1 0 0 1-1-1v-6Zm10 0h6v6a1 1 0 0 1-1 1h-5v-7Z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-10v6m0-9.5h.01"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1v-8.5Z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-updown" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m8 9 4-4 4 4M8 15l4 4 4-4"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Zm9.5-13.5 4 4"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM10 8.5v7l5.5-3.5L10 8.5Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="appbar">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="Rumbo, overview">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="40 -628 4284 668" height="20" width="130.1" role="img" aria-label="Rumbo" class="wordmark" focusable="false"><g transform="scale(1,-1)"><path transform="translate(0,0)" d="M729 -10Q689 -10 640.0 2.5Q591 15 543 64L501 106Q471 136 443.5 155.0Q416 174 381.0 183.5Q346 193 293 193H285V0H90V508L80 589H543Q607 589 646.5 573.5Q686 558 707.5 532.5Q729 507 737.0 475.0Q745 443 745 410V391Q745 331 714.5 283.5Q684 236 618 216Q643 201 665.5 185.5Q688 170 717 153Q750 134 778.5 125.5Q807 117 826.0 115.0Q845 113 848 113L818 0Q806 -3 781.5 -6.5Q757 -10 729 -10ZM401 326Q426 326 449.5 327.0Q473 328 492 330Q526 334 538.5 351.5Q551 369 551 394V405Q551 427 538.5 439.0Q526 451 493 451H285V330Q310 329 340.0 327.5Q370 326 401 326Z" fill="currentColor"/><path transform="translate(892,0)" d="M268 -10Q168 -10 116.5 37.0Q65 84 65 189V588H260V207Q260 160 283.0 144.0Q306 128 340 128H469Q501 128 525.0 144.5Q549 161 549 207V588H741V189Q741 84 690.5 37.0Q640 -10 539 -10Z" fill="currentColor"/><path transform="translate(1732,0)" d="M90 0V508L80 588H322L498 238L678 588H907V0H716V337H705L663 229L590 60H408L332 229L291 337H281V0Z" fill="currentColor"/><path transform="translate(2753,0)" d="M80 0V589H536Q630 589 673.0 551.5Q716 514 716 461V431Q716 390 698.5 363.5Q681 337 661 326Q705 312 731.0 277.5Q757 243 757 187V169Q757 139 750.0 109.0Q743 79 723.5 54.5Q704 30 668.5 15.0Q633 0 576 0ZM275 362H475Q501 362 511.0 373.0Q521 384 521 403V413Q521 434 511.0 443.0Q501 452 466 452H275ZM275 137H516Q542 137 552.0 146.5Q562 156 562 177V195Q562 214 549.0 224.5Q536 235 504 235H275Z" fill="currentColor"/><circle cx="3944.0" cy="294.0" r="300" fill="var(--brand)"/><polygon points="4092.5,442.5 3926.5,151.1 3903.7,253.7 3801.1,276.5" fill="var(--brand-ink)"/></g></svg>
+      <span class="bdesc">Your payments compass</span>
+    </a>
+    <nav class="topnav" aria-label="Site">
+      <a href="#home" data-nav="home">Overview</a>
+      <a href="#reco" data-nav="work">Workspace</a>
+    </nav>
+    <span class="synth" title="All performance figures in this prototype are synthetic"><i aria-hidden="true"></i><span><span class="long">Prototype · s</span><span class="short">S</span>ynthetic<span class="long"> data</span></span></span>
+    <a class="btn sm cta" href="#reco" id="ctaTop">Open workspace</a>
+  </div>
+</header>
+
+<div id="main" tabindex="-1">
+<!-- ================= HOMEPAGE ================= -->
+<div id="v-home" data-page="home">
+  <section class="hero">
+    <svg class="ribbons" id="ribbons" viewBox="0 0 1440 900" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="rg0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--rb-a)" stop-opacity=".15"/><stop offset=".5" style="stop-color:var(--rb-a)" stop-opacity=".7"/><stop offset="1" style="stop-color:var(--rb-b)" stop-opacity=".85"/></linearGradient>
+        <linearGradient id="rg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--rb-a)" stop-opacity=".5"/><stop offset=".55" style="stop-color:var(--rb-b)" stop-opacity=".85"/><stop offset="1" style="stop-color:var(--rb-c)" stop-opacity=".9"/></linearGradient>
+        <linearGradient id="rg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--rb-b)" stop-opacity=".7"/><stop offset=".5" style="stop-color:var(--rb-c)" stop-opacity=".95"/><stop offset="1" style="stop-color:var(--rb-d)" stop-opacity="1"/></linearGradient>
+        <linearGradient id="rg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--rb-c)" stop-opacity=".6"/><stop offset="1" style="stop-color:var(--rb-e)" stop-opacity="1"/></linearGradient>
+      </defs>
+      <path id="rb0" fill="url(#rg0)"/><path id="rb0e" class="rb-edge"/>
+      <path id="rb1" fill="url(#rg1)"/><path id="rb1e" class="rb-edge"/>
+      <path id="rroute" class="rb-route"/><circle id="rdot" r="6" class="rb-dot"/>
+      <path id="rb2" fill="url(#rg2)"/><path id="rb2e" class="rb-edge"/>
+      <path id="rb3" fill="url(#rg3)"/><path id="rb3e" class="rb-edge"/>
+      <path id="rorange" class="rb-orange"/><circle id="rodisc" r="11" class="rb-disc"/>
+    </svg>
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="ticker" id="heroTicker"><i aria-hidden="true"></i><span>Example · Brazil: 33 → 85 of 100 checkouts become sales</span></p>
+        <h1>Choose payment providers <span class="hl">on evidence</span></h1>
+        <p class="lede">See which providers and local payment methods to launch with in a new market, based on how similar merchants really perform.</p>
+        <div class="ctas">
+          <a class="btn btn-lg" href="#reco">Open the workspace <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn ghost btn-lg" href="#home-how">How it works</a>
+          <button class="linkbtn" type="button" id="heroDemo" style="font-size:14.5px;display:inline-flex;align-items:center;gap:6px;color:var(--ink-2)"><svg width="18" height="18" aria-hidden="true"><use href="#i-play"/></svg>Take the 1-minute tour</button>
+        </div>
+      </div>
+    </div>
+    <div class="proof">
+      <div class="wrap proof-row" id="homePreview" aria-label="Example results for Brazil (synthetic data)"></div>
+    </div>
+  </section>
+
+  <section class="home-sec" aria-labelledby="h-today">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">The decision today</p>
+        <h2 id="h-today">A strategic choice made with sales material</h2>
+        <p>Every new market forces the same question: which providers and payment methods do we integrate? Today it is answered with inputs that describe promises, not performance.</p>
+      </div>
+      <div class="today reveal">
+        <div><b>RFPs and sales pitches</b><p>Providers present their best numbers for a merchant they have never processed.</p></div>
+        <div><b>Fee spreadsheets</b><p>Quoted fees get compared line by line, while approval rates, which move revenue far more, are taken on trust.</p></div>
+        <div><b>Advice that isn't neutral</b><p>Consultants and provider sales teams each have a preferred answer.</p></div>
+        <div><b>Gut feel and relationships</b><p>The incumbent provider stays because switching feels risky.</p></div>
+      </div>
+      <div class="verdict">
+        <span><svg width="16" height="16" aria-hidden="true"><use href="#i-x"/></svg>Slow: months from RFP to first payment</span>
+        <span><svg width="16" height="16" aria-hidden="true"><use href="#i-x"/></svg>Based on promised, not observed, approval</span>
+        <span><svg width="16" height="16" aria-hidden="true"><use href="#i-x"/></svg>Rarely revisited once integrated</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-sec" aria-labelledby="h-time" id="home-time">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">From months to weeks</p>
+        <h2 id="h-time">Today, a new market takes months to go live</h2>
+        <p>Tenders and sales pitches stretch the decision before any integration starts. With a ranked suggestion and one integration hub, most of that waiting goes away.</p>
+      </div>
+      <div class="tl reveal" id="timeline"></div>
+      <p class="muted" style="margin:18px 0 0">Today's 12 to 20 weeks is a team assumption to validate in interviews. Rumbo's time comes from the prototype for the example merchant in <span id="tlMarket">Brazil</span>.</p>
+    </div>
+  </section>
+
+  <section class="home-sec" aria-labelledby="h-flow" id="home-flow">
+    <div class="wrap flow100">
+      <div class="flowtxt reveal" id="flowTxt">
+        <p class="eyebrow">100 shoppers at checkout</p>
+        <h2 id="h-flow" style="font-size:clamp(24px,2.6vw,32px);letter-spacing:-.025em;line-height:1.15;margin:6px 0 10px">What changes when people can pay their way</h2>
+        <div class="seg" role="group" aria-label="Show checkout results for"><button type="button" id="fl-today" data-k="today" aria-pressed="true">Today</button><button type="button" id="fl-rumbo" data-k="rumbo" aria-pressed="false">With Rumbo's suggestion</button></div>
+        <p class="big" id="flowBig" aria-live="polite">33<small>of 100 buy</small></p>
+        <p class="cap" id="flowCap"></p>
+        <div class="mrows" id="flowRows"></div>
+      </div>
+      <div class="reveal">
+        <div class="dots" id="flowDots" aria-hidden="true"></div>
+        <div class="lgd" aria-hidden="true"><span><i style="background:var(--today);border-color:var(--today)"></i>Buys today</span><span><i style="background:var(--accent);border-color:var(--accent)"></i>Still buys with the suggestion</span><span><i style="background:var(--brand);border-color:var(--brand)"></i>Extra sales won</span><span><i></i>Leaves without buying</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-sec" aria-labelledby="h-map" id="home-map">
+    <div class="wrap mapgrid">
+      <div class="reveal"><svg class="lmap" id="lmap" viewBox="0 0 527 638" role="img" aria-label="Map of Mexico, Central and South America with the five markets highlighted"><path d="M359 164L361 165L359 167L358 168L356 168L355 170L356 172L357 172L356 174L354 175L353 175L352 177L352 179L351 180L352 182L354 183L355 185L356 186L354 188L353 189L352 189L350 190L348 191L347 191L345 191L343 192L342 194L341 194L339 193L337 193L335 193L334 192L332 191L330 190L331 192L333 194L333 196L334 198L335 200L337 202L339 202L338 204L337 204L335 205L334 207L332 208L331 209L328 210L327 211L326 213L325 211L323 212L321 212L319 211L317 209L316 207L316 206L315 204L315 202L313 201L311 199L313 197L314 196L313 194L312 192L311 190L311 188L311 186L311 184L312 182L313 181L313 179L312 178L309 178L307 179L305 179L303 179L302 179L300 178L298 175L297 174L295 174L294 173L291 173L289 173L286 173L285 173L284 171L282 170L282 168L283 167L283 165L281 163L280 160L279 159L277 160L278 158L279 157L279 154L280 152L281 150L282 148L284 147L285 145L287 144L289 143L286 144L286 147L287 148L288 150L287 152L286 154L284 156L285 157L287 159L287 160L290 160L291 159L291 156L290 155L289 153L288 151L289 149L290 148L293 147L294 147L296 146L298 146L296 144L296 143L297 141L298 142L299 144L300 145L302 145L305 146L308 147L308 149L309 151L311 152L313 151L315 151L321 151L323 153L326 154L328 154L330 154L334 152L336 152L334 151L336 150L338 151L340 150L343 150L346 150L348 150L346 151L343 151L343 153L345 155L346 156L348 156L350 155L351 157L353 157L355 159L353 160L353 162L352 163L350 163L352 165L353 164L357 164L359 163Z"/><path d="M401 439L400 441L398 443L397 445L395 446L391 448L389 448L386 447L384 448L382 448L379 446L377 445L375 445L373 445L371 442L370 441L369 438L370 436L371 434L371 432L371 430L371 428L371 426L372 425L372 423L372 421L373 419L373 417L374 415L376 414L377 413L379 413L382 415L383 417L384 418L384 420L386 419L388 419L389 421L390 421L393 423L395 425L396 426L398 427L399 429L400 430L402 431L401 433L400 435L400 438L400 439Z"/><path d="M322 101L324 101L324 103L322 104L320 104L318 104L315 104L315 102L315 100L317 100L321 100Z"/><path d="M502 617L503 617L504 619L506 619L507 620L508 622L509 624L508 626L506 624L505 622L504 621L503 620L501 619L499 618L497 617L499 616L501 617Z"/><path d="M367 588L369 589L369 591L370 591L371 590L372 590L372 592L372 593L370 594L368 595L368 597L365 596L365 597L364 598L362 597L362 595L364 593L365 593L365 591L366 589ZM358 590L360 590L361 590L363 589L363 591L362 592L360 595L358 596L357 597L355 598L354 596L355 595L357 594L358 593L356 593L358 592L356 591Z"/><path d="M353 154L350 154L348 154L349 153L351 151L349 150L351 150L353 149L353 151L353 153Z"/><path d="M396 184L394 186L394 187L394 189L394 191L395 193L396 194L397 196L396 197L396 199L394 202L393 203L391 201L389 201L387 202L385 201L384 203L385 204L384 206L382 205L381 204L379 203L379 202L378 200L377 198L376 196L375 196L374 195L373 193L372 192L372 190L373 188L373 186L376 186L377 185L377 183L377 181L378 180L382 180L385 181L387 180L388 180L392 180L395 180L396 181L396 183Z"/><path d="M298 243L296 244L294 243L293 243L290 244L289 244L286 245L285 246L283 247L281 248L280 249L279 251L279 253L278 254L278 256L277 258L275 259L274 261L274 263L273 264L274 265L275 267L275 268L277 270L278 271L279 273L278 275L280 276L282 276L284 277L284 279L286 279L288 279L289 279L291 278L292 277L293 276L294 278L294 280L294 283L294 285L295 286L297 285L300 285L301 287L302 289L304 291L305 294L306 295L305 297L304 298L304 301L303 302L304 304L304 306L303 308L302 309L302 311L303 313L301 315L302 318L304 319L304 321L303 322L301 324L300 325L301 327L300 328L299 330L298 332L296 333L295 332L293 331L291 330L289 328L289 327L287 325L285 324L283 322L280 321L277 320L274 319L272 317L269 316L266 314L265 312L263 310L261 309L260 307L259 304L259 302L258 299L257 297L256 295L254 293L253 291L253 290L250 287L250 286L247 281L246 278L245 275L244 273L243 271L242 269L241 267L239 266L238 263L237 261L236 259L231 256L229 255L228 253L230 253L230 251L228 249L228 247L228 244L230 241L232 240L234 238L234 240L234 241L233 242L233 244L235 244L237 245L238 245L239 247L240 248L242 247L243 246L244 245L244 243L245 241L246 239L247 238L248 237L249 235L251 235L253 234L255 233L257 232L259 231L261 229L263 227L263 225L264 223L265 221L264 219L263 218L264 218L266 218L268 218L269 220L270 221L271 223L273 224L274 224L276 226L276 228L278 228L278 230L279 231L281 232L283 232L284 232L286 231L288 231L290 231L291 231L293 231L295 232L297 233L296 236L294 239L294 241L296 241L297 243Z" class="mk" data-mk="PE"/><path d="M371 345L372 346L372 348L373 349L373 351L373 353L373 355L372 357L374 357L375 358L377 358L379 359L381 358L383 358L384 359L386 360L387 361L387 363L387 365L387 367L388 369L389 370L391 370L392 369L394 370L395 371L395 374L394 376L394 378L393 380L393 384L393 386L392 388L391 389L390 390L388 391L387 392L386 394L384 393L382 394L381 394L379 394L376 394L373 393L371 393L368 393L369 392L370 390L371 389L371 387L371 385L373 384L374 382L375 381L373 378L371 377L369 376L368 376L365 374L363 373L360 371L358 370L354 369L353 368L351 367L349 365L348 364L346 361L344 359L344 357L344 355L345 353L345 351L345 349L345 347L346 346L348 344L348 342L350 341L353 340L357 340L360 339L362 339L365 339L367 340L369 341L371 342L371 345Z"/><path d="M252 163L252 165L253 167L252 169L251 170L249 171L247 170L246 168L246 166L247 165L249 166L248 165L246 164L244 163L243 162L241 161L239 161L238 162L237 163L235 165L233 166L233 167L235 169L234 171L231 172L230 171L229 169L227 169L225 167L223 166L222 165L220 165L218 166L218 164L218 162L217 159L218 158L220 158L221 159L222 160L223 161L225 161L226 162L228 162L230 162L232 160L235 160L236 159L238 157L240 157L242 158L244 158L247 159L249 160L252 163Z"/><path d="M216 123L215 124L216 127L215 129L214 131L213 134L214 136L214 138L213 139L213 142L213 144L212 146L212 148L213 149L211 150L210 150L208 148L206 148L203 148L201 147L199 147L196 144L194 142L193 140L191 139L189 137L188 136L190 136L192 136L193 134L194 133L194 131L196 131L197 129L200 130L201 129L202 128L203 126L204 125L206 124L207 125L209 125L211 124L213 124L214 123Z"/><path d="M5 3L7 3L9 3L11 3L12 3L14 3L16 2L18 2L20 2L23 5L25 6L28 7L31 8L34 9L37 10L40 11L43 12L45 12L48 12L50 12L52 12L54 12L56 12L58 12L61 12L61 11L61 9L63 9L66 9L69 9L72 9L73 11L74 12L76 13L77 15L79 16L81 17L82 19L83 21L83 23L84 25L86 26L88 27L90 28L92 29L93 28L94 26L95 24L97 23L99 23L102 23L104 24L105 26L107 28L108 29L109 32L110 34L112 36L113 38L115 39L115 41L115 43L116 45L117 47L119 48L121 48L123 49L125 50L127 51L129 50L129 53L128 55L126 61L126 64L126 65L125 68L126 71L125 73L125 75L127 78L128 80L128 81L127 80L126 77L126 80L127 81L128 83L129 85L132 89L134 91L134 93L136 96L137 98L139 99L141 99L144 100L145 102L148 102L150 101L152 101L154 101L156 100L158 99L160 99L162 99L164 101L166 99L165 98L167 97L169 95L169 92L170 91L171 89L171 87L171 84L174 82L181 81L182 80L184 80L187 80L189 81L191 81L193 81L193 82L193 84L192 86L190 89L190 91L188 93L190 93L188 94L189 97L188 98L187 101L186 100L186 98L185 99L183 100L181 103L179 103L177 105L175 105L172 105L170 105L167 105L167 107L166 108L167 110L169 111L170 113L171 114L171 116L169 116L168 116L165 116L163 116L161 118L160 121L161 122L160 124L160 126L158 124L156 122L155 121L152 118L149 116L147 115L149 116L146 115L144 115L142 114L140 117L138 117L135 118L133 119L131 118L129 117L126 117L123 115L121 114L119 113L116 112L114 112L111 110L109 110L106 109L104 107L103 107L102 106L100 104L98 104L96 103L93 102L90 101L89 99L87 98L85 97L83 96L81 95L80 93L78 91L77 89L77 87L79 87L78 85L79 84L79 81L78 80L77 77L77 75L76 73L74 72L73 70L71 67L69 64L63 60L65 61L63 60L62 59L61 57L60 55L58 54L56 53L57 52L55 53L53 50L54 48L54 46L53 45L51 45L50 43L48 42L47 41L46 39L46 37L44 37L43 36L40 33L39 32L38 31L36 29L36 27L35 26L34 24L33 22L32 20L31 18L30 16L30 14L30 13L28 12L27 11L25 10L23 11L21 9L19 8L20 10L19 13L20 15L21 17L21 20L21 22L22 23L24 25L26 26L28 28L29 30L30 32L32 34L32 35L33 37L34 38L35 39L36 42L37 43L38 45L40 45L41 47L41 49L42 51L42 53L44 56L45 58L45 60L46 61L47 62L49 62L51 64L52 66L53 67L53 69L51 70L50 71L48 68L47 66L46 65L44 64L41 61L39 60L37 58L37 55L37 53L36 51L35 48L33 48L31 46L30 44L28 44L27 44L25 43L24 42L22 41L20 39L19 38L21 38L23 37L24 38L24 37L24 34L24 32L21 28L19 27L18 26L15 24L14 22L14 20L12 18L12 16L11 15L10 13L9 11L8 9L7 7L6 5L5 3Z" class="mk" data-mk="MX"/><path d="M253 100L254 101L256 102L258 102L259 104L257 104L256 104L254 104L252 105L250 104L249 103L248 102L246 102L247 101L251 100Z"/><path d="M216 123L214 123L212 124L210 125L208 125L206 125L205 124L204 126L203 127L202 129L200 130L198 129L196 131L195 131L194 133L193 134L192 136L190 136L189 134L188 133L187 132L187 130L185 129L183 130L182 129L180 128L178 127L179 125L178 124L180 122L182 121L184 119L186 118L188 117L190 118L193 118L195 118L197 117L200 116L202 117L204 117L207 117L209 118L212 120L210 120L212 121L213 121L215 122Z"/><path d="M287 92L287 94L287 96L287 97L286 99L287 101L287 103L285 102L282 102L281 102L278 102L276 102L274 103L272 102L270 101L270 99L272 99L275 100L280 100L281 100L283 100L281 98L281 96L281 94L279 93L277 93L278 91L280 91L283 92L285 92Z"/><path d="M355 185L354 183L352 182L351 180L352 179L352 177L352 176L354 175L356 174L357 173L356 172L355 170L356 169L358 168L359 167L361 166L359 164L361 165L363 166L365 167L367 169L368 170L369 171L369 173L368 175L368 177L368 176L369 174L372 175L373 176L375 178L377 179L377 180L377 182L376 184L376 186L374 186L373 187L373 189L372 191L373 193L374 195L375 196L376 196L377 198L377 200L378 201L379 203L380 204L378 205L376 205L375 206L373 206L372 207L370 207L369 208L367 209L365 209L364 208L362 206L361 205L361 203L360 201L360 198L360 197L360 195L362 193L362 191L361 190L359 189L359 187L360 185L358 184L356 185Z"/><path d="M160 126L160 124L161 122L160 121L161 118L162 117L165 116L168 116L169 116L171 116L171 114L170 113L169 111L167 110L165 109L167 108L167 106L170 105L172 105L175 105L177 105L179 106L179 108L179 111L178 113L178 116L178 117L180 117L182 118L185 118L183 120L181 121L179 122L179 124L178 126L176 127L176 128L174 129L173 131L171 130L166 130L163 129L160 126Z"/><path d="M393 203L395 200L396 198L396 196L397 194L396 193L395 192L394 190L394 188L394 186L395 184L397 182L400 182L404 183L406 186L407 187L409 188L409 189L411 190L411 192L410 194L408 196L408 197L407 199L406 201L405 202L403 203L402 203L400 203L398 202L396 204L394 203Z"/><path d="M178 127L179 127L181 128L182 129L184 130L186 130L188 130L187 132L187 134L185 135L182 134L181 134L178 133L175 132L173 131L174 129L175 128L176 127Z"/><path d="M265 218L263 218L264 219L265 221L265 223L263 225L263 227L261 229L260 230L258 231L256 233L253 234L251 235L249 235L248 237L247 238L246 239L245 241L244 243L244 244L243 246L242 247L240 248L239 247L238 245L237 245L235 244L233 245L233 243L234 241L234 240L234 238L235 237L237 234L237 232L237 230L236 232L235 233L233 233L231 232L230 231L231 229L230 227L231 225L230 223L232 222L233 221L234 218L235 216L235 213L236 212L238 211L240 210L242 209L244 209L246 210L248 211L250 212L251 213L252 215L253 215L255 215L257 215L258 214L260 215L261 216L263 217L265 218Z"/><path d="M287 103L287 101L285 100L287 99L286 97L287 96L287 94L287 92L289 91L291 91L293 91L295 92L296 93L298 93L299 95L302 95L300 96L302 97L304 97L307 99L307 101L306 102L304 101L302 101L300 101L297 101L295 102L293 101L291 102L290 104L289 106L287 105Z"/><path d="M224 69L226 70L228 69L229 70L232 70L233 71L235 71L237 71L238 73L240 74L242 74L247 76L249 78L251 79L253 79L255 81L256 81L259 82L261 83L263 83L262 85L264 86L267 86L269 87L270 88L272 89L270 90L268 90L266 91L263 91L259 90L257 91L256 91L253 91L250 91L251 90L253 88L253 87L251 86L249 86L247 85L246 84L245 82L243 80L241 80L236 79L234 78L233 76L230 77L228 75L227 76L224 76L223 74L225 74L224 73L219 72L217 74L215 75L214 76L211 76L211 77L208 78L207 78L208 77L209 75L210 73L215 71L219 70L221 69L224 69Z"/><path d="M220 157L218 157L217 159L218 161L218 163L218 164L218 166L216 165L215 163L215 165L213 164L213 162L212 160L210 159L208 158L207 157L204 154L203 153L204 155L205 155L204 157L203 156L201 155L200 154L199 152L200 151L199 149L200 148L202 148L205 149L207 148L209 148L210 150L212 150L214 152L216 154L218 156L219 157Z"/><path d="M289 143L287 144L285 145L284 147L282 148L281 149L280 152L279 153L279 156L278 157L277 159L279 159L281 162L282 164L283 166L282 168L282 170L284 171L285 173L286 173L289 173L291 174L293 173L294 173L296 174L298 175L299 177L301 179L303 179L305 179L307 179L309 178L311 178L313 178L313 180L312 181L312 183L311 185L311 188L311 190L312 192L312 194L314 195L313 197L311 199L313 200L314 201L315 202L315 204L316 207L317 209L316 210L316 207L315 206L314 204L312 204L311 206L310 205L307 206L304 206L302 206L300 206L299 206L299 209L299 210L301 211L303 211L303 213L301 213L299 213L298 213L297 216L297 218L299 219L300 220L300 222L301 224L301 226L301 228L300 231L300 233L299 236L299 238L299 240L298 242L297 242L295 241L293 240L295 237L297 235L296 233L294 232L292 231L290 231L288 231L287 230L285 231L283 232L282 232L280 232L278 231L278 229L277 228L276 227L275 225L274 224L272 223L271 222L270 220L269 219L267 218L265 217L264 217L262 216L260 215L259 214L257 215L256 215L253 215L252 215L251 213L250 212L248 211L246 210L244 209L243 208L242 207L243 205L244 204L244 202L246 202L248 201L249 200L250 199L251 197L252 195L254 193L252 192L252 191L252 189L252 187L252 185L252 183L252 182L252 180L251 178L252 176L250 174L249 173L249 171L249 169L251 170L252 168L252 166L252 165L253 165L255 166L256 168L256 165L255 164L256 163L259 161L260 159L261 158L263 158L262 156L263 155L263 153L264 151L265 150L267 148L270 148L271 148L272 146L274 147L277 146L281 144L282 143L284 142L285 140L287 139L290 140L291 142L289 143Z" class="mk" data-mk="CO"/><path d="M295 333L297 332L299 331L299 329L300 328L302 329L303 331L303 333L304 335L304 336L305 338L307 339L306 342L307 343L305 345L306 347L307 348L307 350L308 351L309 353L309 355L310 357L310 359L311 361L311 363L314 363L316 364L316 365L315 368L314 370L313 371L311 372L308 373L307 374L307 376L307 377L306 380L307 382L307 384L306 386L307 389L308 390L307 392L305 392L304 394L303 396L302 398L301 399L300 401L299 402L299 405L298 407L298 409L298 410L298 412L298 414L297 415L296 417L295 419L295 420L294 422L294 423L295 425L296 427L296 429L297 430L297 432L297 434L297 436L299 437L298 439L298 442L298 443L297 445L296 447L295 450L295 452L295 453L295 456L295 457L293 459L292 460L291 462L290 464L290 466L291 468L290 470L291 472L291 474L292 476L292 478L290 478L289 479L289 482L289 483L288 485L287 487L287 489L287 490L286 492L286 494L286 496L286 499L286 501L286 503L287 504L286 506L285 507L285 508L284 511L284 513L286 514L286 516L286 517L287 519L287 521L286 522L286 524L289 525L290 527L289 528L287 528L285 528L286 529L288 531L289 532L288 534L287 535L287 537L287 539L286 541L287 543L287 545L286 546L285 548L286 550L285 551L283 552L283 554L282 556L283 558L283 560L282 562L282 563L281 565L280 566L278 567L278 569L276 569L275 572L276 574L276 576L277 578L277 581L278 582L280 582L282 582L283 584L283 586L283 588L283 590L284 593L285 594L286 596L289 596L292 596L295 596L298 596L299 596L303 597L304 598L306 598L304 598L301 598L300 600L298 601L295 602L293 603L292 605L292 608L292 611L291 614L290 615L287 614L285 613L283 611L283 608L286 608L286 610L287 608L289 607L290 605L289 603L286 606L283 607L282 609L282 611L279 609L280 607L280 605L281 603L282 604L284 602L286 603L288 602L286 601L284 601L282 602L281 601L280 603L279 605L279 606L277 606L276 605L277 603L278 602L275 603L273 603L273 601L272 600L271 598L274 598L275 596L277 597L279 596L281 596L282 597L281 599L282 597L281 596L282 594L280 591L278 590L280 592L282 593L279 594L278 596L276 596L275 594L273 593L272 593L273 592L273 589L272 588L270 587L269 587L267 585L266 583L268 583L268 581L269 579L271 581L272 584L274 585L274 583L275 581L273 584L272 582L273 581L271 580L270 579L270 577L273 576L271 574L271 572L273 572L272 571L273 569L273 567L272 569L271 571L271 570L270 567L270 564L271 563L272 562L271 562L269 560L269 557L271 557L274 557L276 559L275 557L275 554L274 556L272 557L271 557L269 555L269 553L271 554L270 552L271 550L272 548L271 546L269 547L267 546L267 543L265 545L263 545L264 547L262 546L264 543L266 541L266 539L268 537L270 537L272 537L272 534L274 534L273 537L273 539L271 541L272 541L273 539L274 538L275 540L274 542L273 544L275 543L275 541L275 539L275 537L274 536L276 534L277 533L279 534L278 532L276 531L279 529L281 528L281 525L279 524L277 523L278 520L279 518L278 517L279 515L280 513L280 511L280 509L280 507L283 508L282 506L282 504L280 504L281 502L283 501L281 502L280 500L278 502L276 503L275 501L274 500L273 497L273 495L274 492L274 490L275 488L276 486L277 483L276 477L276 475L276 473L276 471L275 470L275 468L275 466L277 466L278 465L278 463L279 461L280 456L282 455L282 453L283 451L284 448L285 446L285 444L286 441L287 439L287 437L287 435L289 431L289 429L288 425L288 423L287 421L287 418L287 414L289 413L289 410L289 407L288 404L289 403L290 401L290 398L291 397L292 395L292 393L293 391L293 388L294 386L294 384L294 381L295 379L294 376L294 373L294 370L295 368L294 366L294 364L296 363L296 361L296 358L297 356L297 353L296 348L297 345L297 342L296 340L296 336L295 333ZM306 602L306 605L306 608L306 611L306 614L306 617L306 620L306 623L306 625L303 626L301 625L299 624L297 625L296 624L293 624L290 624L286 623L286 621L288 621L290 621L292 620L293 621L295 622L294 620L292 617L292 615L293 613L295 615L294 616L295 618L296 620L298 620L299 620L301 621L302 622L303 621L298 617L297 615L297 613L300 612L301 611L301 609L298 609L296 610L295 609L295 607L296 606L296 604L298 604L299 603L300 601L303 602L305 602ZM316 629L315 630L313 629L312 630L310 629L309 628L311 626L314 627L316 628ZM274 516L272 516L271 515L271 513L272 512L272 509L272 508L272 505L273 503L274 503L276 505L276 507L276 509L274 509L275 511L276 512L275 514L274 516ZM270 568L270 571L270 572L270 575L268 576L268 574L267 572L268 571L267 571L267 574L265 575L263 574L263 572L265 571L264 570L265 569L265 567L267 566L267 564L269 564L270 568ZM263 564L263 563L263 560L263 559L264 557L265 559L266 561L266 563L264 564ZM269 563L267 563L266 561L266 559L265 558L267 556L268 558L269 560L269 563ZM279 611L281 612L283 613L284 614L283 616L282 617L280 618L280 616L279 615L278 616L277 615L275 613L274 612L276 610L278 611ZM299 626L304 627L306 627L308 627L306 629L308 629L309 632L310 633L308 633L306 632L305 632L304 630L303 629L302 630L303 632L301 632L300 630L299 629L298 628L298 626ZM289 617L290 617L291 619L291 620L288 619L287 619L285 618L284 616L287 615L289 617ZM274 525L273 526L274 528L274 530L275 531L274 533L272 533L272 531L271 529L270 528L270 525L271 525L272 523L274 523Z" class="mk" data-mk="CL"/><path d="M317 209L319 211L320 212L322 212L324 211L325 212L327 211L328 210L330 209L332 208L334 207L334 206L336 205L337 204L339 202L337 202L335 202L335 200L333 197L333 195L331 193L330 191L331 191L333 191L335 193L336 193L339 192L340 194L342 195L343 193L344 191L346 192L348 191L350 190L352 189L353 189L354 188L356 187L355 185L357 185L359 184L360 186L359 188L361 189L361 191L362 192L362 194L361 195L360 198L360 200L360 202L361 204L361 205L363 207L364 208L366 209L368 209L369 208L371 207L372 207L374 206L376 205L377 204L379 205L381 205L383 205L385 205L384 204L384 201L386 202L388 202L390 201L391 202L393 203L395 204L397 203L399 203L401 203L402 203L404 203L406 201L406 199L407 198L408 196L409 194L410 193L411 192L412 190L414 192L415 194L415 197L416 201L417 202L418 204L419 206L420 206L422 207L422 209L421 210L420 212L419 213L417 216L415 217L413 219L411 222L410 224L409 225L406 226L408 227L411 226L414 225L415 223L416 225L417 226L417 228L419 229L421 229L422 229L424 229L426 228L425 231L424 233L426 229L430 226L431 227L431 225L432 223L433 222L435 221L437 221L439 221L440 222L442 222L443 223L445 223L447 224L449 225L450 227L452 226L454 227L455 228L455 230L455 232L456 230L456 232L455 234L454 236L456 235L457 233L458 234L459 233L462 232L465 232L467 233L470 234L472 234L473 235L475 235L478 235L481 234L484 235L486 236L488 237L490 238L492 240L494 241L496 243L497 244L500 246L502 248L505 249L507 249L511 249L513 252L514 254L514 255L515 259L516 261L516 262L515 264L516 266L515 269L514 273L512 274L511 276L509 278L508 280L506 282L504 283L503 284L502 286L500 288L499 290L498 293L496 295L495 297L493 298L492 296L491 298L490 300L489 302L490 305L489 309L490 311L490 313L490 315L491 316L490 319L489 321L489 322L489 324L488 326L489 328L487 330L486 332L485 335L485 339L485 341L484 342L483 343L482 345L482 346L480 349L478 350L477 354L477 356L474 358L471 361L471 363L468 363L465 363L464 362L464 363L462 364L459 364L458 364L455 364L455 366L453 366L451 367L450 369L447 369L442 371L441 372L439 374L437 376L435 377L434 379L433 380L431 379L429 380L431 381L431 383L430 385L430 388L430 390L430 392L430 394L430 397L430 398L430 400L429 402L428 403L426 404L425 405L423 408L421 411L420 415L418 419L416 421L414 423L413 424L410 426L409 427L409 425L410 425L413 423L414 422L415 420L416 419L417 417L417 415L415 415L414 413L414 415L414 416L413 418L412 420L411 421L409 422L409 424L408 426L408 428L407 430L406 433L405 435L403 437L401 439L400 438L400 435L401 433L402 432L401 431L399 430L399 428L398 427L395 425L394 424L391 422L390 421L388 420L387 418L386 420L384 418L383 417L382 415L380 413L378 413L377 414L375 414L376 412L377 411L379 409L380 408L380 406L382 405L383 403L384 402L385 401L387 399L388 398L390 397L391 396L392 395L394 394L396 393L397 392L398 391L398 389L399 386L398 385L398 382L396 381L394 381L393 380L394 379L394 376L395 374L395 372L394 370L392 369L391 370L389 370L388 369L387 367L387 365L387 363L387 361L386 360L384 359L383 358L381 358L380 359L377 358L375 358L374 357L372 357L372 355L372 354L373 352L373 350L373 348L372 347L371 345L372 344L371 342L372 340L373 338L374 335L374 334L375 332L374 330L373 328L372 327L371 326L369 324L369 322L370 320L366 319L363 319L361 319L359 319L358 317L358 314L356 312L358 312L358 309L357 307L357 305L356 303L354 302L351 302L349 302L347 300L345 299L343 298L341 297L340 296L338 296L337 295L334 295L332 295L331 293L330 292L328 291L327 289L326 288L327 286L326 284L326 282L327 280L327 278L325 278L323 278L321 278L319 279L316 281L314 282L312 283L310 284L308 285L307 286L305 286L302 285L300 285L299 285L296 286L294 285L294 283L294 280L294 278L294 276L292 277L291 278L289 279L288 279L286 279L284 279L284 277L282 276L280 276L278 276L279 274L279 272L277 271L276 269L275 268L274 266L273 265L273 263L275 262L274 260L276 258L278 258L278 256L278 254L279 252L280 250L281 248L282 247L284 246L285 245L287 245L289 244L292 244L293 243L295 243L296 244L298 242L299 240L299 238L299 236L300 233L300 231L300 229L301 227L301 225L301 223L300 221L299 220L297 218L297 216L297 213L299 213L301 212L302 213L303 211L301 211L299 210L299 209L299 206L300 206L302 206L304 206L307 206L309 206L309 205L310 206L312 205L313 204L315 206L316 207L316 209ZM424 218L426 218L429 218L431 218L431 220L431 222L430 224L429 226L427 226L426 227L424 228L422 228L420 228L418 227L417 225L418 224L417 223L417 221L417 219L419 218L424 218Z" class="mk" data-mk="BR"/><path d="M301 327L300 326L301 325L302 323L303 322L304 320L303 319L301 316L302 314L302 311L302 309L303 308L304 306L304 304L303 303L304 301L304 298L305 297L306 295L305 294L304 291L302 289L301 287L302 285L305 286L307 286L308 285L310 284L311 284L313 282L314 282L318 279L319 279L323 278L325 278L326 277L327 279L326 282L326 284L327 286L326 287L327 289L328 291L330 292L331 293L332 295L334 295L336 295L338 296L340 296L341 297L343 298L345 299L347 300L348 301L350 302L353 301L355 302L357 304L357 305L357 307L358 312L356 312L357 313L358 316L358 318L361 319L363 319L366 319L369 320L369 322L369 323L370 325L372 327L373 328L374 330L375 332L374 334L374 335L374 337L372 340L371 342L373 343L371 345L371 343L369 341L367 340L365 339L362 339L360 339L357 340L354 340L350 341L348 342L348 344L346 346L345 347L345 349L345 351L345 353L344 355L344 357L343 358L342 357L339 357L337 357L335 357L334 359L333 361L332 359L330 358L329 358L326 357L324 358L322 356L320 357L318 358L317 360L316 361L315 362L313 363L311 362L311 360L310 358L310 357L309 354L309 352L307 350L307 348L306 347L305 345L307 343L306 342L307 340L306 339L304 337L304 335L303 333L303 331L302 329L301 327Z"/><path d="M179 105L180 104L182 102L184 100L185 101L185 104L185 107L184 109L184 112L183 115L181 116L179 117L178 116L178 113L179 111L179 109L179 106Z"/><path d="M374 413L373 416L373 418L373 420L372 422L372 424L371 426L371 427L371 430L371 434L369 435L369 439L369 441L370 443L369 445L370 446L373 448L375 449L376 450L377 453L376 454L376 457L378 459L380 459L380 462L380 464L378 468L376 470L375 473L371 475L366 477L362 478L354 480L351 480L348 480L346 478L345 481L346 482L347 484L346 487L345 490L345 492L346 493L345 495L342 497L340 497L337 497L334 496L332 495L330 495L328 495L328 497L328 501L328 504L329 506L331 507L332 508L334 508L333 506L335 505L337 507L337 509L337 511L335 512L333 510L332 509L330 510L328 511L331 512L333 513L330 514L329 515L327 517L327 520L327 522L327 524L326 525L325 527L325 529L321 530L319 531L317 532L315 535L314 537L313 539L312 540L313 542L314 544L318 548L322 549L324 550L324 553L322 555L324 557L322 558L320 560L318 562L316 563L315 565L313 566L312 569L311 575L309 577L307 576L306 575L304 576L306 576L307 578L305 579L304 581L303 583L302 585L303 589L304 591L302 591L304 592L306 596L307 598L307 599L306 598L303 597L301 597L298 596L295 596L292 596L289 596L287 596L285 594L284 593L283 592L283 589L283 587L283 585L283 583L281 582L279 583L278 582L277 579L276 577L276 575L276 573L276 571L278 569L278 567L280 566L281 565L282 563L282 562L283 560L283 558L282 557L282 555L283 553L285 551L286 550L285 548L286 546L287 545L287 543L286 541L287 539L287 537L287 535L288 534L289 532L288 531L286 529L285 528L287 528L289 528L290 527L290 525L286 525L286 523L287 521L286 519L286 517L286 516L287 514L285 514L284 511L284 509L285 507L285 506L287 505L286 503L286 501L286 499L286 496L286 494L286 492L287 491L286 489L287 487L287 486L288 484L289 482L289 480L290 478L292 478L292 476L291 474L291 472L290 470L291 468L290 466L290 464L291 462L292 460L293 459L294 458L295 456L295 453L295 452L295 450L295 448L296 446L297 445L298 443L298 441L298 438L299 436L297 435L297 434L297 431L296 429L295 427L295 425L294 423L294 422L295 420L295 419L296 417L297 415L298 414L298 412L298 410L298 409L297 407L299 406L299 403L300 402L301 400L302 398L303 397L304 395L305 393L306 392L308 391L307 389L306 387L307 385L307 382L306 380L307 379L307 377L307 375L307 374L310 372L313 371L314 370L315 368L316 365L316 364L315 362L316 361L317 360L318 358L320 358L321 356L323 357L325 357L328 358L330 358L332 359L332 362L334 360L335 357L337 357L339 357L342 357L343 358L345 360L347 363L348 365L350 366L352 367L353 369L356 370L359 370L362 372L363 373L368 376L369 376L371 377L373 378L374 379L374 381L373 383L371 385L371 387L371 388L370 390L369 391L368 393L371 393L373 393L376 394L378 394L379 394L381 394L383 393L385 393L387 393L388 392L389 391L391 390L392 388L393 386L393 384L393 381L395 381L397 381L398 384L399 386L398 389L398 391L397 392L396 393L394 394L392 395L391 396L390 397L388 398L387 399L386 400L385 401L384 402L382 404L381 406L380 407L379 409L377 411L376 412L374 413ZM306 625L306 623L306 620L306 617L306 614L306 611L306 608L306 605L306 602L308 605L309 607L307 608L309 609L310 612L312 614L313 615L314 617L316 618L318 620L320 621L321 622L322 623L324 623L326 623L327 625L326 626L323 626L321 627L319 627L317 626L311 626L309 625L307 625Z"/><g id="lmapLabels"><text x="261" y="276" text-anchor="middle">Peru</text><text x="99" y="52" text-anchor="middle">Mexico</text><text x="280" y="185" text-anchor="middle">Colombia</text><text x="267" y="456" text-anchor="end">Chile</text><text x="414" y="286" text-anchor="middle">Brazil</text></g></svg></div>
+      <div class="reveal">
+        <p class="eyebrow">Five markets, five ways to pay</p>
+        <h2 id="h-map" style="font-size:clamp(24px,2.6vw,32px);letter-spacing:-.025em;line-height:1.15;margin:6px 0 16px">Cards are only part of the story</h2>
+        <div class="mk-tabs" role="group" aria-label="Choose a market" id="mkTabs"></div>
+        <div class="mk-card" id="mkCard" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-sec" id="home-how" aria-labelledby="h-how">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">How it works</p>
+        <h2 id="h-how">From merchant profile to a decision your team owns</h2>
+        <p>The tool predicts; people decide. Every step shows where its numbers come from.</p>
+      </div>
+      <ol class="steps"><span class="prog" aria-hidden="true"></span>
+        <li><b>Describe the merchant</b><p>Target markets, industry, ticket size, risk, local entity and, if available, its own payment history.</p></li>
+        <li><b>Learn from similar merchants</b><p>Their real approval rates with each provider become the starting point, adjusted with the merchant's own results.</p></li>
+        <li><b>Compare the options</b><p>Sales, costs and time to go live for each option, compared on first‑year profit.</p></li>
+        <li class="human"><b>Decide, then keep watching</b><p>The payments team approves or overrides with a reason. Review alerts reopen the decision when results drift.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="home-sec" aria-labelledby="h-trust">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Principles</p>
+        <h2 id="h-trust">Built to be challenged</h2>
+      </div>
+      <div class="principles reveal">
+        <article><span class="ico"><svg width="18" height="18" aria-hidden="true"><use href="#i-scale"/></svg></span><h3>Provider‑agnostic</h3><p>No provider can pay for its ranking. The method is disclosed, so the payments team can check why a setup wins.</p></article>
+        <article><span class="ico"><svg width="18" height="18" aria-hidden="true"><use href="#i-sigma"/></svg></span><h3>Uncertainty on every estimate</h3><p>Approval estimates come with a range, a sample size and their source. Thin data is flagged instead of hidden.</p><div class="eg"><span class="sig">about 81% (likely 78–85%)</span><span class="pill mute">Similar merchants</span><span class="pill warn">Few similar merchants</span></div></article>
+        <article><span class="ico good"><svg width="18" height="18" aria-hidden="true"><use href="#i-person"/></svg></span><h3>People make the call</h3><p>Contracts, pricing and relationships stay with the Head of Payments, Finance and Legal. Overrides are expected and logged.</p></article>
+        <article><span class="ico warn"><svg width="18" height="18" aria-hidden="true"><use href="#i-bell"/></svg></span><h3>Reopened on evidence</h3><p>Approval drift, a shift in payment-method mix or a better peer benchmark triggers a review, and so does the 6‑month calendar.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-sec" aria-labelledby="h-measure">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">What we measure</p>
+        <h2 id="h-measure">Better decisions, not just better predictions</h2>
+      </div>
+      <div class="measure reveal">
+        <div><b>Approval rate</b><span>Card payments approved out of 100 tried</span></div>
+        <div><b>Payment cost per sale</b><span>Fees, currency exchange and platform costs per completed sale</span></div>
+        <div><b>Time to launch</b><span>Decision to first live payment in a new market</span></div>
+        <div><b>Override rate</b><span>Where people disagree with the model, and why</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-sec" aria-labelledby="h-cta">
+    <div class="wrap">
+      <div class="band reveal">
+        <div><h2 id="h-cta">Try it with your own merchant profile</h2><p>Change markets, ticket size or risk and watch the recommendation, the decision canvas and the review alerts update.</p></div>
+        <a class="btn" href="#reco">Open the workspace <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= WORKSPACE ================= -->
+<div id="workspace" class="shell" hidden>
+  <aside class="side" id="side" aria-label="Workspace">
+    <a class="side-brand" href="#home" aria-label="Rumbo, overview"><svg xmlns="http://www.w3.org/2000/svg" viewBox="40 -628 4284 668" height="20" width="130.1" role="img" aria-label="Rumbo" class="wordmark" focusable="false"><g transform="scale(1,-1)"><path transform="translate(0,0)" d="M729 -10Q689 -10 640.0 2.5Q591 15 543 64L501 106Q471 136 443.5 155.0Q416 174 381.0 183.5Q346 193 293 193H285V0H90V508L80 589H543Q607 589 646.5 573.5Q686 558 707.5 532.5Q729 507 737.0 475.0Q745 443 745 410V391Q745 331 714.5 283.5Q684 236 618 216Q643 201 665.5 185.5Q688 170 717 153Q750 134 778.5 125.5Q807 117 826.0 115.0Q845 113 848 113L818 0Q806 -3 781.5 -6.5Q757 -10 729 -10ZM401 326Q426 326 449.5 327.0Q473 328 492 330Q526 334 538.5 351.5Q551 369 551 394V405Q551 427 538.5 439.0Q526 451 493 451H285V330Q310 329 340.0 327.5Q370 326 401 326Z" fill="currentColor"/><path transform="translate(892,0)" d="M268 -10Q168 -10 116.5 37.0Q65 84 65 189V588H260V207Q260 160 283.0 144.0Q306 128 340 128H469Q501 128 525.0 144.5Q549 161 549 207V588H741V189Q741 84 690.5 37.0Q640 -10 539 -10Z" fill="currentColor"/><path transform="translate(1732,0)" d="M90 0V508L80 588H322L498 238L678 588H907V0H716V337H705L663 229L590 60H408L332 229L291 337H281V0Z" fill="currentColor"/><path transform="translate(2753,0)" d="M80 0V589H536Q630 589 673.0 551.5Q716 514 716 461V431Q716 390 698.5 363.5Q681 337 661 326Q705 312 731.0 277.5Q757 243 757 187V169Q757 139 750.0 109.0Q743 79 723.5 54.5Q704 30 668.5 15.0Q633 0 576 0ZM275 362H475Q501 362 511.0 373.0Q521 384 521 403V413Q521 434 511.0 443.0Q501 452 466 452H275ZM275 137H516Q542 137 552.0 146.5Q562 156 562 177V195Q562 214 549.0 224.5Q536 235 504 235H275Z" fill="currentColor"/><circle cx="3944.0" cy="294.0" r="300" fill="var(--brand)"/><polygon points="4092.5,442.5 3926.5,151.1 3903.7,253.7 3801.1,276.5" fill="var(--brand-ink)"/></g></svg><span class="bdesc">Your payments compass</span></a>
+    <button class="acct" type="button" id="acctBtn" data-edit aria-controls="profileDrawer" aria-expanded="false"><span class="acct-av" id="acctAv" aria-hidden="true">LA</span><span class="acct-t"><b id="acctName">Lumen Atelier</b><small id="acctSub">Fashion</small></span><svg width="16" height="16" aria-hidden="true"><use href="#i-updown"/></svg><span class="sr-only">Edit merchant profile</span></button>
+    <p class="side-h" id="sh-mk">Markets (<span id="mkCount">2</span>)</p>
+    <div class="side-list" id="mktSwitch" role="group" aria-labelledby="sh-mk"></div>
+    <nav aria-label="Decision steps">
+      <p class="side-h">Decision</p>
+      <div class="side-list">
+        <a class="side-link" id="nav-reco" href="#reco" data-view="reco"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>Suggestion</a>
+        <a class="side-link" id="nav-canvas" href="#canvas" data-view="canvas"><svg width="18" height="18" aria-hidden="true"><use href="#i-grid"/></svg>Decision canvas</a>
+        <a class="side-link" id="nav-decide" href="#decide" data-view="decide"><svg width="18" height="18" aria-hidden="true"><use href="#i-person"/></svg>Team decision</a>
+        <a class="side-link" id="nav-monitor" href="#monitor" data-view="monitor"><svg width="18" height="18" aria-hidden="true"><use href="#i-bell"/></svg>After launch<span class="badge" id="alertBadge" aria-label="1 alert needs action">1</span></a>
+      </div>
+      <p class="side-h">Learn</p>
+      <div class="side-list">
+        <a class="side-link" id="nav-how" href="#how" data-view="how"><svg width="18" height="18" aria-hidden="true"><use href="#i-info"/></svg>How it works</a>
+        <a class="side-link" id="nav-home" href="#home" data-view="home"><svg width="18" height="18" aria-hidden="true"><use href="#i-home"/></svg>Overview</a>
+      </div>
+    </nav>
+    <p class="side-foot"><b>Class prototype.</b> All figures are synthetic and providers are anonymized. The AI suggests; your team decides.</p>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+  <div class="shell-main">
+    <header class="topbar">
+      <button class="iconbtn menu" id="menuBtn" type="button" aria-label="Open menu" aria-controls="side" aria-expanded="false"><svg width="20" height="20" aria-hidden="true"><use href="#i-menu"/></svg></button>
+      <p class="crumb" id="crumb"></p>
+      <span class="synth"><i aria-hidden="true"></i><span class="long">Prototype · synthetic data</span><span class="short">Synthetic</span></span>
+      <button class="btn ghost sm demo-btn" type="button" id="demoBtn"><svg width="16" height="16" aria-hidden="true"><use href="#i-play"/></svg><span class="t">Start demo</span><span class="sr-only">Start guided demo</span></button>
+      <a class="iconbtn" href="#monitor" id="bellBtn" aria-label="Alerts: 1 needs action"><svg width="20" height="20" aria-hidden="true"><use href="#i-bell"/></svg><i class="dot" aria-hidden="true"></i></a>
+      <a class="iconbtn" href="#how" aria-label="How it works"><svg width="20" height="20" aria-hidden="true"><use href="#i-info"/></svg></a>
+      <span class="avatar" role="img" aria-label="Signed in as Head of Payments (example user)" title="Head of Payments (example user)">HP</span>
+    </header>
+    <main id="results" class="content" tabindex="-1">
+      <p class="sr-only" aria-live="polite" id="liveStatus"></p>
+      <div class="pagehead">
+        <div><h1 id="pageTitle">Suggestion</h1><p class="sub" id="pageSub"></p></div>
+        <button class="btn ghost" type="button" id="editProfile" data-edit aria-controls="profileDrawer" aria-expanded="false"><svg width="16" height="16" aria-hidden="true"><use href="#i-edit"/></svg>Edit profile</button>
+      </div>
+      <section aria-labelledby="pageTitle" data-panel="reco" id="v-reco"></section>
+      <section aria-labelledby="pageTitle" data-panel="canvas" id="v-canvas" hidden></section>
+      <section aria-labelledby="pageTitle" data-panel="decide" id="v-decide" hidden></section>
+      <section aria-labelledby="pageTitle" data-panel="monitor" id="v-monitor" hidden></section>
+      <section aria-labelledby="pageTitle" data-panel="how" id="v-how" hidden></section>
+      <p class="wsfoot">Rumbo is a class project for <i>Artificial Intelligence and Strategic Decisions</i> (IE Business School, 2026), not a commercial product. Provider names are anonymized archetypes; approval rates, fees and peer groups are synthetic. Brazil's checkout mix (Pix 42%, cards 41%) follows EBANX 2025 as reported by PYMNTS.</p>
+    </main>
+  </div>
+  <aside class="rail drawer" id="profileDrawer" aria-labelledby="pdTitle" hidden>
+    <div class="drawer-h"><h2 id="pdTitle">Merchant profile</h2><button class="iconbtn" type="button" id="drawerClose" aria-label="Close merchant profile"><svg width="18" height="18" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+      <p class="note">Pre-filled with a fictional example merchant. Change any field and the suggestion updates.</p>
+
+      <div class="field"><label for="mName">Merchant</label><input id="mName" type="text" value="Lumen Atelier (example)"></div>
+      <div class="row2">
+        <div class="field"><label for="mHome">Home market</label>
+          <select id="mHome"><option value="ES" selected>Spain (EUR)</option><option value="FR">France (EUR)</option><option value="IT">Italy (EUR)</option><option value="DE">Germany (EUR)</option></select></div>
+        <div class="field"><label for="mInd">Industry</label>
+          <select id="mInd"><option value="fashion" selected>Fashion</option><option value="electronics">Electronics</option><option value="digital">Digital goods</option><option value="travel">Travel</option></select></div>
+      </div>
+      <div class="field"><span class="lbl">Target markets</span>
+        <div class="chips" id="mMarkets" role="group" aria-label="Target markets"></div><p class="hint" id="h-markets" hidden></p></div>
+      <div class="row2">
+        <div class="field"><label for="mTicket">Average order (€)</label><input id="mTicket" type="number" inputmode="decimal" min="5" max="2000" step="5" value="65" aria-describedby="h-mTicket"><p class="hint" id="h-mTicket" hidden></p></div>
+        <div class="field"><label for="mVol">Checkouts a month, per market</label><input id="mVol" type="number" inputmode="numeric" min="100" max="2000000" step="500" value="8000" aria-describedby="h-mVol"><p class="hint" id="h-mVol" hidden></p></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="mRisk">Fraud risk</label>
+          <select id="mRisk"><option value="low">Low</option><option value="med" selected>Medium</option><option value="high">High</option></select></div>
+        <div class="field"><label for="mMargin">Profit margin on sales</label>
+          <select id="mMargin"><option value="0.25">25%</option><option value="0.35">35%</option><option value="0.40" selected>40%</option><option value="0.55">55%</option></select></div>
+      </div>
+      <label class="check"><input id="mEntity" type="checkbox"> Has a local company in these markets</label>
+      <label class="check"><input id="mOwn" type="checkbox" checked> <span>Already sells cross-border to <span id="ownMktName">one of its target markets</span> through its current payment provider</span></label>
+      <div class="subbox" id="ownBox">
+        <div class="field"><label for="mOwnMkt">Which market</label><select id="mOwnMkt"></select></div>
+        <div class="row2">
+          <div class="field"><label for="mOwnN">Card payments tried (last 3 months)</label><input id="mOwnN" type="number" inputmode="numeric" min="0" step="100" value="4800"></div>
+          <div class="field"><label for="mOwnA">Of which approved</label><input id="mOwnA" type="number" inputmode="numeric" min="0" step="10" value="2780" aria-describedby="h-mOwnA"></div>
+        </div>
+        <p class="hint" id="h-mOwnA" hidden></p>
+        <p class="note" style="margin:0" id="ownNote">The tool starts from similar merchants' results, then adjusts them with yours.</p>
+      </div>
+  </aside>
+</div>
+</div>
+
+<div class="tour" id="tour" hidden>
+  <div class="tour-hole" id="tourHole"></div>
+  <div class="tour-card" id="tourCard" role="dialog" aria-modal="false" aria-labelledby="tourTitle">
+    <span class="k" id="tourStep">Step 1 of 7</span>
+    <h2 id="tourTitle"></h2>
+    <p id="tourText"></p>
+    <div class="tour-dots" id="tourDots" aria-hidden="true"></div>
+    <div class="tour-act"><button class="linkbtn" type="button" id="tourExit">Exit demo</button><span><button class="btn ghost" type="button" id="tourBack">Back</button> <button class="btn" type="button" id="tourNext">Next</button></span></div>
+  </div>
+</div>
+
+<footer class="sitefoot">
+  <div class="wrap">
+    <p><b>Rumbo</b>, your payments compass, is a group project for <i>Artificial Intelligence and Strategic Decisions</i>. Master in Management, IE Business School (2026). It is a class prototype, not a commercial product. Provider names are anonymized archetypes so the tool stays provider-agnostic. Approval rates, fees, peer cohorts and integration times are synthetic and illustrative. The Brazil checkout mix (Pix 42%, cards 41%) follows EBANX's 2025 figures as reported by PYMNTS; other markets' method mixes are team assumptions to be validated.</p>
+    <nav aria-label="Footer"><a href="#home">Overview</a><a href="#reco">Workspace</a><a href="#how">Method</a></nav>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+try{const l=document.createElement("link");l.rel="icon";l.type="image/svg+xml";l.href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-106.5 -677.0 820 820'%3E%3Cg transform='scale(1,-1)'%3E%3Cellipse cx='303.5' cy='267.0' rx='249.4' ry='265.1' fill='%23F08A24'/%3E%3Cpolygon points='427.2,390.7 288.9,147.9 269.6,233.1 184.4,252.4' fill='%23FFFFFF'/%3E%3C/g%3E%3C/svg%3E";document.head.appendChild(l);}catch(e){}
+/* ---------- Reference data (synthetic unless noted) ---------- */
+const MARKETS = {
+  BR:{name:"Brazil", cur:"BRL", installments:true, xb:.62, local:.83, methods:[
+    {id:"card",label:"Cards",cat:"card",share:.41},
+    {id:"pix",label:"Pix",cat:"instant",share:.42,comp:.88},
+    {id:"boleto",label:"Boleto",cat:"cash",share:.06,comp:.55},
+    {id:"wallet",label:"Local wallets",cat:"wallet",share:.11,comp:.90}]},
+  MX:{name:"Mexico", cur:"MXN", installments:true, xb:.70, local:.84, methods:[
+    {id:"card",label:"Cards",cat:"card",share:.55},
+    {id:"oxxo",label:"OXXO cash",cat:"cash",share:.14,comp:.60},
+    {id:"spei",label:"SPEI transfer",cat:"instant",share:.16,comp:.85},
+    {id:"wallet",label:"Local wallets",cat:"wallet",share:.15,comp:.90}]},
+  CO:{name:"Colombia", cur:"COP", installments:true, xb:.63, local:.80, methods:[
+    {id:"card",label:"Cards",cat:"card",share:.46},
+    {id:"pse",label:"PSE transfer",cat:"instant",share:.34,comp:.80},
+    {id:"efecty",label:"Efecty cash",cat:"cash",share:.08,comp:.55},
+    {id:"nequi",label:"Nequi wallet",cat:"wallet",share:.12,comp:.90}]},
+  CL:{name:"Chile", cur:"CLP", installments:true, xb:.76, local:.87, methods:[
+    {id:"card",label:"Cards",cat:"card",share:.68},
+    {id:"transfer",label:"Bank transfer",cat:"instant",share:.20,comp:.85},
+    {id:"wallet",label:"Local wallets",cat:"wallet",share:.12,comp:.90}]},
+  PE:{name:"Peru", cur:"PEN", installments:false, xb:.66, local:.81, methods:[
+    {id:"card",label:"Cards",cat:"card",share:.52},
+    {id:"yape",label:"Yape / Plin",cat:"wallet",share:.30,comp:.90},
+    {id:"pagoef",label:"PagoEfectivo cash",cat:"cash",share:.18,comp:.60}]}
+};
+const ALL = Object.keys(MARKETS);
+// Provider archetypes. fees: [percent incl. FX/cross-border, fixed € per approved txn]
+const PROVIDERS = {
+  GP:{name:"Your current provider (Europe, cross-border)", short:"Your current provider", a:"your current provider", markets:ALL, entity:false, route:"xb", covers:["card"], inst:false, adj:0,
+      fees:{card:[.044,.25]}, onboard:0, integ:0, live:true, desc:"Your existing European PSP. Cards are acquired in the EU, so Latin American issuers see a cross-border transaction."},
+  GL:{name:"Global provider with a local licence", short:"Global provider, local licence", a:"a global provider with a local licence", markets:["BR","MX","CL"], entity:true, route:"local", covers:["card","instant"], inst:true, adj:.01,
+      fees:{card:[.032,.20],instant:[.015,0]}, onboard:6, integ:4, desc:"A global PSP that holds local acquiring licences. Needs the merchant to have a local entity."},
+  XS:{name:"Latin America specialist", short:"Latin America specialist", a:"a Latin America specialist", markets:ALL, entity:false, route:"local", covers:["card","instant","cash","wallet"], inst:true, adj:-.01,
+      fees:{card:[.040,.20],instant:[.025,0],cash:[.020,.90],wallet:[.035,0]}, onboard:3, integ:5, desc:"Processes locally without a local entity and pays out in EUR. Broad local method coverage, higher all-in fees."},
+  LA:{name:"Brazilian acquirer (local bank partner)", short:"Brazilian acquirer", a:"a Brazilian acquirer", markets:["BR"], entity:true, route:"local", covers:["card","instant"], inst:true, adj:.02,
+      fees:{card:[.034,.10],instant:[.019,0]}, onboard:8, integ:6, desc:"Domestic Brazilian acquirer. Lowest processing fees; fees shown include BRL to EUR repatriation. Needs a CNPJ."},
+  AP:{name:"Local payments add-on (no cards)", short:"Local payments add-on", a:"a local payments add-on", markets:ALL, entity:false, route:null, covers:["instant","cash","wallet"], inst:false, adj:0,
+      fees:{instant:[.022,0],cash:[.018,.80],wallet:[.030,0]}, onboard:3, integ:3, desc:"Adds local payment methods only (no cards). Usually combined with a card provider."}
+};
+const IND = {fashion:{l:"Fashion",o:0}, electronics:{l:"Electronics",o:-.25}, digital:{l:"Digital goods",o:-.35}, travel:{l:"Travel",o:-.15}};
+const RISK = {low:.15, med:0, high:-.35};
+const SUBST = .35;          // share of shoppers who switch to card when their preferred method is missing
+const INST_PEN = .90;       // card conversion kept when installments are not offered where they are expected
+const RETRY = .30;          // share of declines that are soft and retriable on a fallback acquirer
+let ORCH_FEE = .05;
+const ORCH_BASE = .05;
+const GATEWAY = .03, ORCH_SETUP = 12000, ORCH_CFG = 5000, DIRECT_INTEG = 30000;
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const logit = p => Math.log(p/(1-p));
+const sig = x => 1/(1+Math.exp(-x));
+const clamp = (x,a,b) => Math.min(b,Math.max(a,x));
+function hash(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return ((h>>>0)%10000)/10000;}
+const eur = v => {const r=Math.round(v); return (r<0?"-":"")+"€"+new Intl.NumberFormat("en-GB",{maximumFractionDigits:0}).format(Math.abs(r));};
+const NF0 = new Intl.NumberFormat("en-GB",{maximumFractionDigits:0}), NF2 = new Intl.NumberFormat("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
+const eurk = v => {const k=Math.round(v/1000); return (k<0?"-":"")+"€"+NF0.format(Math.abs(k))+"k";};
+const eur2 = v => "€"+NF2.format(v);
+const pct = (v,d=1) => (v*100).toFixed(d)+"%";
+const pp = v => {const x=Math.round(v*1000)/10; return (x>=0?"+":"")+(x===0?"0.0":x.toFixed(1))+"\u00a0pts";};
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function phi(z){return Math.exp(-z*z/2)/Math.sqrt(2*Math.PI);}
+function Phi(z){const t=1/(1+.2316419*Math.abs(z));const d=.3989423*Math.exp(-z*z/2);let p=d*t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p;}
+
+/* ---------- Synthetic peer network ---------- */
+// Number of similar merchants and attempts the orchestration network has seen for provider x market x industry.
+function cohort(pid, mk, ind){
+  const p=PROVIDERS[pid], M=MARKETS[mk];
+  const h=hash(pid+mk+ind);
+  let merchants=Math.round(4+h*40);
+  if(ind==="travel" && (mk==="PE"||mk==="CL")) merchants=Math.min(merchants,3);
+  if(pid==="LA" && ind==="digital") merchants=3;
+  const attempts=merchants*Math.round(9000+hash(ind+pid+mk)*30000);
+  const base = p.route==="xb"?M.xb:M.local;
+  const noise=(hash(mk+ind+pid+"n")-.5)*.12;
+  const rate=sig(logit(base)+p.adj*4+IND[ind].o+noise);
+  const marketRate=sig(logit(base)+p.adj*4);
+  return {merchants, attempts, rate, marketRate, thin: merchants<5};
+}
+
+/* ---------- Estimation: card approval per provider for this merchant ---------- */
+function num(id, def, min, max, unit){
+  const el=$("#"+id), raw=el.value.trim(), h=$("#h-"+id); let v=+raw, msg="";
+  if(raw===""||!isFinite(v)){ v=def; msg=`Enter a number. Using ${unit(def)} for now.`; }
+  else if(v<min){ v=min; msg=`Minimum is ${unit(min)}; using ${unit(min)}.`; }
+  else if(v>max){ v=max; msg=`Maximum is ${unit(max)}; using ${unit(max)}.`; }
+  if(h){ h.textContent=msg; h.hidden=!msg; }
+  el.setAttribute("aria-invalid", msg?"true":"false");
+  return v;
+}
+function profile(){
+  const markets=[...document.querySelectorAll("#mMarkets input:checked")].map(i=>i.value);
+  const ownN=Math.max(0,Math.floor(+$("#mOwnN").value)||0); let ownA=Math.max(0,Math.floor(+$("#mOwnA").value)||0);
+  const hA=$("#h-mOwnA"); if(ownA>ownN){ hA.textContent="Approved cannot exceed attempts; using "+NF0.format(ownN)+"."; hA.hidden=false; ownA=ownN; } else hA.hidden=true;
+  return {
+    name:$("#mName").value.trim()||"Merchant", ind:$("#mInd").value,
+    ticket:num("mTicket",65,5,2000,v=>"€"+NF0.format(v)),
+    vol:num("mVol",8000,100,2000000,v=>NF0.format(v)+" checkouts"), risk:$("#mRisk").value, margin:+$("#mMargin").value,
+    entity:$("#mEntity").checked, own:$("#mOwn").checked, ownMkt:$("#mOwnMkt").value||"BR", ownN, ownA,
+    markets: markets.length?markets:["BR"]
+  };
+}
+function estimates(P, mk){
+  const out={}; const M=MARKETS[mk];
+  const tAdj=-.15*Math.log(P.ticket/60), rAdj=RISK[P.risk];
+  let merchantEffect=0, ownInfo=null;
+  for(const pid of Object.keys(PROVIDERS)){
+    const p=PROVIDERS[pid]; if(!p.markets.includes(mk)||!p.covers.includes("card")) continue;
+    const c=cohort(pid,mk,P.ind);
+    const peer = c.thin? sig(logit(c.marketRate)+IND[P.ind].o) : c.rate;   // privacy floor: thin cohorts fall back to market level
+    const m0=sig(logit(peer)+tAdj+rAdj);
+    out[pid]={cohort:c, peer, prior:m0, mean:m0, sd:c.thin?.07:.04, src:c.thin?"Market-level prior (cohort below 5 merchants)":"Peer cohort"};
+  }
+  if(P.own && mk===P.ownMkt && P.ownN>0 && out.GP){
+    const k=3000, x=Math.min(P.ownA,P.ownN), n=P.ownN;
+    const post=(out.GP.prior*k+x)/(k+n);
+    merchantEffect=logit(post)-logit(out.GP.prior);
+    ownInfo={n,x,obs:x/n,prior:out.GP.prior,post};
+    out.GP.mean=post; out.GP.sd=Math.sqrt(post*(1-post)/(k+n))+.01; out.GP.src="Peer prior updated with your own data";
+    for(const pid in out){ if(pid!=="GP"){ out[pid].mean=sig(logit(out[pid].prior)+.5*merchantEffect); out[pid].sd=Math.max(.035,out[pid].sd-.005);} }
+  }
+  return {est:out, ownInfo, merchantEffect};
+}
+
+/* ---------- Setup simulation ---------- */
+function feasible(ids,P){return ids.every(id=>!PROVIDERS[id].entity||P.entity);}
+function simulate(ids, P, mk, E, delta=0){
+  const M=MARKETS[mk], N=P.vol, orch=ids.length>1;
+  const cardProv=ids.filter(id=>PROVIDERS[id].covers.includes("card")).map(id=>({id,a:clamp(E[id].mean+(PROVIDERS[id].route==="local"?delta:0),.05,.99)})).sort((x,y)=>y.a-x.a);
+  let completed=0, fees=0, attempts=0, covered=0; const byMethod=[];
+  let cardDemand=0;
+  for(const m of M.methods){
+    if(m.cat==="card"){ cardDemand+=m.share; covered+= cardProv.length?m.share:0; continue; }
+    const provs=ids.filter(id=>PROVIDERS[id].covers.includes(m.cat));
+    if(provs.length){
+      covered+=m.share;
+      provs.sort((a,b)=>feeOf(a,m.cat,P.ticket)-feeOf(b,m.cat,P.ticket));
+      const pid=provs[0], comp=m.comp+(pid==="XS"?.01:0), n=N*m.share, ok=n*comp;
+      completed+=ok; attempts+=n; fees+=ok*feeOf(pid,m.cat,P.ticket);
+      byMethod.push({m,pid,ok,n});
+    } else {
+      if(cardProv.length) cardDemand+=m.share*SUBST;
+      byMethod.push({m,pid:null,ok:0,n:N*m.share,lost:true});
+    }
+  }
+  let cardApproval=0, instOK=true;
+  if(cardProv.length){
+    const n=N*cardDemand; attempts+=n;
+    const a1=cardProv[0].a; let ok1=n*a1, ok2=0;
+    if(cardProv[1]) ok2=n*(1-a1)*RETRY*cardProv[1].a;
+    instOK=!M.installments||cardProv.some(c=>PROVIDERS[c.id].inst);
+    const pen=instOK?1:INST_PEN; ok1*=pen; ok2*=pen;
+    cardApproval=(ok1+ok2)/n/pen;
+    completed+=ok1+ok2; fees+=ok1*feeOf(cardProv[0].id,"card",P.ticket)+(ok2?ok2*feeOf(cardProv[1].id,"card",P.ticket):0);
+    byMethod.unshift({m:M.methods[0],pid:cardProv[0].id,ok:ok1+ok2,n,fallback:cardProv[1]&&cardProv[1].id});
+  }
+  const procCost=fees+attempts*GATEWAY+(orch?attempts*ORCH_FEE:0);
+  const revenue=completed*P.ticket;
+  const monthly=revenue*P.margin-procCost;
+  const newIds=ids.filter(id=>!PROVIDERS[id].live);
+  let weeks=0, oneOff=0;
+  if(newIds.length){
+    if(orch){ weeks=Math.max(...newIds.map(id=>PROVIDERS[id].onboard),4)+newIds.length; oneOff=ORCH_SETUP+ORCH_CFG*newIds.length; }
+    else { weeks=Math.max(...newIds.map(id=>PROVIDERS[id].onboard))+newIds.reduce((s,id)=>s+PROVIDERS[id].integ,0); oneOff=DIRECT_INTEG*newIds.length; }
+  }
+  return {ids, orch, completed, acceptance:completed/N, cardApproval, cpa:procCost/Math.max(1,completed), costRate:procCost/Math.max(1,revenue), procCost, revenue, monthly, weeks, oneOff, coverage:covered, instOK, byMethod, cardProv};
+}
+function feeOf(pid,cat,ticket){const f=PROVIDERS[pid].fees[cat];return f?f[0]*ticket+f[1]:Infinity;}
+function value12(sim, sq){const mo=sim.weeks/4.33;return sq.monthly*Math.min(12,mo)+sim.monthly*Math.max(0,12-mo)-sim.oneOff;}
+
+function enumerate(P, mk){
+  const {est, ownInfo}=estimates(P,mk);
+  const avail=Object.keys(PROVIDERS).filter(id=>PROVIDERS[id].markets.includes(mk));
+  const sets=[]; avail.forEach(a=>sets.push([a])); for(let i=0;i<avail.length;i++)for(let j=i+1;j<avail.length;j++)sets.push([avail[i],avail[j]]);
+  const sq=simulate(["GP"],P,mk,est);
+  const ok=[], blocked=[];
+  sq.v12=value12(sq,sq);
+  for(const s of sets){
+    if(!s.some(id=>PROVIDERS[id].covers.includes("card"))) continue;
+    const sim=simulate(s,P,mk,est); sim.v12=value12(sim,sq); sim.key=s.join("+");
+    (feasible(s,P)?ok:blocked).push(sim);
+  }
+  return {est, ownInfo, sq, ok, blocked};
+}
+function setupName(ids){
+  if(ids.length===1) return PROVIDERS[ids[0]].short;
+  return ids.map(id=>PROVIDERS[id].short).join(" + ");
+}
+function setupSub(sim){ return sim.orch?"Connected through one integration hub":"Connected directly"; }
+const OBJ = {
+  v12:{l:"Profit, first 12 months", f:s=>s.v12, better:"high"},
+  acceptance:{l:"Checkouts that become sales", f:s=>s.acceptance, better:"high"},
+  cpa:{l:"Payment cost per sale", f:s=>s.cpa, better:"low"},
+  weeks:{l:"Time to go live", f:s=>s.weeks, better:"low"}
+};
+
+/* ---------- State ---------- */
+let view="reco", market="BR", objective="v12", decisions=[], salesMode="p100", profitMode="cum";
+const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+view="home";
+
+const PAGES={reco:["Suggestion for {m}","Which payment providers to start with, based on how similar merchants actually perform. The AI suggests; your team decides."],
+  canvas:["Decision canvas · {m}","The options, what could happen, and the expected profit of each choice."],
+  decide:["Team decision · {m}","The Head of Payments accepts the suggestion or chooses something else, and records why."],
+  monitor:["After launch · {m}","An example of the first six months, and the signals that reopen the decision."],
+  how:["How it works","Key terms, the method, where the data comes from and the safeguards."]};
+function rank(res){
+  const o=OBJ[objective];
+  return [...res.ok].sort((a,b)=>o.better==="high"?o.f(b)-o.f(a):(o.f(a)-o.f(b))||(b.v12-a.v12));
+}
+
+/* ---------- Views ---------- */
+const ICON=n=>`<svg width="15" height="15" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+function of100(v){ return Math.round(v*100); }
+function eurM(v){ const a=Math.abs(v); return (v<0?"−":"")+(a>=1e6?"€"+(a/1e6).toFixed(1)+"M":"€"+NF0.format(Math.round(a/1000))+"k"); }
+function actionPhrase(s){
+  if(s.ids.length===1&&s.ids[0]==="GP") return "keep today's setup";
+  const others=s.ids.filter(i=>i!=="GP").map(i=>PROVIDERS[i].a);
+  return s.ids.includes("GP") ? `keep your current provider and add ${others.join(" and ")}` : `switch to ${others.join(" plus ")}`;
+}
+function headline(best, sq, M){
+  const gain=best.v12-sq.v12;
+  return `In ${M.name}, ${actionPhrase(best)}. About ${of100(best.acceptance)} of every 100 checkouts would become sales (${of100(sq.acceptance)} today), worth about ${eurM(gain)} ${gain>=0?"more":"less"} profit in the first year.`;
+}
+function whyCards(sim, res, mk){
+  const M=MARKETS[mk], out=[];
+  const c=sim.cardProv[0];
+  if(c){
+    const p=PROVIDERS[c.id];
+    if(p.route==="local") out.push({i:"route",t:`Cards processed inside ${M.name}`,p:`Banks in ${M.name} approve local payments more often than foreign ones: about ${of100(sim.cardApproval)} of 100 card payments approved, up from ${of100(res.sq.cardApproval)} today.`});
+    else out.push({i:"route",t:"Cards still processed abroad",p:`About ${of100(sim.cardApproval)} of 100 card payments approved, the same as today.`});
+    if(sim.cardProv[1]) out.push({i:"retry",t:"Backup for declined cards",p:`If a card is declined, it's tried again through ${PROVIDERS[sim.cardProv[1].id].a}, which wins back part of those sales.`});
+  }
+  const lm=M.methods.filter(m=>m.cat!=="card");
+  const cov=lm.filter(m=>sim.byMethod.find(b=>b.m.id===m.id&&!b.lost));
+  if(cov.length) out.push({i:"wallet",t:"Local payment methods",p:`Accepts ${cov.map(m=>m.label).join(", ")}. With cards, that covers ${pct(sim.coverage,0)} of how people in ${M.name} like to pay.`});
+  const miss=lm.filter(m=>!cov.includes(m));
+  if(miss.length) out.push({i:"gap",t:"Not offered",w:true,p:`${miss.map(m=>`${m.label} (${pct(m.share,0)} of shoppers)`).join(", ")}. Most shoppers who wanted these leave without buying.`});
+  if(M.installments) out.push({i:"cal",t:"Pay in installments",w:!sim.instOK,p:sim.instOK?`Shoppers can split card payments into monthly parts, which is common in ${M.name}.`:"No installments, so about 1 in 10 card buyers drops out."});
+  out.push({i:"clock",t:"Time to go live",p:sim.weeks?`About ${sim.weeks} weeks, including contracts and checks. One-off cost: ${eur(sim.oneOff)}.`:"Already live, nothing to connect."});
+  return out;
+}
+function whyList(sim,res,mk){ return whyCards(sim,res,mk).map(c=>`${c.t}: ${c.p}`); }
+function srcPill(e){
+  if(e.cohort.thin) return '<span class="pill warn">Few similar merchants</span>';
+  if(/own data/.test(e.src)) return '<span class="pill">Similar merchants + your data</span>';
+  return '<span class="pill mute">Similar merchants</span>';
+}
+const rng=e=>`${Math.round((e.mean-e.sd)*100)}–${Math.round((e.mean+e.sd)*100)}%`;
+
+function legend(items){ return `<div class="lg">${items.map(([c,l])=>`<span><i style="background:${c}"></i>${esc(l)}</span>`).join("")}</div>`; }
+function seg(id,opts,cur){ return `<div class="seg" role="group" aria-label="${esc(id.label)}">${opts.map(([k,l])=>`<button type="button" id="${id.p}-${k}" data-k="${k}" aria-pressed="${k===cur}">${esc(l)}</button>`).join("")}</div>`; }
+function niceStep(v){ if(v<=0) return 1; const e=Math.pow(10,Math.floor(Math.log10(v))), f=v/e; return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*e; }
+function scale(lo,hi,n=4){ const st=niceStep((hi-lo)/n||1); const a=Math.floor(lo/st)*st, b=Math.ceil(hi/st)*st; const t=[]; for(let v=a;v<=b+st/2;v+=st) t.push(Math.abs(v)<st/1e6?0:v); return {a,b,t}; }
+function barChart(cats,A,B,fmt,label){
+  const W=560,H=250,pl=48,pr=8,pt=12,pb=30, sc=scale(0,Math.max(...A,...B,1)), mx=sc.b;
+  const y=v=>pt+(1-v/mx)*(H-pt-pb), gw=(W-pl-pr)/cats.length, bw=Math.min(30,gw*.28);
+  const ticks=sc.t;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">
+  ${ticks.map(t=>`<line x1="${pl}" x2="${W-pr}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${pl-8}" y="${y(t)+4}" text-anchor="end">${fmt(t)}</text>`).join("")}
+  ${cats.map((c,i)=>{const cx=pl+gw*i+gw/2;return `<rect x="${cx-bw-2}" y="${y(A[i])}" width="${bw}" height="${Math.max(0,y(0)-y(A[i]))}" rx="3" fill="var(--today)"/><rect x="${cx+2}" y="${y(B[i])}" width="${bw}" height="${Math.max(0,y(0)-y(B[i]))}" rx="3" fill="var(--accent)"/><text x="${cx}" y="${H-10}" text-anchor="middle">${esc(c)}</text>`;}).join("")}
+  </svg>`;
+}
+function lineChart(xs,A,B,fmt,label,mark){
+  const W=560,H=250,pl=56,pr=12,pt=12,pb=30;
+  const lo0=Math.min(0,...A,...B), hi0=Math.max(...A,...B);
+  const sc=scale(lo0<-.08*hi0?lo0:0,hi0), mx=sc.b, mn=sc.a;
+  const x=i=>pl+i*(W-pl-pr)/(xs.length-1), y=v=>pt+(mx-v)/(mx-mn)*(H-pt-pb);
+  const ticks=sc.t;
+  const path=S=>S.map((v,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join(" ");
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">
+  ${ticks.map(t=>`<line x1="${pl}" x2="${W-pr}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${pl-8}" y="${y(t)+4}" text-anchor="end">${fmt(t)}</text>`).join("")}
+  ${mark!=null&&mark>0&&mark<xs.length-1?`<line x1="${x(mark)}" x2="${x(mark)}" y1="${pt}" y2="${H-pb}" stroke="var(--ink-3)" stroke-dasharray="3 4"/><text x="${x(mark)+5}" y="${pt+10}" text-anchor="start">live</text>`:""}
+  <path d="${path(A)}" fill="none" stroke="var(--today)" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="${path(B)}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+  ${xs.map((l,i)=>i%2===0||xs.length<8?`<text x="${x(i)}" y="${H-10}" text-anchor="middle">${esc(l)}</text>`:"").join("")}
+  </svg>`;
+}
+const kEur=v=>{const a=Math.abs(v);return (v<0?"−":"")+(a>=1e6?"€"+(+(a/1e6).toFixed(2))+"M":a>=1000?"€"+Math.round(a/1000)+"k":"€"+Math.round(a));};
+function recoCharts(res,best,P){
+  const sq=res.sq, M=MARKETS[market], N=Math.max(1,P.vol);
+  const by=sim=>{const o={};sim.byMethod.forEach(b=>{o[b.m.id]=(o[b.m.id]||0)+b.ok;});return o;};
+  const a=by(sq), b=by(best), mets=M.methods;
+  const f=salesMode==="p100"?(v=>v/N*100):(v=>v);
+  const A=mets.map(m=>f(a[m.id]||0)), B=mets.map(m=>f(b[m.id]||0));
+  const fmtS=salesMode==="p100"?(v=>Math.round(v)):(v=>v>=1000?(v/1000).toFixed(v%1000?1:0)+"k":Math.round(v));
+  const mo=best.weeks/4.33, months=[...Array(13).keys()];
+  const T=months.map(m=>profitMode==="cum"?sq.monthly*m:sq.monthly);
+  const R=months.map(m=>profitMode==="cum"?sq.monthly*Math.min(m,mo)+best.monthly*Math.max(0,m-mo)-best.oneOff:(m===0?sq.monthly:sq.monthly*Math.max(0,Math.min(1,mo-(m-1)))+best.monthly*(1-Math.max(0,Math.min(1,mo-(m-1))))));
+  const xsP=profitMode==="cum"?months.map(m=>m===0?"Start":"M"+m):months.map(m=>m===0?"Now":"M"+m);
+  const ranked=[...res.ok].sort((x,y)=>y.v12-x.v12), pick=rank(res)[0];
+  const isSQ=t=>t.ids.length===1&&t.ids[0]==="GP"; const top=ranked.slice(0,5); if(!top.some(isSQ)) top.push(ranked.find(isSQ)||sq);
+  const maxV=Math.max(...top.map(t=>t.v12),1);
+  const ests=Object.entries(res.est);
+  return `
+  <div class="cards2">
+    <div class="panel">
+      <div class="card-h"><div><h3><a href="#canvas">Sales by payment method${ICON("chev")}</a></h3><span class="when">Estimate · synthetic data</span></div>${seg({p:"sm",label:"Show sales as"},[["p100","Per 100 checkouts"],["month","Per month"]],salesMode)}</div>
+      ${legend([["var(--today)","Today"],["var(--accent)","With Rumbo's suggestion"]])}
+      ${barChart(mets.map(m=>m.label),A,B,fmtS,`Completed sales by payment method in ${M.name}, today versus with the suggestion`)}
+      <p class="cardfoot">Today, shoppers who want ${esc(mets.filter(m=>m.cat!=="card").map(m=>m.label).join(", "))} mostly leave. With the suggestion they can pay the way they prefer.</p>
+    </div>
+    <div class="panel">
+      <div class="card-h"><div><h3><a href="#canvas">Profit, first 12 months${ICON("chev")}</a></h3><span class="when">Estimate · synthetic data</span></div>${seg({p:"pm",label:"Show profit as"},[["cum","Running total"],["month","Per month"]],profitMode)}</div>
+      ${legend([["var(--today)","Today"],["var(--accent)","With Rumbo's suggestion"]])}
+      ${lineChart(xsP,T,R,kEur,`Profit over the first 12 months in ${M.name}, today versus with the suggestion`,best.weeks?mo:null)}
+      <p class="cardfoot">${profitMode==="cum"?`Starts below zero because of the one-off set-up cost (${eur(best.oneOff)}), then overtakes today's setup once it's live.`:"Monthly margin on completed sales, minus payment costs, before the one-off set-up cost."}</p>
+    </div>
+  </div>
+  <div class="cards2">
+    <div class="panel">
+      <div class="card-h"><div><h3><a href="#compare">Profit by option${ICON("chev")}</a></h3><span class="when">First 12 months · best options and today</span></div></div>
+      ${legend([["var(--today)","Today"],["var(--accent)","Other options"],["var(--brand)","Rumbo's pick"]])}
+      <div class="hbars">${top.map(t=>`<div class="hb ${t===pick?"pick":isSQ(t)?"today":""}"><span class="n">${esc(setupName(t.ids))}${isSQ(t)?" <small>(today)</small>":""}</span><span class="v">${eurk(t.v12)}</span><span class="tr"><i style="width:${Math.max(2,t.v12/maxV*100).toFixed(1)}%"></i></span></div>`).join("")}</div>
+    </div>
+    <div class="panel">
+      <div class="card-h"><div><h3><a href="#estimates">Card approvals by provider${ICON("chev")}</a></h3><span class="when">Out of 100 card payments · ${esc(M.name)}</span></div></div>
+      ${legend([["var(--today)","Similar merchants"],["var(--accent)","Estimate for you"]])}
+      <div class="hbars">${ests.map(([id,e])=>`<div class="hb hb2"><span class="n">${esc(PROVIDERS[id].short)} <small>· ${PROVIDERS[id].route==="local"?"in the country":"from abroad"}</small></span><span class="v">${of100(e.mean)} <span class="sig">${rng(e)}</span></span><span class="tr peer"><i style="width:${(e.peer*100).toFixed(1)}%"></i></span><span class="tr"><i style="width:${(e.mean*100).toFixed(1)}%"></i></span></div>`).join("")}</div>
+    </div>
+  </div>`;
+}
+
+let brKey=null;
+function bridgeParts(sq,sim,P){
+  const card=x=>x.byMethod.filter(b=>b.m.cat==="card").reduce((t,b)=>t+b.ok,0);
+  const loc=x=>x.byMethod.filter(b=>b.m.cat!=="card").reduce((t,b)=>t+b.ok,0);
+  const k=P.ticket*P.margin*12, mo=Math.min(12,sim.weeks/4.33), dm=sim.monthly-sq.monthly;
+  return [["More card payments approved",(card(sim)-card(sq))*k],["Local payment methods",(loc(sim)-loc(sq))*k],["Payment costs",-(sim.procCost-sq.procCost)*12],["Waiting to go live",-dm*mo],["One-off set-up",-sim.oneOff]];
+}
+function bridgeHTML(res,ranked,P){
+  const sq=res.sq, opts=ranked.filter(s=>!(s.ids.length===1&&s.ids[0]==="GP")).slice(0,6);
+  if(!opts.length) return "<p class='lead'>No options to compare.</p>";
+  if(!brKey||!opts.find(o=>o.key===brKey)) brKey=opts[0].key;
+  const sim=opts.find(o=>o.key===brKey), pick=rank(res)[0]===sim, parts=bridgeParts(sq,sim,P);
+  const W=820,H=300,pl=12,pr=12,pt=28,pb=62, n=parts.length+2, gw=(W-pl-pr)/n, bw=Math.min(74,gw*.62);
+  let run=sq.v12; const bars=[{l:"Today",a:0,b:sq.v12,kind:"today",v:sq.v12}];
+  parts.forEach(([l,v])=>{ bars.push({l,a:run,b:run+v,kind:v>=0?"up":"down",v}); run+=v; });
+  bars.push({l:"With this option",a:0,b:sim.v12,kind:pick?"pick":"opt",v:sim.v12});
+  const all=bars.flatMap(x=>[x.a,x.b]), sc=scale(Math.min(0,...all),Math.max(...all)), y=v=>pt+(sc.b-v)/(sc.b-sc.a)*(H-pt-pb);
+  const col={today:"var(--today)",up:"var(--good)",down:"var(--bad)",pick:"var(--brand)",opt:"var(--accent)"};
+  const fmt=(x,signed)=>(signed&&x>=0?"+":"")+(signed&&x<0?"−":"")+eurk(Math.abs(x)).replace("-","");
+  const wrapL=l=>{const w=l.split(" ");const a=[];let c="";w.forEach(t=>{if((c+" "+t).trim().length>14&&c){a.push(c);c=t;}else c=(c+" "+t).trim();});a.push(c);return a;};
+  const svg=`<svg class="br-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Profit bridge from today's ${eurk(sq.v12)} to ${eurk(sim.v12)} with ${esc(setupName(sim.ids))}">
+    <line x1="${pl}" x2="${W-pr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line-strong)" stroke-opacity=".5"/>
+    ${bars.map((x,i)=>{const cx=pl+gw*i+gw/2, top=y(Math.max(x.a,x.b)), h=Math.max(1.5,Math.abs(y(x.a)-y(x.b)));
+      const conn=i<bars.length-1?`<line x1="${cx+bw/2}" x2="${cx+gw-bw/2}" y1="${y(i===0?x.b:x.b)}" y2="${y(i===0?x.b:x.b)}" stroke="var(--line-strong)" stroke-dasharray="3 3"/>`:"";
+      return `<rect x="${cx-bw/2}" y="${top}" width="${bw}" height="${h}" rx="4" fill="${col[x.kind]}"/>${conn}
+      <text class="v" x="${cx}" y="${top-8}" text-anchor="middle">${x.kind==="up"||x.kind==="down"?fmt(x.v,true):eurk(x.v)}</text>
+      ${wrapL(x.l).map((t,j)=>`<text class="lab" x="${cx}" y="${H-pb+20+j*15}" text-anchor="middle">${esc(t)}</text>`).join("")}`;}).join("")}
+  </svg>`;
+  const big=parts.reduce((m,p)=>Math.abs(p[1])>Math.abs(m[1])?p:m,parts[0]);
+  return `<div class="br-head"><div class="card-h" style="margin:0"><div><h3>Why this option? Where the extra profit comes from</h3><span class="when">First 12 months, compared with today · synthetic data</span></div></div>
+    <label class="muted" for="brSel" style="display:flex;align-items:center;gap:8px">Option <select id="brSel">${opts.map(o=>`<option value="${o.key}" ${o.key===brKey?"selected":""}>${esc(setupName(o.ids))}${o===rank(res)[0]?" (suggested)":""}</option>`).join("")}</select></label></div>
+    ${legend([["var(--good)","Adds profit"],["var(--bad)","Costs profit"],["var(--brand)","Rumbo's pick"]])}
+    <div class="br-wrap">${svg}</div>
+    <p class="cardfoot">The biggest driver here: <b>${esc(big[0].toLowerCase())}</b> (${fmt(big[1],true)}). Pick another option to see why it earns ${pick?"less":"more or less"}.</p>`;
+}
+function wireBridge(){ const bs=$("#brSel"); if(!bs) return; bs.addEventListener("change",()=>{ brKey=bs.value; const r=enumerate(profile(),market); $("#bridge").innerHTML=bridgeHTML(r,rank(r),profile()); wireBridge(); $("#brSel").focus(); }); }
+function renderReco(res){
+  const P=profile(), mk=market, M=MARKETS[mk];
+  const ranked=rank(res), best=ranked[0], sq=res.sq;
+  const o=OBJ[objective];
+  const maxAcc=Math.max(...ranked.map(s=>s.acceptance));
+  const rows=ranked.slice(0,8);
+  if(!rows.find(r=>r.key==="GP")) rows.push(ranked.find(r=>r.key==="GP"));
+  const cp=best.cardProv[0], e=cp?res.est[cp.id]:null;
+  const gain=best.v12-sq.v12, dC=best.cpa-sq.cpa;
+  const ownTxt = res.ownInfo?`<div class="callout" style="margin-top:14px"><b>Your own results count.</b> Similar merchants get about ${of100(res.ownInfo.prior)} of 100 cards approved with your current provider; you get ${of100(res.ownInfo.obs)}. So the tool lowers its estimates a little for every option.</div>`:"";
+  $("#v-reco").innerHTML=`
+  <div class="panel reco" data-v12="${Math.round(best.v12)}" data-sq12="${Math.round(sq.v12)}">
+    <div class="reco-head"><div class="pills"><span class="pill brand">AI suggestion · ${esc(M.name)}</span>${e?srcPill(e):""}</div>
+    <span class="muted">Ranked by ${o.l.toLowerCase()}</span></div>
+    <p class="headline">${esc(headline(best,sq,M))}</p>
+    <div class="kpis kpis3">
+      <div class="kpi"><div class="k">Checkouts that become sales</div><div class="v">${of100(best.acceptance)} <small>of 100</small></div><div class="d">today: ${of100(sq.acceptance)} of 100</div></div>
+      <div class="kpi"><div class="k">Payment cost per sale</div><div class="v">${eur2(best.cpa)}</div><div class="d"><span class="delta ${dC<=0?"up":"down"}">${dC<=0?"−":"+"}${eur2(Math.abs(dC))}</span> vs ${eur2(sq.cpa)} today</div></div>
+      <div class="kpi"><div class="k">Extra profit, first 12 months</div><div class="v">${gain>=0?"+":""}${eurM(gain)}</div><div class="d">${eurk(best.v12)} vs ${eurk(sq.v12)} today · ${best.weeks?"live in "+best.weeks+" weeks":"live now"}</div></div>
+    </div>
+    <h3 class="setup">${esc(setupName(best.ids))} <small>${setupSub(best)}</small></h3>
+    <div class="provline">${best.byMethod.map(b=>`<span class="prov ${b.pid?"":"off"}">${esc(b.m.label)} → <b>${b.pid?esc(PROVIDERS[b.pid].short):"not offered"}</b>${b.fallback?` · backup: ${esc(PROVIDERS[b.fallback].short.toLowerCase())}`:""}</span>`).join("")}</div>
+    <div class="whycards">${whyCards(best,res,mk).map(c=>`<div class="whycard ${c.w?"warn":""}"><div class="t"><span class="ico ${c.w?"warn":""}">${ICON(c.i)}</span>${esc(c.t)}</div><p>${esc(c.p)}</p></div>`).join("")}</div>
+    ${ownTxt}
+  </div>
+  ${recoCharts(res,best,P)}
+  <div class="panel" id="bridge">${bridgeHTML(res,ranked,P)}</div>
+  <div class="summary">
+    <div><span class="label">Next step</span><h3>Your team decides</h3><p>Check how safe this choice is in the decision canvas, then accept it or pick something else. Contracts and prices are negotiated by people.</p></div>
+    <div class="acts"><a class="btn ghost" href="#canvas">Open decision canvas</a><a class="btn" href="#decide">Record decision</a></div>
+  </div>
+  <div class="panel" id="compare">
+    <div class="controls"><h3 style="margin:0;flex:1 1 auto">Compare all options for ${esc(M.name)}</h3>
+      <label class="muted" for="objSel">Sort by</label>
+      <select id="objSel">${Object.entries(OBJ).map(([k,v])=>`<option value="${k}" ${k===objective?"selected":""}>${v.l}</option>`).join("")}</select></div>
+    <p class="lead">The fastest option is rarely the most profitable one. Change the sorting to see the trade-offs.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Option</th><th class="n">Cards approved</th><th class="n">Checkouts → sales</th><th class="n">Cost per sale</th><th class="n">Go-live</th><th class="n">Profit, 12 months</th></tr></thead>
+      <tbody>${rows.map((s,i)=>`<tr class="${i===0?"top1":""} ${s.key==="GP"?"sq":""}"><td class="setupname">${esc(setupName(s.ids))}<small>${setupSub(s)}</small></td>
+      <td class="n">${pct(s.cardApproval,0)}</td>
+      <td class="n">${pct(s.acceptance,0)}<span class="mini" style="width:${Math.round(40*s.acceptance/maxAcc)}px"></span></td>
+      <td class="n">${eur2(s.cpa)}</td><td class="n">${s.weeks} wks</td><td class="n">${eurk(s.v12)}</td></tr>`).join("")}</tbody>
+    </table></div>
+    ${res.blocked.length?`<p class="muted" style="margin:10px 0 0">Not shown because they need a local company: ${[...new Set(res.blocked.flatMap(b=>b.ids).filter(id=>PROVIDERS[id].entity))].map(id=>esc(PROVIDERS[id].name)).join(" · ")}. Tick “Has a local company” to include them (best of these: ${eurk(Math.max(...res.blocked.map(b=>b.v12)))} over 12 months).</p>`:""}
+  </div>
+  <details class="panel more" id="estimates">
+    <summary><h3>Where the estimates come from</h3><span class="muted">Show details</span></summary>
+    <p class="lead" style="margin-top:12px">We start from the results of similar ${esc(IND[P.ind].l.toLowerCase())} merchants in ${esc(M.name)}, adjust for this merchant's order size and risk${res.ownInfo?", then for its own results":""}. Groups of fewer than five merchants are never shown, to protect their privacy.</p>
+    <div class="tablewrap"><table><thead><tr><th>Provider</th><th>Processing</th><th class="n">Similar merchants</th><th class="n">Their card approvals</th><th class="n">Estimate for you</th><th class="n">Likely range</th><th>Based on</th></tr></thead>
+    <tbody>${Object.entries(res.est).map(([id,e])=>`<tr><td>${esc(PROVIDERS[id].name)}</td><td>${PROVIDERS[id].route==="local"?"In the country":"From abroad"}</td><td class="n">${e.cohort.thin?"fewer than 5":e.cohort.merchants}</td><td class="n">${pct(e.peer,0)}</td><td class="n"><b>${pct(e.mean,0)}</b></td><td class="n"><span class="sig">${rng(e)}</span></td><td>${srcPill(e)}</td></tr>`).join("")}</tbody></table></div>
+  </details>`;
+  $("#objSel").addEventListener("change",e=>{objective=e.target.value;renderAll();});
+  wireBridge();
+  document.querySelectorAll("#v-reco [id^='sm-']").forEach(b=>b.addEventListener("click",()=>{salesMode=b.dataset.k;renderAll();}));
+  document.querySelectorAll("#v-reco [id^='pm-']").forEach(b=>b.addEventListener("click",()=>{profitMode=b.dataset.k;renderAll();}));
+}
+function renderHome(P){
+  const mk=P.markets.includes("BR")?"BR":P.markets[0], M=MARKETS[mk];
+  const r=enumerate(P,mk), sq=r.sq, best=[...r.ok].sort((a,b)=>b.v12-a.v12)[0];
+  const bar=(a,b)=>`<div class="cmp-row"><span class="lab">${a}</span><span class="val"><s>${of100(b[0])}</s><b>${of100(b[1])} of 100</b></span><div class="bars" aria-hidden="true"><i style="--w:${(b[0]*100).toFixed(1)}%"></i><i class="new" style="--w:${(b[1]*100).toFixed(1)}%"></i></div></div>`;
+  const gain=best.v12-sq.v12;
+  $("#heroTicker span").textContent=`Example · ${M.name}: ${of100(sq.acceptance)} → ${of100(best.acceptance)} of 100 checkouts become sales`;
+  $("#homePreview").innerHTML=`
+    <div><b>${of100(best.acceptance)} of 100</b><span>checkouts become sales (${of100(sq.acceptance)} today)</span></div>
+    <div><b>${gain>=0?"+":""}${eurM(gain)}</b><span>profit in year one (${eurk(sq.v12)} → ${eurk(best.v12)})</span></div>
+    <div><b>${best.weeks} weeks</b><span>to go live</span></div>
+    <div class="proof-note"><svg width="16" height="16" aria-hidden="true"><use href="#i-person"/></svg><span>The AI suggests.<br>Your team decides.</span></div>`;
+}
+
+function canvasModel(res){
+  const P=profile(), mk=market;
+  const byV=[...res.ok].sort((a,b)=>b.v12-a.v12);
+  const isLocal=s=>s.cardProv[0]&&PROVIDERS[s.cardProv[0].id].route==="local";
+  const xbAlt=byV.find(s=>s.key!=="GP"&&!isLocal(s));
+  const locals=byV.filter(isLocal).slice(0,xbAlt?2:3);
+  const acts=[res.sq, ...(xbAlt?[xbAlt]:[]), ...locals];
+  const lead=locals[0];
+  const sd=lead?res.est[lead.cardProv[0].id].sd:.04;
+  const a=-.03,b=.02, za=a/sd, zb=b/sd;
+  const p1=Phi(za), p3=1-Phi(zb), p2=1-p1-p3;
+  const d1=-sd*phi(za)/p1, d3=sd*phi(zb)/p3, d2=sd*(phi(za)-phi(zb))/p2;
+  const states=[
+    {id:"S1",l:"Worse than expected",p:p1,d:d1,desc:`Local card approval lands more than 3 pp below the estimate (avg ${pp(d1)})`},
+    {id:"S2",l:"As expected",p:p2,d:d2,desc:"Within −3 / +2 pp of the estimate"},
+    {id:"S3",l:"Better than expected",p:p3,d:d3,desc:`More than 2 pp above the estimate (avg ${pp(d3)})`}];
+  const {est}=estimates(P,mk);
+  const V=acts.map(s=>states.map(st=>{const sq=simulate(["GP"],P,mk,est,st.d);return value12(simulate(s.ids,P,mk,est,st.d),sq);}));
+  const EV=V.map(r=>r.reduce((t,v,i)=>t+v*states[i].p,0));
+  const order=EV.map((v,i)=>i).sort((x,y)=>EV[y]-EV[x]);
+  const w=order[0], r=order[1];
+  // (a) state sensitivity: winner vs the best option that keeps cards cross-border
+  const xi=xbAlt?acts.indexOf(xbAlt):-1;
+  const diff=(i,j,d)=>{const sq=simulate(["GP"],P,mk,est,d);return value12(simulate(acts[i].ids,P,mk,est,d),sq)-value12(simulate(acts[j].ids,P,mk,est,d),sq);};
+  const bisect=(f,lo,hi)=>{if(f(lo)*f(hi)>=0)return null;for(let i=0;i<60;i++){const m=(lo+hi)/2;(f(lo)*f(m)<=0)?hi=m:lo=m;}return (lo+hi)/2;};
+  const diffS=(A,B,d)=>{const sq=simulate(["GP"],P,mk,est,d);return value12(simulate(A.ids,P,mk,est,d),sq)-value12(simulate(B.ids,P,mk,est,d),sq);};
+  const thr = (xbAlt&&acts[w]!==xbAlt)? bisect(d=>diffS(acts[w],xbAlt,d),-.6,.15) : null;
+  // same test for the best local setup WITHOUT the incumbent as fallback
+  const unhedged=byV.find(s=>isLocal(s)&&!s.ids.includes("GP"));
+  const thrU = (xbAlt&&unhedged)? bisect(d=>diffS(unhedged,xbAlt,d),-.6,.15) : null;
+  // payoff sensitivity: orchestration fee at which the best direct (single-provider) setup overtakes the winner
+  const direct=byV.find(s=>!s.orch&&s.key!=="GP");
+  let feeThr=null;
+  if(acts[w].orch&&direct){
+    const base=ORCH_FEE;
+    feeThr=bisect(fe=>{ORCH_FEE=fe;const v=diffS(acts[w],direct,0);ORCH_FEE=base;return v;},0,2);
+    ORCH_FEE=base;
+  }
+  return {acts,states,V,EV,w,r,xi,thr,thrU,unhedged,direct,feeThr,sd,xbAlt};
+}
+function optNames(C){
+  const isLocal=s=>s.cardProv[0]&&PROVIDERS[s.cardProv[0].id].route==="local";
+  const isSQ=s=>s.ids.length===1&&s.ids[0]==="GP";
+  const M=MARKETS[market], pix=M.methods.some(m=>m.id==="pix");
+  const n=C.acts.map(s=> isSQ(s)?"Change nothing": !isLocal(s)?(pix?"Add Pix and local methods, cards stay in Europe":"Add local payment methods, cards stay in Europe"): s.ids.includes("GP")?`Move cards to ${M.name}, keep current provider as backup`:"Move everything to local partners, no backup");
+  return n.map((x,i)=> n.filter(y=>y===x).length>1 ? `${x} (${C.acts[i].ids.length===1?"one partner":"two partners"})` : x);
+}
+function renderCanvas(res){
+  if(wiFee===null) wiFee=ORCH_BASE;
+  const M=MARKETS[market], C=canvasModel(res), P=profile(), N=optNames(C);
+  const close = C.thr!==null && Math.abs(C.thr) < 2*C.sd;
+  const pts=v=>(Math.abs(v)*100).toFixed(0)+" points";
+  const O=i=>`Option ${i+1}`;
+  $("#v-canvas").innerHTML=`
+  <div class="panel">
+    <span class="pill brand">Decision canvas · ${esc(M.name)}</span>
+    <h3 style="margin-top:6px">Which payment setup should ${esc(P.name.replace(" (example)",""))} start with in ${esc(M.name)}?</h3>
+    <p class="lead"><b>Who decides:</b> Head of Payments, with Finance and Legal. <b>Time frame:</b> first 12 months, checked again after 6. <b>Why it matters:</b> this choice fixes how many payments get approved and what they cost for years.</p>
+    <div class="canvas-grid">
+      <div class="cell"><div class="num">1 · OPTIONS</div><h4>Four realistic choices</h4><ul>${C.acts.map((a,i)=>`<li><b>${O(i)}</b> · ${esc(N[i])}<br><span class="muted">${esc(setupName(a.ids))}</span></li>`).join("")}</ul></div>
+      <div class="cell"><div class="num">2 · WHAT DRIVES THE RESULT</div><h4>Five things that matter</h4><ul><li>Are cards processed in the country or from abroad?</li><li>Are ${esc(M.methods.filter(m=>m.cat!=="card").map(m=>m.label).join(", "))} accepted?</li><li>Fees, including currency exchange</li><li>How fast it can go live</li>${M.installments?"<li>Can shoppers pay in installments?</li>":""}</ul></div>
+      <div class="cell"><div class="num">3–4 · WHAT COULD HAPPEN</div><h4>Will local card approvals be as good as for similar merchants?</h4><ul>${C.states.map(s=>`<li><b>${esc(s.l)}</b> · ${pct(s.p,0)} chance</li>`).join("")}</ul><p class="muted" style="margin-top:6px">The AI estimates these chances from how much results vary between similar merchants${res.ownInfo?" and from your own results":""}.</p></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>5–6 · Profit in each case, and the expected result</h3>
+    <p class="lead">Profit over the first 12 months: margin on completed sales, minus payment and set-up costs. Today's setup keeps earning while the new one is being connected.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Option</th>${C.states.map(s=>`<th class="n wrap">${esc(s.l)}<br>${pct(s.p,0)} chance</th>`).join("")}<th class="n wrap">Expected<br>result</th></tr></thead>
+      <tbody>${C.acts.map((a,i)=>`<tr class="${i===C.w?"top1":""}"><td class="setupname">${O(i)} · ${esc(N[i])}</td>${C.V[i].map(v=>`<td class="n">${eurk(v)}</td>`).join("")}<td class="n ${i===C.w?"ev-win":""}">${eurk(C.EV[i])}</td></tr>`).join("")}</tbody>
+    </table></div>
+    <p class="muted" style="margin:8px 0 0">Expected result = the profit in each case, weighted by its chance. Best: <b>${O(C.w)} · ${esc(N[C.w])}</b>, ${eurk(C.EV[C.w]-C.EV[C.r])} ahead of ${O(C.r)}.</p>
+  </div>
+  <div class="panel" id="whatif">
+    <div class="card-h"><div><h3>Try it: what if things go differently?</h3><span class="when">Drag the sliders. Profit over the first 12 months updates for each option.</span></div><button class="btn ghost sm" type="button" id="wiReset">Reset</button></div>
+    <div class="wi-grid" style="margin-top:14px">
+      <div class="wi-ctl">
+        <div><label for="wiShort">Local card approvals vs expected <output id="wiShortOut" for="wiShort"></output></label>
+          <input type="range" id="wiShort" min="-30" max="6" step="0.5" value="${(wiDelta*100).toFixed(1)}" aria-describedby="wiShortHint">
+          <div class="scale" aria-hidden="true"><span>30 pts lower</span><span>as expected</span><span>+6</span></div>
+          <p class="hint2" id="wiShortHint">What if banks in ${esc(M.name)} approve fewer local card payments than similar merchants suggest?</p></div>
+        <div><label for="wiFee">Integration hub fee per payment <output id="wiFeeOut" for="wiFee"></output></label>
+          <input type="range" id="wiFee" min="0" max="1.5" step="0.01" value="${wiFee.toFixed(2)}" aria-describedby="wiFeeHint">
+          <div class="scale" aria-hidden="true"><span>€0.00</span><span>€0.75</span><span>€1.50</span></div>
+          <p class="hint2" id="wiFeeHint">The price of the one connection that links several providers. We assume €${ORCH_BASE.toFixed(2)}.</p></div>
+      </div>
+      <div><p class="wi-verdict" id="wiVerdict" aria-live="polite"></p><div class="hbars" id="wiBars" style="margin-top:0"></div>
+        <div class="wi-ticks" id="wiTicks"></div></div>
+    </div>
+  </div>
+  <div class="cols2">
+    <div class="panel"><h3>7 · How safe is this choice?</h3>
+      ${C.thr!==null?`<p class="lead" style="margin-bottom:10px">${O(C.w)} stays better than adding local methods only, unless local card approvals come in <b>${pts(C.thr)} lower</b> than expected.</p>
+      <div class="callout ${close?"warn":""}">${close?"That could realistically happen, so test first: send 20% of card payments through the new partner for four weeks before committing.":"That is very unlikely, so the choice is safe."}</div>`
+      :(C.xbAlt&&C.acts[C.w].ids.includes("GP")?`<p class="lead" style="margin-bottom:10px"><b>Very safe.</b> ${O(C.w)} keeps your current provider as a backup. If local approvals disappoint, card payments simply go back to today's route, so it stays ahead of ${O(C.xi)} in every case we tested.</p>
+      ${C.thrU!==null?`<div class="callout">Without that backup, ${C.acts.indexOf(C.unhedged)>=0?O(C.acts.indexOf(C.unhedged)):esc(setupName(C.unhedged.ids))} would only lose to ${O(C.xi)} if local approvals were <b>${pts(C.thrU)} lower</b> than expected.</div>`:""}`
+      :`<p class="lead">No option that keeps cards abroad comes close enough to change the answer.</p>`)}
+      <p class="lead" style="margin:12px 0 0"><b>What could change the answer?</b> ${C.feeThr!==null&&C.direct?`The price of the integration hub. Above <b>€${C.feeThr.toFixed(2)} per payment</b> (we assume €${ORCH_FEE.toFixed(2)}), connecting one partner directly would be better. That price is negotiated by people.`:`Mainly fees and time to go live, which are negotiated by people.`}</p>
+    </div>
+    <div class="panel"><h3>8–11 · Who does what</h3>
+      <ul class="why" style="grid-template-columns:1fr;margin-top:4px">
+        <li><b>The AI estimates</b> approval rates, the chance of each case and the profit of each option, using data from similar merchants.</li>
+        <li><b>People judge</b> prices, contracts, relationships, legal and tax set-up, and strategic fit.</li>
+        <li><b>How it runs:</b> profile → options ranked → this canvas → team decision → launch → monitoring.</li>
+        <li><b>It learns:</b> real results update the estimates, and alerts reopen the decision when results drift.</li>
+      </ul></div>
+  </div>`;
+  wiCtx={C,N,P,mk:market,est:estimates(P,market).est};
+  const sh=$("#wiShort"), fe=$("#wiFee");
+  sh.addEventListener("input",()=>{wiDelta=+sh.value/100;updateWhatIf();});
+  fe.addEventListener("input",()=>{wiFee=+fe.value;updateWhatIf();});
+  $("#wiReset").addEventListener("click",()=>{wiDelta=0;wiFee=ORCH_BASE;sh.value=0;fe.value=ORCH_BASE;updateWhatIf();});
+  updateWhatIf();
+}
+let wiDelta=0, wiFee=null, wiCtx=null;
+function updateWhatIf(){
+  if(!wiCtx) return; const {C,N,P,mk,est}=wiCtx; const base=ORCH_FEE;
+  ORCH_FEE=wiFee;
+  const extra=C.direct&&!C.acts.some(a=>a.key===C.direct.key)?C.direct:null, acts=extra?[...C.acts,extra]:C.acts;
+  const names=extra?[...N.map((n,i)=>`Option ${i+1} · ${n}`),`For reference: ${setupName(extra.ids)}, connected directly`]:N.map((n,i)=>`Option ${i+1} · ${n}`);
+  const vals=acts.map(a=>{ const sq=simulate(["GP"],P,mk,est,wiDelta); return value12(simulate(a.ids,P,mk,est,wiDelta),sq); });
+  ORCH_FEE=base;
+  const w=vals.indexOf(Math.max(...vals)), mx=Math.max(...vals.map(v=>Math.abs(v)),1), flipped=w!==C.w;
+  const d=Math.round(wiDelta*100*10)/10;
+  $("#wiShortOut").textContent= d===0?"as expected":(d<0?`${Math.abs(d)} points lower`:`${d} points higher`);
+  $("#wiFeeOut").textContent="€"+wiFee.toFixed(2);
+  $("#wiVerdict").innerHTML=`Best option here: <b>${esc(names[w])}</b>${flipped?'<span class="wi-flip">The answer changes</span>':""}`;
+  $("#wiBars").innerHTML=acts.map((a,i)=>`<div class="hb ${i===w?"pick":(a.ids.length===1&&a.ids[0]==="GP")?"today":""}"><span class="n">${esc(names[i])}</span><span class="v">${eurk(vals[i])}</span><span class="tr"><i style="width:${Math.max(1.5,Math.max(0,vals[i])/mx*100).toFixed(1)}%"></i></span></div>`).join("");
+  const t=[];
+  if(C.thr!==null) t.push(`<button type="button" data-d="${(C.thr*100).toFixed(1)}">Jump to the tipping point (${Math.abs(C.thr*100).toFixed(0)} points lower)</button>`);
+  if(C.thrU!==null&&C.unhedged&&C.xi>=0&&C.acts.indexOf(C.unhedged)>=0) t.push(`<button type="button" data-d="${(C.thrU*100).toFixed(1)}">Where Option ${C.acts.indexOf(C.unhedged)+1} drops below Option ${C.xi+1} (${Math.abs(C.thrU*100).toFixed(0)} points lower)</button>`);
+  if(C.feeThr!==null&&C.direct) t.push(`<button type="button" data-f="${(C.feeThr+.01).toFixed(2)}">Hub fee where a direct connection wins (€${C.feeThr.toFixed(2)})</button>`);
+  $("#wiTicks").innerHTML=t.length?"Try: "+t.join(""):"";
+  $("#wiTicks").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.d){wiDelta=+b.dataset.d/100-.005;$("#wiShort").value=(wiDelta*100).toFixed(1);} if(b.dataset.f){wiFee=+b.dataset.f;$("#wiFee").value=wiFee;} updateWhatIf(); }));
+}
+
+/* ---------- Team decision ---------- */
+function renderDecide(res){
+  const C=canvasModel(res), M=MARKETS[market];
+  const rec=C.acts[C.w];
+  $("#v-decide").innerHTML=`
+  <div class="panel">
+    <span class="pill good">People decide</span>
+    <h3 style="margin-top:6px">Record your team's decision for ${esc(M.name)}</h3>
+    <p class="lead">The AI suggests <b>${esc(setupName(rec.ids))}</b>. The Head of Payments accepts it or picks something else, and says why. Those reasons are reviewed every month to see what the AI is missing.</p>
+    <div class="field"><span class="lbl">Decision</span>
+      <div class="radio"><label><input type="radio" name="dc" id="dcAccept" value="accept" checked> Accept the suggestion</label><label><input type="radio" name="dc" id="dcOverride" value="override"> Choose something else</label></div></div>
+    <div id="ovBox" hidden>
+      <div class="row2">
+        <div class="field"><label for="ovSetup">Chosen option</label><select id="ovSetup">${C.acts.map((a,i)=>i===C.w?"":`<option value="${i}">${esc(setupName(a.ids))}</option>`).join("")}</select></div>
+        <div class="field"><label for="ovReason">Reason</label><select id="ovReason"><option>Better price agreed with another provider</option><option>Existing contract or relationship</option><option>Legal, tax or local company issue</option><option>Risk or compliance concern</option><option>Other</option></select></div>
+      </div>
+    </div>
+    <div class="field"><label for="dcNote">Note for the decision log</label><textarea id="dcNote" placeholder="e.g. Finance to confirm the exchange-rate cost before signing…"></textarea></div>
+    <button class="btn" id="dcSave" type="button">Record decision</button>
+    <ul class="log" id="dcLog">${decisions.map(d=>`<li><span class="w">${esc(d.when)} · ${esc(d.market)}</span><br>${esc(d.text)}</li>`).join("")||'<li class="muted">No decisions recorded in this session yet.</li>'}</ul>
+  </div>
+  <div class="panel">
+    <h3>Who does what</h3>
+    <div class="tablewrap"><table><thead><tr><th>Role</th><th>Suggests</th><th>Approves</th><th>Can change the choice</th><th>Responsible for</th></tr></thead><tbody>
+      <tr><td>Rumbo (the AI)</td><td>Yes</td><td>No</td><td>No</td><td>Ranking options, estimates, alerts, explaining each suggestion</td></tr>
+      <tr><td>Head of Payments</td><td>Yes</td><td>Yes</td><td>Yes, with a reason</td><td>Final choice and launch plan</td></tr>
+      <tr><td>Finance</td><td>Input</td><td>Budget</td><td>No</td><td>Checking fees, exchange costs and payback</td></tr>
+      <tr><td>Legal and procurement</td><td>Input</td><td>Contracts</td><td>Can block on compliance</td><td>Negotiation, checks, local company and tax</td></tr>
+    </tbody></table></div>
+  </div>`;
+  const sync=()=>{$("#ovBox").hidden=!$("#dcOverride").checked;};
+  $("#dcAccept").addEventListener("change",sync);$("#dcOverride").addEventListener("change",sync);
+  $("#dcSave").addEventListener("click",()=>{
+    const ov=$("#dcOverride").checked, note=$("#dcNote").value.trim();
+    const text= ov?`Chose ${setupName(C.acts[+$("#ovSetup").value].ids)} instead of the suggestion (${setupName(rec.ids)}). Reason: ${$("#ovReason").value}.`:`Accepted the suggestion: ${setupName(rec.ids)}.`;
+    decisions.unshift({when:new Date().toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"}),market:M.name,text:text+(note?` Note: ${note}`:"")});
+    renderDecide(res);
+  });
+}
+
+/* ---------- Monitoring ---------- */
+function renderMonitor(res){
+  const C=canvasModel(res), M=MARKETS[market], s=C.acts[C.w];
+  const exp=s.cardApproval, drift=[.004,.001,-.006,-.021,-.034,-.039];
+  const months=["Jan","Feb","Mar","Apr","May","Jun"];
+  const obs=drift.map(d=>exp+d);
+  const instant=M.methods.find(m=>m.cat==="instant")||M.methods.find(m=>m.cat==="wallet");
+  const shareObs=[0,.01,.02,.03,.05,.07].map(d=>instant.share+d);
+  const alerts=[];
+  if(obs[4]-exp<-.03&&obs[5]-exp<-.03) alerts.push({lv:"bad",t:"Card approvals are below plan",w:"May–Jun",p:`For two months in a row, card approvals have been ${(Math.abs(obs[5]-exp)*100).toFixed(0)} points below the expected ${pct(exp,0)}. Check why banks are declining, then send more card payments through the backup provider.`});
+  if(shareObs[5]-instant.share>.05) alerts.push({lv:"warn",t:`${instant.label} is growing faster than planned`,w:"Jun",p:`${instant.label} is now ${pct(shareObs[5],0)} of checkouts (planned: ${pct(instant.share,0)}). Its fees matter more now, so it's worth renegotiating or comparing providers.`});
+  alerts.push({lv:"info",t:"Similar merchants are doing better elsewhere",w:"Jun",p:`Similar ${IND[profile().ind].l.toLowerCase()} merchants in ${M.name} now get about 2.5 points more card approvals with another provider. Run the suggestion again.`});
+  alerts.push({lv:"info",t:"Six-month review due",w:"Jul",p:"Payment setups are rarely revisited once they're live, so the tool asks for a review every six months anyway."});
+  // chart
+  const W=560,H=200,pl=44,pr=12,pt=12,pb=28;
+  const lo=Math.floor((Math.min(...obs,exp)-.02)*100)/100, hi=Math.ceil((Math.max(...obs,exp)+.02)*100)/100;
+  const x=i=>pl+i*(W-pl-pr)/(months.length-1), y=v=>pt+(hi-v)/(hi-lo)*(H-pt-pb);
+  const ticks=[];for(let v=lo;v<=hi+1e-9;v+=.02)ticks.push(+v.toFixed(2));
+  const path=obs.map((v,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join(" ");
+  const band=`M${x(0)} ${y(exp+.03)} L${x(5)} ${y(exp+.03)} L${x(5)} ${y(exp-.03)} L${x(0)} ${y(exp-.03)} Z`;
+  $("#v-monitor").innerHTML=`
+  <div class="panel">
+    <span class="pill warn">Example data after launch</span>
+    <h3 style="margin-top:6px">After launch in ${esc(M.name)}: the first six months</h3>
+    <p class="lead">Once ${esc(setupName(s.ids))} is live, the tool keeps watching real results and tells the team when to look at the decision again.</p>
+    <div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px;min-width:420px" role="img" aria-label="Card approvals: actual versus expected by month">
+      ${ticks.map(t=>`<line x1="${pl}" x2="${W-pr}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)" stroke-width="1"/><text x="${pl-6}" y="${y(t)+4}" text-anchor="end">${Math.round(t*100)}%</text>`).join("")}
+      <path d="${band}" fill="var(--accent-soft)"/>
+      <line x1="${x(0)}" x2="${x(5)}" y1="${y(exp)}" y2="${y(exp)}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <path d="${path}" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      ${obs.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="${i===5?4.5:3}" fill="${v-exp<-.03?"var(--bad)":"var(--ink)"}"/>`).join("")}
+      ${months.map((m,i)=>`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${m}</text>`).join("")}
+    </svg></div>
+    <div class="legend"><span><i style="background:var(--ink)"></i>Actual card approvals</span><span><i style="background:var(--accent)"></i>Expected (${pct(exp,0)})</span><span><i style="background:var(--accent-soft);height:10px"></i>Normal range (±3 points)</span></div>
+  </div>
+  <div class="panel"><h3>Alerts for the payments team</h3><p class="lead">Signals that it's time to look at the provider choice again.</p>
+    <div class="alerts">${alerts.map(a=>`<div class="alert ${a.lv}"><span class="t"><span class="sev">${{bad:"Act now",warn:"Keep an eye on it",info:"For info"}[a.lv]}</span>${esc(a.t)}</span><span class="w">${esc(a.w)}</span><p>${esc(a.p)}</p></div>`).join("")}</div></div>
+  <div class="panel"><h3>How we measure success</h3>
+    <div class="tablewrap"><table><thead><tr><th>Measure</th><th>What it means</th><th class="n">Today</th><th class="n">With the tool</th></tr></thead><tbody>
+      <tr><td>Card approval rate</td><td>Card payments approved out of 100 tried</td><td class="n">${pct(res.sq.cardApproval,0)}</td><td class="n">${pct(s.cardApproval,0)}</td></tr>
+      <tr><td>Checkouts that become sales</td><td>Out of 100 checkouts, how many are paid, with any method</td><td class="n">${pct(res.sq.acceptance,0)}</td><td class="n">${pct(s.acceptance,0)}</td></tr>
+      <tr><td>Payment cost per sale</td><td>Fees, currency exchange and platform costs, per completed sale</td><td class="n">${eur2(res.sq.cpa)}</td><td class="n">${eur2(s.cpa)}</td></tr>
+      <tr><td>Time to go live</td><td>From decision to the first real payment</td><td class="n">12–20 weeks</td><td class="n">${s.weeks} weeks</td></tr>
+      <tr><td>How often people change the AI's choice</td><td>Tracked to learn from, not as a target</td><td class="n">n/a</td><td class="n">Tracked</td></tr>
+    </tbody></table></div>
+    <p class="muted" style="margin:8px 0 0">Today's 12–20 weeks (via tenders and sales pitches) is a team assumption to check in interviews.</p>
+  </div>`;
+}
+
+/* ---------- How it works ---------- */
+function renderHow(){
+  $("#v-how").innerHTML=`
+  <div class="panel"><h3>Key terms in plain words</h3>
+    <dl class="gloss">
+      <div><dt>Approval rate</dt><dd>Out of 100 card payments, how many the shopper's bank accepts.</dd></div>
+      <div><dt>Local processing</dt><dd>The payment is handled by a company inside the shopper's country, so their bank sees a domestic payment and approves it more often.</dd></div>
+      <div><dt>Cross-border</dt><dd>The payment is handled from abroad (here, Europe). Banks decline these more often.</dd></div>
+      <div><dt>Pix</dt><dd>Brazil's instant bank payment, used for about 4 in 10 online purchases.</dd></div>
+      <div><dt>Boleto</dt><dd>A Brazilian payment slip, paid online or at a bank within a few days.</dd></div>
+      <div><dt>Integration hub</dt><dd>One connection that lets the merchant use several payment providers at once (also called orchestration).</dd></div>
+      <div><dt>Similar merchants</dt><dd>Anonymized results from other merchants of the same type, in the same market.</dd></div>
+      <div><dt>Override</dt><dd>When the team chooses differently from the AI, and records why.</dd></div>
+    </dl></div>
+  <div class="panel"><h3>From merchant profile to a team decision</h3>
+    <p class="lead">At each step, either the AI predicts or people decide. The AI's output is never the decision itself.</p>
+    <ol class="flow">
+      <li><b>Profile</b>Who the merchant is and where it wants to sell.</li>
+      <li><b>Similar merchants</b>Find merchants like this one, by market, industry and order size.</li>
+      <li><b>Estimate</b>Start from their results, then adjust with the merchant's own.</li>
+      <li><b>Simulate</b>Work out sales, costs and time to go live for each option.</li>
+      <li><b>Compare</b>Rank the options and test how safe the best one is.</li>
+      <li class="human"><b>Team decides</b>Accept or choose differently, with a reason; negotiate contracts.</li>
+      <li><b>Monitor</b>Watch real results and flag when to review.</li>
+    </ol></div>
+  <div class="cols2">
+    <div class="panel"><h3>Where the data comes from</h3>
+      <div class="tablewrap"><table><thead><tr><th>Data</th><th>Source</th></tr></thead><tbody>
+        <tr><td>Approval rates by provider and market</td><td>Anonymized results across many merchants on a neutral integration hub. One merchant only sees its own providers, which is why the tool works best inside such a company.</td></tr>
+        <tr><td>The merchant's own results</td><td>Its real payments, used to adjust the estimates.</td></tr>
+        <tr><td>Fees and exchange costs</td><td>Price lists and signed contracts, entered by the payments team.</td></tr>
+        <tr><td>How people pay in each market</td><td>Public reports (for example EBANX for Brazil), refreshed every quarter.</td></tr>
+        <tr><td>Coverage, licences, local company rules</td><td>Provider documentation, checked by Legal.</td></tr>
+      </tbody></table></div></div>
+    <div class="panel"><h3>Safeguards</h3>
+      <ul class="why" style="grid-template-columns:1fr;margin-top:4px">
+        <li><b>Neutral.</b> No provider can pay to rank higher, and the method is open for anyone to check.</li>
+        <li><b>Private.</b> Only combined results are used; groups of fewer than five merchants are never shown.</li>
+        <li><b>Tested, not assumed.</b> Merchants who went local may differ from those who didn't, so the tool suggests a small trial before full commitment.</li>
+        <li><b>Explained.</b> Every suggestion lists its reasons, so the team can challenge it.</li>
+        <li><b>People stay in charge.</b> Choosing differently from the AI is expected and recorded, not discouraged.</li>
+      </ul></div>
+  </div>
+  <details class="panel more"><summary><h3>Model assumptions</h3><span class="muted">Show details</span></summary>
+    <p class="lead" style="margin:12px 0 0">Shoppers whose preferred method is missing: ${pct(SUBST,0)} switch to card, the rest leave. Without installments where people expect them, ${pct(INST_PEN,0)} of card sales are kept. A backup provider recovers ${pct(RETRY,0)} of declined cards. Costs: €${GATEWAY.toFixed(2)} per payment attempt; the integration hub adds €${ORCH_FEE.toFixed(2)} per attempt plus ${eur(ORCH_SETUP)} set-up and ${eur(ORCH_CFG)} per provider; a direct connection costs ${eur(DIRECT_INTEG)} per provider. Approval estimates start from similar merchants and are adjusted with the merchant's own results (a Bayesian update). All figures are synthetic and illustrative.</p></details>`;
+}
+
+
+/* Rumbo hero ribbons: deterministic frame function, loops every T seconds */
+const RIBBON_T=16;
+function ribbonFrame(svg,t,draw){
+  const W=(k,ph)=>Math.sin(2*Math.PI*(k*t/RIBBON_T)+ph);
+  const B=[ // bands: concave sweeps rising to the top-right, filled below/right of the curve
+    {id:"rb0",x0:380,k1:[180,560],k2:[520,140],x3:1560,y3:40,a:22,ph:0},
+    {id:"rb1",x0:600,k1:[160,520],k2:[480,170],x3:1560,y3:230,a:26,ph:1.3},
+    {id:"rb2",x0:880,k1:[120,500],k2:[420,180],x3:1560,y3:420,a:30,ph:2.6},
+    {id:"rb3",x0:1130,k1:[90,470],k2:[300,170],x3:1560,y3:600,a:24,ph:4.1}];
+  B.forEach(b=>{
+    const dx=b.a*W(1,b.ph), dy=b.a*W(2,b.ph+.7), ex=b.a*.7*W(1,b.ph+2.1);
+    const x0=b.x0+ex, c1x=x0+b.k1[0]+dx, c1y=960-b.k1[1]+dy*.5, c2x=x0+b.k2[0]-dx*.6, c2y=b.y3+b.k2[1]+dy;
+    const c="M"+x0+" 960 C"+c1x+" "+c1y+" "+c2x+" "+c2y+" "+b.x3+" "+(b.y3+dy*.5);
+    svg.querySelector("#"+b.id).setAttribute("d",c+" L1600 "+(b.y3+dy*.5)+" L1600 1000 L"+x0+" 1000 Z");
+    svg.querySelector("#"+b.id+"e").setAttribute("d",c);
+  });
+  // thin indigo route with a travelling dot
+  const s=14*W(1,.4);
+  const r="M300 990 C760 930 "+(940+s)+" "+(470-s)+" 1560 "+(340+s*.6);
+  const rp=svg.querySelector("#rroute"); rp.setAttribute("d",r);
+  const L=rp.getTotalLength(), f=(t/RIBBON_T*2)%1, p=rp.getPointAtLength(L*(.18+.72*f)), dot=svg.querySelector("#rdot");
+  dot.setAttribute("cx",p.x); dot.setAttribute("cy",p.y); dot.setAttribute("opacity",Math.min(1,f*6,(1-f)*6).toFixed(2));
+  // orange heading: steady, gentle sway, ends in the compass disc
+  const o=12*W(1,1.1), q=10*W(2,.3);
+  const ex=1360+o*.4, ey=150+q*.5, mx=1030+q, my=540+o;
+  const op=svg.querySelector("#rorange");
+  op.setAttribute("d","M520 990 C720 930 "+(mx-170)+" "+(my+110)+" "+mx+" "+my+" C"+(mx+170)+" "+(my-110)+" "+(ex-150)+" "+(ey+120)+" "+ex+" "+ey);
+  const od=svg.querySelector("#rodisc"); od.setAttribute("cx",ex); od.setAttribute("cy",ey);
+  if(draw!=null){ const ol=op.getTotalLength(); op.style.strokeDasharray=ol; op.style.strokeDashoffset=(ol*(1-draw)).toFixed(1); od.setAttribute("r",(11*Math.max(0,(draw-.92)/.08)).toFixed(2)); }
+}
+
+/* ---------- homepage: 100 shoppers ---------- */
+let flowState="today", flowTouched=false, flowData=null;
+function per100(sim,N,mk){ const o={}; sim.byMethod.forEach(b=>{o[b.m.id]=(o[b.m.id]||0)+b.ok/N*100;}); return MARKETS[mk].methods.map(m=>({m,v:o[m.id]||0})); }
+function renderFlow(P){
+  const mk=P.markets.includes("BR")?"BR":P.markets[0], M=MARKETS[mk];
+  const r=enumerate(P,mk), sq=r.sq, best=[...r.ok].sort((a,b)=>b.v12-a.v12)[0], N=Math.max(1,P.vol);
+  const T=Math.round(sq.acceptance*100), R=Math.max(T,Math.round(best.acceptance*100));
+  const a=per100(sq,N,mk), b=per100(best,N,mk), mx=Math.max(...a.map(x=>x.v),...b.map(x=>x.v),1);
+  flowData={T,R,M};
+  $("#flowDots").innerHTML=Array.from({length:100},(_,i)=>`<i style="--d:${i}" class="${i<T?"done":i<R?"won-slot":""}"></i>`).join("");
+  $("#flowRows").innerHTML=a.map((x,i)=>`<div class="mrow"><span>${esc(x.m.label)}</span><span class="tr"><i style="--w:${(x.v/mx*100).toFixed(1)}%;--w2:${(b[i].v/mx*100).toFixed(1)}%"></i></span><span class="v" data-a="${Math.round(x.v)}" data-b="${Math.round(b[i].v)}">${Math.round(x.v)}</span></div>`).join("");
+  applyFlow(false);
+}
+let flowAnim=0;
+function applyFlow(animate){
+  if(!flowData) return; const {T,R,M}=flowData, on=flowState==="rumbo";
+  $("#flowDots").classList.toggle("rumbo",on); $("#flowTxt").classList.toggle("rumbo",on);
+  $("#flowDots").querySelectorAll("i.won-slot").forEach(d=>d.classList.toggle("won",on));
+  ["today","rumbo"].forEach(k=>$("#fl-"+k).setAttribute("aria-pressed",k===flowState));
+  $("#flowRows").querySelectorAll(".v").forEach(v=>v.textContent=on?v.dataset.b:v.dataset.a);
+  $("#flowCap").textContent= on ? `In ${M.name}, with the payment methods people prefer and cards processed locally, ${R-T} more of every 100 checkouts become sales.` : `In ${M.name} today, a European provider accepts cards only and processes them from abroad. Most shoppers who wanted Pix or local options leave.`;
+  const big=$("#flowBig"), to=on?R:T, from=+(big.dataset.v||T);
+  cancelAnimationFrame(flowAnim);
+  const set=v=>{big.firstChild.nodeValue=String(v);big.dataset.v=v;};
+  if(!animate||reduceMotion()) { set(to); return; }
+  const t0=performance.now(), dur=900;
+  const step=t=>{const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3); set(Math.round(from+(to-from)*e)); if(k<1) flowAnim=requestAnimationFrame(step);};
+  flowAnim=requestAnimationFrame(step);
+}
+function reduceMotion(){ try{return window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){return false;} }
+
+/* ---------- homepage: timeline + market map ---------- */
+let mapMk="BR";
+function renderTimeline(P){
+  const mk=P.markets.includes("BR")?"BR":P.markets[0], r=enumerate(P,mk), best=[...r.ok].sort((a,b)=>b.v12-a.v12)[0];
+  const wk=Math.max(3,best.weeks), AX=20, w=x=>(x/AX*100).toFixed(2)+"%";
+  const today=[["Tender and sales pitches",6],["Negotiation and contracts",4],["Integration and testing",6]];
+  const rum=[["Decide",1],["Onboarding and checks",wk-2],["Live",1]];
+  $("#tlMarket").textContent=MARKETS[mk].name;
+  const bar=(rows,label,cls)=>`<div class="tl-bar"><div class="tl-track" role="img" aria-label="${esc(label)}">${rows.map(([l,x],i)=>`<span class="tl-seg" style="--w:${w(x)};--i:${i}"><em>${x} wk${x===1?"":"s"}</em></span>`).join("")}</div>
+      <ol class="tl-labels">${rows.map(([l,x],i)=>`<li style="--w:${w(x)};--i:${i}"><span class="sw ${cls}${i===rows.length-1?" last":""}" aria-hidden="true"></span>${esc(l)}<small> · ${x} wk${x===1?"":"s"}</small></li>`).join("")}</ol></div>`;
+  $("#timeline").innerHTML=`
+    <div class="tl-row tl-now"><div class="tl-name"><b>Today</b><span>RFPs, pitches, spreadsheets</span></div>
+      ${bar(today,"Today: about 16 weeks (12 to 20): "+today.map(([l,x])=>l+" "+x+" weeks").join(", "),"now")}
+      <div class="tl-total">12 to 20 weeks<small>assumption</small></div></div>
+    <div class="tl-row tl-rum"><div class="tl-name"><b>With Rumbo</b><span>ranked suggestion, one hub</span></div>
+      ${bar(rum,`With Rumbo: about ${best.weeks} weeks: `+rum.map(([l,x])=>l+" "+x+(x===1?" week":" weeks")).join(", "),"rum")}
+      <div class="tl-total">${best.weeks} weeks<small>from the prototype</small></div></div>
+    <div class="tl-axis" aria-hidden="true">${[0,5,10,15,20].map(x=>`<span>${x} wks</span>`).join("")}</div>`;
+}
+function renderMap(){
+  const M=MARKETS[mapMk];
+  $("#mkTabs").innerHTML=ALL.map(m=>`<button type="button" data-mk="${m}" aria-pressed="${m===mapMk}">${MARKETS[m].name}</button>`).join("");
+  document.querySelectorAll("#lmap path.mk").forEach(p=>p.classList.toggle("on",p.dataset.mk===mapMk));
+  const mx=Math.max(...M.methods.map(x=>x.share));
+  $("#mkCard").innerHTML=`<h3>${esc(M.name)}</h3><p class="src">${mapMk==="BR"?"How people pay online: EBANX 2025 via PYMNTS":"How people pay online: team assumption, to validate"} · approval rates synthetic</p>
+    <div class="mrows" style="margin:0;max-width:none">${M.methods.map(x=>`<div class="mrow"><span>${esc(x.label)}</span><span class="tr"><i style="width:${(x.share/mx*100).toFixed(1)}%"></i></span><span class="v">${Math.round(x.share*100)}%</span></div>`).join("")}</div>
+    <div class="facts"><div><span>Cards approved from abroad</span><b>${of100(M.xb)} of 100</b></div><div><span>Processed locally</span><b>${of100(M.local)} of 100</b></div>
+    <div><span>Local methods (not cards)</span><b>${Math.round(M.methods.filter(x=>x.cat!=="card").reduce((t,x)=>t+x.share,0)*100)}% of checkouts</b></div><div><span>Shoppers expect installments</span><b>${M.installments?"Yes":"Rarely"}</b></div></div>`;
+  document.querySelectorAll("#mkTabs button").forEach(b=>b.addEventListener("click",()=>{mapMk=b.dataset.mk;renderMap();$(`#mkTabs button[data-mk="${mapMk}"]`).focus();}));
+}
+function initMap(){
+  const svg=$("#lmap");
+  svg.querySelectorAll("path.mk").forEach(p=>{
+    p.addEventListener("click",()=>{mapMk=p.dataset.mk;renderMap();});
+    p.addEventListener("mouseenter",()=>{mapMk=p.dataset.mk;renderMap();});
+  });
+  renderMap();
+}
+/* ---------- Wiring ---------- */
+function renderMarkets(){
+  const P=profile();
+  if(!P.markets.includes(market)) market=P.markets[0];
+  // own sales history: offered only for selected target markets
+  const os=$("#mOwnMkt"), keep=P.markets.includes(os.value)?os.value:P.markets[0];
+  os.innerHTML=P.markets.map(m=>`<option value="${m}" ${m===keep?"selected":""}>${MARKETS[m].name}</option>`).join("");
+  $("#ownMktName").textContent = P.markets.length===1 ? MARKETS[P.markets[0]].name : ($("#mOwn").checked ? MARKETS[keep].name : "one of its target markets");
+  $("#ownNote").textContent = keep===market ? `Its results in ${MARKETS[keep].name} adjust the estimates you are viewing now.` : `Its results in ${MARKETS[keep].name} adjust the ${MARKETS[keep].name} estimates only. You are viewing ${MARKETS[market].name}, which uses similar merchants' results alone.`;
+  $("#mktSwitch").innerHTML=P.markets.map(m=>`<button type="button" data-m="${m}" aria-pressed="${m===market}"><span class="code" aria-hidden="true">${m}</span>${MARKETS[m].name}</button>`).join("");
+  $("#mkCount").textContent=P.markets.length;
+  $("#mktSwitch").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{market=b.dataset.m;renderAll();}));
+}
+let lastLive="";
+function focusKey(){const e=document.activeElement;if(!e||e===document.body)return null;if(e.dataset&&e.dataset.m)return {m:e.dataset.m};return e.id?{id:e.id}:null;}
+function restoreFocus(k){if(!k)return;const el=k.m?document.querySelector(`#mktSwitch button[data-m="${k.m}"]`):document.getElementById(k.id);if(el&&el!==document.activeElement)el.focus({preventScroll:true});}
+function renderAll(){
+  const fk=focusKey();
+  renderMarkets();
+  $("#ownBox").hidden=!$("#mOwn").checked;
+  const res=enumerate(profile(),market);
+  renderReco(res);renderCanvas(res);renderDecide(res);renderMonitor(res);renderHow();renderHome(profile());renderFlow(profile());renderTimeline(profile());
+  const onHome=view==="home";
+  $("#v-home").hidden=!onHome; $("#workspace").hidden=onHome; document.body.classList.toggle("ws",!onHome);
+  document.querySelectorAll(".topnav a").forEach(a=>{ if((a.dataset.nav==="home")===onHome) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  $("#ctaTop").hidden=!onHome;
+  document.title = onHome ? "Rumbo · Your payments compass" : "Rumbo · "+(PAGES[view]?PAGES[view][0].replace("{m}",MARKETS[market].name):"Workspace");
+  document.querySelectorAll("[data-panel]").forEach(p=>p.hidden=p.dataset.panel!==view);
+  document.querySelectorAll(".side-link").forEach(a=>{ if(a.dataset.view===view) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  if(PAGES[view]){ $("#pageTitle").textContent=PAGES[view][0].replace("{m}",MARKETS[market].name); $("#pageSub").textContent=PAGES[view][1]; }
+  const P=profile(), best=rank(res)[0];
+  const live=`${MARKETS[market].name}: suggested ${setupName(best.ids)}, profit in the first 12 months ${eurk(best.v12)}.`;
+  if(live!==lastLive){ $("#liveStatus").textContent=live; lastLive=live; }
+  const nm=P.name.replace(/\s*\(example\)\s*$/,"")||"Example merchant";
+  $("#acctName").textContent=nm; $("#acctAv").textContent=(nm.match(/\b\p{L}/gu)||["M"]).slice(0,2).join("").toUpperCase();
+  $("#acctSub").textContent=`${IND[P.ind].l} · €${NF0.format(P.ticket)} orders`;
+  $("#crumb").innerHTML=`<b>${esc(nm)}</b>${ICON("chev")}<span>${esc(view==="how"?"How it works":MARKETS[market].name)}</span>`;
+  restoreFocus(fk);
+}
+const VIEWS=["home","reco","canvas","decide","monitor","how"];
+function setView(v,focusTab){ if(!VIEWS.includes(v))return; const page=(view==="home")!==(v==="home"); view=v;
+  try{ history.replaceState(null,"","#"+v); }catch(e){}
+  renderAll(); window.scrollTo(0,0); if(focusTab&&v!=="home") $("#nav-"+v).focus(); }
+$("#mMarkets").innerHTML=ALL.map(m=>`<label class="chip"><input type="checkbox" name="markets" value="${m}" id="mk-${m}" ${m==="BR"||m==="MX"?"checked":""}><span>${MARKETS[m].name}</span></label>`).join("");
+document.querySelectorAll(".rail input,.rail select").forEach(el=>{ if(!el.name) el.name=el.id; if(el.type==="text"||el.type==="number") el.autocomplete="off"; });
+$("#mName").spellcheck=false;
+let deb; const soon=()=>{clearTimeout(deb);deb=setTimeout(renderAll,120);};
+document.querySelectorAll(".rail input,.rail select").forEach(el=>el.addEventListener("change",renderAll));
+document.querySelectorAll(".rail input[type=number],.rail input[type=text]").forEach(el=>el.addEventListener("input",soon));
+// keep at least one market selected, and say so
+document.querySelectorAll("#mMarkets input").forEach(cb=>cb.addEventListener("change",()=>{
+  const h=$("#h-markets");
+  if(!document.querySelector("#mMarkets input:checked")){ cb.checked=true; h.textContent="Keep at least one target market selected."; h.hidden=false; renderAll(); }
+  else h.hidden=true;
+}));
+// deep links (#reco, #canvas, #decide, #monitor, #how)
+const fromHash=()=>{const h=(location.hash||"").slice(1); if(VIEWS.includes(h)&&h!==view){ const page=(view==="home")!==(h==="home"); view=h; closeSide(); renderAll(); window.scrollTo(0,0); if(page&&h!=="home") $("#results").focus({preventScroll:true}); }
+  else if(h==="compare"||h==="estimates"){ if(view!=="reco"){view="reco";renderAll();} const el=document.getElementById(h); if(el){ if(el.tagName==="DETAILS") el.open=true; el.scrollIntoView({block:"start"}); } try{history.replaceState(null,"","#reco");}catch(e){} } };
+window.addEventListener("hashchange",fromHash);
+{const h=(location.hash||"").slice(1); if(VIEWS.includes(h)) view=h;}
+// homepage motion: reveal on scroll, compass dial, steps progress, 100-shoppers toggle
+["today","rumbo"].forEach(k=>$("#fl-"+k).addEventListener("click",()=>{flowTouched=true; if(flowState!==k){flowState=k; applyFlow(true);} }));
+(function(){
+  const motion=!reduceMotion();
+  if(motion) document.documentElement.classList.add("js-motion");
+  const reveal=[...document.querySelectorAll(".reveal")];
+  if("IntersectionObserver" in window && motion){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} }),{rootMargin:"0px 0px -8% 0px",threshold:.08});
+    reveal.forEach(el=>io.observe(el));
+  } else reveal.forEach(el=>el.classList.add("in"));
+  const flowSec=$("#home-flow");
+  if("IntersectionObserver" in window){
+    const fo=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting && !flowTouched && flowState==="today"){ setTimeout(()=>{ if(!flowTouched && flowState==="today"){ flowState="rumbo"; applyFlow(true);} }, motion?700:0); fo.disconnect(); } }),{threshold:.45});
+    fo.observe(flowSec);
+  }
+  const steps=$(".steps"), lis=[...steps.querySelectorAll("li")], vid=null;
+  // hero ribbons: drawn live; static frame with reduced motion; paused off-screen or outside the homepage
+  const rsvg=$("#ribbons"); let rVis=true, rRun=0, rStart=null;
+  ribbonFrame(rsvg,0,motion?0:1);
+  const rLoop=now=>{ rRun=0; if(!(motion&&rVis&&view==="home")) return; if(rStart===null) rStart=now; const t=(now-rStart)/1000;
+    ribbonFrame(rsvg,t%RIBBON_T, t<2.2?Math.min(1,1-Math.pow(1-t/2.2,3)):1); rRun=requestAnimationFrame(rLoop); };
+  const rKick=()=>{ if(!rRun&&motion&&rVis&&view==="home") rRun=requestAnimationFrame(rLoop); };
+  if("IntersectionObserver" in window) new IntersectionObserver(es=>es.forEach(e=>{rVis=e.isIntersecting;rKick();}),{threshold:0}).observe(rsvg);
+  window.addEventListener("hashchange",()=>setTimeout(rKick,50)); rKick();
+  let tick=false;
+  const onScroll=()=>{ tick=false; if(view!=="home") return;
+    const y=window.scrollY||0;
+    const vh=window.innerHeight||800;
+    reveal.forEach(el=>{ if(!el.classList.contains("in") && el.getBoundingClientRect().top < vh*0.92) el.classList.add("in"); });
+    const r=steps.getBoundingClientRect();
+    const p=Math.max(0,Math.min(1,(vh*0.85-r.top)/(vh*0.6)));
+    steps.style.setProperty("--p",p.toFixed(3));
+    lis.forEach((li,i)=>li.classList.toggle("lit",p>=(i+0.5)/lis.length));
+  };
+  window.addEventListener("scroll",()=>{ if(!tick){tick=true;requestAnimationFrame(onScroll);} },{passive:true});
+  onScroll();
+})();
+
+// guided demo
+const TOUR=[
+ {v:"reco",sel:"#acctBtn",t:"Meet the merchant",x:"Lumen Atelier, a Spanish fashion shop expanding into Latin America. Its profile drives everything: change it any time and every number updates."},
+ {v:"reco",sel:"#mktSwitch",t:"Pick a market",x:"Each target market gets its own suggestion. We start with Brazil, where Pix and cards each make up about 4 in 10 online payments."},
+ {v:"reco",sel:".reco",t:"Rumbo's suggestion",x:"Keep the current provider and add a Latin America specialist. About 85 of every 100 checkouts would become sales, up from 33 today."},
+ {v:"reco",sel:"#bridge",t:"Why this option",x:"Where the extra profit comes from: more cards approved, local payment methods, minus fees, set-up and the weeks before going live."},
+ {v:"canvas",sel:"#whatif",t:"Stress-test the choice",x:"Drag the sliders: what if local banks approve fewer payments, or the hub costs more? Watch where the best option changes."},
+ {v:"decide",sel:"#v-decide .panel",t:"Your team decides",x:"The Head of Payments accepts the suggestion or picks something else, with a reason. Rumbo never decides on its own."},
+ {v:"monitor",sel:"#v-monitor .alerts",t:"After launch",x:"Rumbo keeps watching real results and flags when it's time to look at the decision again."}];
+let tourI=-1, tourFrom=null;
+function tourPlace(){
+  if(tourI<0) return; const st=TOUR[tourI], el=document.querySelector(st.sel), hole=$("#tourHole"), card=$("#tourCard");
+  const r=el?el.getBoundingClientRect():null, vw=innerWidth, vh=innerHeight, ok=r&&r.width>0&&r.height>0&&r.right>0&&r.left<vw;
+  const pad=8, cw=card.offsetWidth, ch=card.offsetHeight;
+  if(ok){ const top=Math.max(4,r.top-pad), h=Math.min(r.height+pad*2, vh-top-4);
+    hole.classList.remove("none"); Object.assign(hole.style,{left:(r.left-pad)+"px",top:top+"px",width:(r.width+pad*2)+"px",height:h+"px"});
+    let cx=Math.min(Math.max(16,r.left),vw-cw-16), cy=r.bottom+pad+12;
+    if(cy+ch>vh-12){ cy=r.top-pad-12-ch; } if(cy<12){ cy=Math.max(12,vh-ch-16); cx=vw-cw-16; }
+    Object.assign(card.style,{left:cx+"px",top:cy+"px"}); }
+  else { hole.classList.add("none"); Object.assign(card.style,{left:((vw-cw)/2)+"px",top:((vh-ch)/2)+"px"}); }
+}
+function tourGo(i){
+  if(i<0) return; if(i>=TOUR.length){ tourEnd(); return; }
+  tourI=i; const st=TOUR[i];
+  $("#tourStep").textContent=`Step ${i+1} of ${TOUR.length}`; $("#tourTitle").textContent=st.t; $("#tourText").textContent=st.x;
+  $("#tourDots").innerHTML=TOUR.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("");
+  $("#tourBack").disabled=i===0; $("#tourNext").textContent=i===TOUR.length-1?"Finish":"Next";
+  if(view!==st.v){ location.hash="#"+st.v; }
+  setTimeout(()=>{ const el=document.querySelector(st.sel); if(el&&el.getBoundingClientRect().width>0) el.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"}); setTimeout(tourPlace, reduceMotion()?30:420); },60);
+  setTimeout(tourPlace,30);
+}
+function tourStart(from){ tourFrom=from||null; closeDrawer(); closeSide(true); $("#tour").hidden=false; tourGo(0); setTimeout(()=>$("#tourNext").focus(),80); }
+function tourEnd(){ tourI=-1; $("#tour").hidden=true; const f=tourFrom&&document.contains(tourFrom)&&tourFrom.offsetParent?tourFrom:$("#demoBtn"); f&&f.focus(); }
+$("#demoBtn").addEventListener("click",e=>tourStart(e.currentTarget));
+$("#heroDemo").addEventListener("click",()=>{ location.hash="#reco"; setTimeout(()=>tourStart($("#demoBtn")),120); });
+$("#tourNext").addEventListener("click",()=>tourGo(tourI+1));
+$("#tourBack").addEventListener("click",()=>tourGo(tourI-1));
+$("#tourExit").addEventListener("click",tourEnd);
+document.addEventListener("keydown",e=>{ if(tourI<0) return; if(e.key==="Escape"){e.stopImmediatePropagation();tourEnd();} else if(e.key==="ArrowRight"){tourGo(tourI+1);} else if(e.key==="ArrowLeft"){tourGo(tourI-1);} },true);
+window.addEventListener("resize",()=>tourPlace()); window.addEventListener("scroll",()=>{ if(tourI>=0) requestAnimationFrame(tourPlace); },{passive:true});
+initMap();
+// profile drawer (non-modal on desktop so results update beside it) and phone sidebar
+let opener=null;
+const narrow=()=>{try{return window.matchMedia("(max-width:900px)").matches;}catch(e){return false;}};
+function syncScrim(){ $("#scrim").hidden=!( $("#side").classList.contains("open") || (!$("#profileDrawer").hidden && narrow()) ); }
+function openDrawer(from){ opener=from||null; $("#profileDrawer").hidden=false; closeSide(true); document.querySelectorAll("[data-edit]").forEach(b=>b.setAttribute("aria-expanded","true")); syncScrim(); $("#mName").focus(); }
+function closeDrawer(){ if($("#profileDrawer").hidden) return; $("#profileDrawer").hidden=true; document.querySelectorAll("[data-edit]").forEach(b=>b.setAttribute("aria-expanded","false")); syncScrim(); if(opener&&document.contains(opener)) opener.focus(); }
+function openSide(){ $("#side").classList.add("open"); $("#menuBtn").setAttribute("aria-expanded","true"); syncScrim(); const a=$("#side .side-link[aria-current=page]")||$("#side a"); a&&a.focus(); }
+function closeSide(silent){ if(!$("#side").classList.contains("open")) return; $("#side").classList.remove("open"); $("#menuBtn").setAttribute("aria-expanded","false"); syncScrim(); if(!silent) $("#menuBtn").focus(); }
+document.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>$("#profileDrawer").hidden?openDrawer(b):closeDrawer()));
+$("#drawerClose").addEventListener("click",closeDrawer);
+$("#menuBtn").addEventListener("click",()=>$("#side").classList.contains("open")?closeSide():openSide());
+$("#scrim").addEventListener("click",()=>{closeSide(true);closeDrawer();});
+document.addEventListener("keydown",e=>{ if(e.key!=="Escape") return; if(!$("#profileDrawer").hidden){closeDrawer();} else if($("#side").classList.contains("open")){closeSide();} });
+document.querySelectorAll("#side .side-link").forEach(a=>a.addEventListener("click",()=>closeSide(true)));
+renderAll();
+})();
+</script>
+
+</body>
+</html>
