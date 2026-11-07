@@ -458,6 +458,9 @@ h4.sub{font-family:var(--f-mono);font-size:11px;font-weight:500;text-transform:u
 .mk-tabs button{font:inherit;font-size:13.5px;font-weight:500;padding:7px 14px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);cursor:pointer}
 .mk-tabs button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .mk-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+.mk-card{display:grid}
+.mk-pane{grid-area:1/1;visibility:hidden}
+.mk-pane.on{visibility:visible}
 .mk-card h3{margin:0;font-size:22px;letter-spacing:-.02em}
 .mk-card .src{font-size:12px;color:var(--ink-3);margin:4px 0 16px}
 .mk-card .facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
@@ -729,7 +732,7 @@ aside.rail.drawer[hidden]{display:none}
         <p class="eyebrow">Five markets, five ways to pay</p>
         <h2 id="h-map" style="font-size:clamp(24px,2.6vw,32px);letter-spacing:-.025em;line-height:1.15;margin:6px 0 16px">Cards are only part of the story</h2>
         <div class="mk-tabs" role="group" aria-label="Choose a market" id="mkTabs"></div>
-        <div class="mk-card" id="mkCard" aria-live="polite"></div>
+        <div class="mk-card" id="mkCard"></div><p class="sr-only" id="mkLive" aria-live="polite"></p>
       </div>
     </div>
   </section>
@@ -1681,16 +1684,24 @@ function renderTimeline(P){
       <div class="tl-total">${best.weeks} weeks<small>from the prototype</small></div></div>
     <div class="tl-axis" aria-hidden="true">${[0,5,10,15,20].map(x=>`<span>${x} wks</span>`).join("")}</div>`;
 }
-function renderMap(){
-  const M=MARKETS[mapMk];
-  $("#mkTabs").innerHTML=ALL.map(m=>`<button type="button" data-mk="${m}" aria-pressed="${m===mapMk}">${MARKETS[m].name}</button>`).join("");
-  document.querySelectorAll("#lmap path.mk").forEach(p=>p.classList.toggle("on",p.dataset.mk===mapMk));
-  const mx=Math.max(...M.methods.map(x=>x.share));
-  $("#mkCard").innerHTML=`<h3>${esc(M.name)}</h3><p class="src">${mapMk==="BR"?"How people pay online: EBANX 2025 via PYMNTS":"How people pay online: team assumption, to validate"} · approval rates synthetic</p>
+function mkPane(mk){
+  const M=MARKETS[mk], mx=Math.max(...M.methods.map(x=>x.share));
+  return `<h3>${esc(M.name)}</h3><p class="src">${mk==="BR"?"How people pay online: EBANX 2025 via PYMNTS":"How people pay online: team assumption, to validate"} · approval rates synthetic</p>
     <div class="mrows" style="margin:0;max-width:none">${M.methods.map(x=>`<div class="mrow"><span>${esc(x.label)}</span><span class="tr"><i style="width:${(x.share/mx*100).toFixed(1)}%"></i></span><span class="v">${Math.round(x.share*100)}%</span></div>`).join("")}</div>
     <div class="facts"><div><span>Cards approved from abroad</span><b>${of100(M.xb)} of 100</b></div><div><span>Processed locally</span><b>${of100(M.local)} of 100</b></div>
     <div><span>Local methods (not cards)</span><b>${Math.round(M.methods.filter(x=>x.cat!=="card").reduce((t,x)=>t+x.share,0)*100)}% of checkouts</b></div><div><span>Shoppers expect installments</span><b>${M.installments?"Yes":"Rarely"}</b></div></div>`;
-  document.querySelectorAll("#mkTabs button").forEach(b=>b.addEventListener("click",()=>{mapMk=b.dataset.mk;renderMap();$(`#mkTabs button[data-mk="${mapMk}"]`).focus();}));
+}
+function renderMap(){
+  if(!$("#mkTabs").children.length){
+    $("#mkTabs").innerHTML=ALL.map(m=>`<button type="button" data-mk="${m}" aria-pressed="false">${MARKETS[m].name}</button>`).join("");
+    document.querySelectorAll("#mkTabs button").forEach(b=>b.addEventListener("click",()=>{mapMk=b.dataset.mk;renderMap();}));
+    // every market's card is stacked in the same spot, so the card keeps one size whichever market is shown
+    $("#mkCard").innerHTML=ALL.map(m=>`<div class="mk-pane" data-mk="${m}">${mkPane(m)}</div>`).join("");
+  }
+  document.querySelectorAll("#mkTabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mk===mapMk));
+  document.querySelectorAll("#lmap path.mk").forEach(p=>p.classList.toggle("on",p.dataset.mk===mapMk));
+  $("#mkLive").textContent=MARKETS[mapMk].name+" selected";
+  document.querySelectorAll("#mkCard .mk-pane").forEach(p=>{ const on=p.dataset.mk===mapMk; p.classList.toggle("on",on); p.setAttribute("aria-hidden",on?"false":"true"); });
 }
 function initMap(){
   const svg=$("#lmap");
