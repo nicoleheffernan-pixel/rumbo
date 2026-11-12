@@ -1635,7 +1635,10 @@ function renderRollout(res){
 }
 
 /* ---------- Full report (download) ---------- */
+let DLNS=null;
+try{ if(window.claude&&typeof window.claude.use==="function") window.claude.use("downloads").then(d=>{DLNS=d;}).catch(()=>{}); }catch(e){}
 function download(name,text,type){
+  if(DLNS){ DLNS.save({filename:name,data:new Blob([text])}).catch(()=>{}); return; }
   const url=URL.createObjectURL(new Blob([text],{type:type+";charset=utf-8"}));
   const a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),4000);
