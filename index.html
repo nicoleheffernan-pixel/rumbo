@@ -637,6 +637,39 @@ body.ws .appbar, body.ws .sitefoot{display:none}
 .hb.pick .n{font-weight:600} .hb.pick .v{color:var(--brand-strong);font-weight:600}
 .hb2 .tr{height:7px} .hb2 .tr + .tr{margin-top:3px}
 .hb2 .tr.peer i{background:var(--today)}
+
+/* providers, roll out, report */
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.reco-act{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.reco-act .btn svg,.controls .btn svg{width:15px;height:15px}
+.prov b{color:var(--ink);font-weight:600;margin-right:4px}
+.vlegend{margin-top:4px}
+.vtable td{vertical-align:top}
+.vtable .setupname small{max-width:340px}
+.vrank{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);font-family:var(--f-mono);font-size:11px;color:var(--ink-3);vertical-align:1px}
+.vtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+tr.vblk td{color:var(--ink-3)} tr.vblk td b{color:var(--ink-2)}
+th.c,td.c{text-align:center}
+.rfpcb{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+.rfplist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.rfplist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+.rfplist .mono{margin-left:auto;font-size:12.5px;color:var(--ink-2)}
+.simbar{display:flex;gap:10px;align-items:flex-start;margin-bottom:16px}
+.simbar svg{flex:none;margin-top:3px}
+.conns{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:10px}
+.conn{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface-2);min-width:0}
+.conn .muted{font-size:13px}
+.conn code{font-size:11.5px;color:var(--ink-3)}
+.csteps{display:flex;flex-wrap:wrap;gap:4px}
+.cstep{font-family:var(--f-mono);font-size:11px;padding:3px 8px;border-radius:999px;border:1px dashed var(--line-strong);color:var(--ink-3)}
+.cstep.ok{border-style:solid;border-color:transparent;background:var(--good-soft);color:var(--good)}
+.codeblock{margin:0;max-height:360px;overflow:auto;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font:12px/1.55 var(--f-mono);color:var(--ink-2);white-space:pre}
+.apilist{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+.apilist li{display:grid;grid-template-columns:76px 1fr;gap:2px 10px;align-items:center;font-size:13px}
+.apilist li > span:last-child{grid-column:2;color:var(--ink-3);font-size:12.5px}
+.apilist code{font-size:12.5px;color:var(--ink);overflow-wrap:anywhere}
+.http{justify-self:start;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:2px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent);text-align:center}
+.http.post,.http.put{background:var(--good-soft);color:var(--good)} .http.webhook{background:var(--warn-soft);color:var(--warn)}
 .cardfoot{margin:12px 0 0;font-size:12.5px;color:var(--ink-3)}
 aside.rail.drawer{position:fixed;border-radius:0;top:0;right:0;bottom:0;z-index:45;width:min(400px,100vw);overflow-y:auto;background:var(--surface);border-left:1px solid var(--line);box-shadow:-24px 0 48px -24px rgba(14,20,36,.35);padding:20px 22px 28px}
 aside.rail.drawer[hidden]{display:none}
@@ -686,6 +719,8 @@ aside.rail.drawer[hidden]{display:none}
     <symbol id="i-updown" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m8 9 4-4 4 4M8 15l4 4 4-4"/></symbol>
     <symbol id="i-edit" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Zm9.5-13.5 4 4"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM10 8.5v7l5.5-3.5L10 8.5Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 3v4m6-4v4M7 7h10v4a5 5 0 0 1-10 0V7Zm5 9v5"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-5 5 5-5 5"/></symbol>
   </defs>
 </svg>
@@ -873,8 +908,10 @@ aside.rail.drawer[hidden]{display:none}
       <p class="side-h">Decision</p>
       <div class="side-list">
         <a class="side-link" id="nav-reco" href="#reco" data-view="reco"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>Suggestion</a>
+        <a class="side-link" id="nav-providers" href="#providers" data-view="providers"><svg width="18" height="18" aria-hidden="true"><use href="#i-scale"/></svg>Providers</a>
         <a class="side-link" id="nav-canvas" href="#canvas" data-view="canvas"><svg width="18" height="18" aria-hidden="true"><use href="#i-grid"/></svg>Decision canvas</a>
         <a class="side-link" id="nav-decide" href="#decide" data-view="decide"><svg width="18" height="18" aria-hidden="true"><use href="#i-person"/></svg>Team decision</a>
+        <a class="side-link" id="nav-rollout" href="#rollout" data-view="rollout"><svg width="18" height="18" aria-hidden="true"><use href="#i-plug"/></svg>Roll out</a>
         <a class="side-link" id="nav-monitor" href="#monitor" data-view="monitor"><svg width="18" height="18" aria-hidden="true"><use href="#i-bell"/></svg>After launch<span class="badge" id="alertBadge" aria-label="1 alert needs action">1</span></a>
       </div>
       <p class="side-h">Learn</p>
@@ -906,6 +943,8 @@ aside.rail.drawer[hidden]{display:none}
       <section aria-labelledby="pageTitle" data-panel="reco" id="v-reco"></section>
       <section aria-labelledby="pageTitle" data-panel="canvas" id="v-canvas" hidden></section>
       <section aria-labelledby="pageTitle" data-panel="decide" id="v-decide" hidden></section>
+      <section aria-labelledby="pageTitle" data-panel="providers" id="v-providers" hidden></section>
+      <section aria-labelledby="pageTitle" data-panel="rollout" id="v-rollout" hidden></section>
       <section aria-labelledby="pageTitle" data-panel="monitor" id="v-monitor" hidden></section>
       <section aria-labelledby="pageTitle" data-panel="how" id="v-how" hidden></section>
       <p class="wsfoot">Rumbo is a class project for <i>Artificial Intelligence and Strategic Decisions</i> (IE Business School, 2026), not a commercial product. Provider names are anonymized archetypes; approval rates, fees and peer groups are synthetic. Brazil's checkout mix (Pix 42%, cards 41%) follows EBANX 2025 as reported by PYMNTS.</p>
@@ -1178,6 +1217,8 @@ view="home";
 const PAGES={reco:["Suggestion for {m}","Which payment providers to start with, based on how similar merchants actually perform. The AI suggests; your team decides."],
   canvas:["Decision canvas · {m}","The options, what could happen, and the expected profit of each choice."],
   decide:["Team decision · {m}","The Head of Payments accepts the suggestion or chooses something else, and records why."],
+  providers:["Providers · {m}","The best providers of each type, ranked on the same numbers as the suggestion. Build your RFP shortlist here."],
+  rollout:["Roll out · {m}","How the chosen setup would go live: plan, routing rules and connections. Simulated, no live connections."],
   monitor:["After launch · {m}","An example of the first six months, and the signals that reopen the decision."],
   how:["How it works","Key terms, the method, where the data comes from and the safeguards."]};
 function rank(res){
@@ -1342,11 +1383,11 @@ function renderReco(res){
   if(!rows.find(r=>r.key==="GP")) rows.push(ranked.find(r=>r.key==="GP"));
   const cp=best.cardProv[0], e=cp?res.est[cp.id]:null;
   const gain=best.v12-sq.v12, dC=best.cpa-sq.cpa;
-  const ownTxt = res.ownInfo?`<div class="callout" style="margin-top:14px"><b>Your own results count.</b> Similar merchants get about ${of100(res.ownInfo.prior)} of 100 cards approved with your current provider; you get ${of100(res.ownInfo.obs)}. So the tool lowers its estimates a little for every option.</div>`:"";
+  const ownTxt = res.ownInfo?`<div class="callout" style="margin-top:12px"><b>Your own results count.</b> Similar merchants get about ${of100(res.ownInfo.prior)} of 100 cards approved with your current provider; you get ${of100(res.ownInfo.obs)}. So the tool lowers its estimates a little for every option.</div>`:"";
   $("#v-reco").innerHTML=`
   <div class="panel reco" data-v12="${Math.round(best.v12)}" data-sq12="${Math.round(sq.v12)}">
     <div class="reco-head"><div class="pills"><span class="pill brand">AI suggestion · ${esc(M.name)}</span>${e?srcPill(e):""}</div>
-    <span class="muted">Ranked by ${o.l.toLowerCase()}</span></div>
+    <div class="reco-act"><span class="muted">Ranked by ${o.l.toLowerCase()}</span><button class="btn ghost sm" type="button" id="dlReport">${ICON("download")}Full report</button></div></div>
     <p class="headline">${esc(headline(best,sq,M))}</p>
     <div class="kpis kpis3">
       <div class="kpi"><div class="k">Checkouts that become sales</div><div class="v">${of100(best.acceptance)} <small>of 100</small></div><div class="d">today: ${of100(sq.acceptance)} of 100</div></div>
@@ -1354,15 +1395,14 @@ function renderReco(res){
       <div class="kpi"><div class="k">Extra profit, first 12 months</div><div class="v">${gain>=0?"+":""}${eurM(gain)}</div><div class="d">${eurk(best.v12)} vs ${eurk(sq.v12)} today · ${best.weeks?"live in "+best.weeks+" weeks":"live now"}</div></div>
     </div>
     <h3 class="setup">${esc(setupName(best.ids))} <small>${setupSub(best)}</small></h3>
-    <div class="provline">${best.byMethod.map(b=>`<span class="prov ${b.pid?"":"off"}">${esc(b.m.label)} → <b>${b.pid?esc(PROVIDERS[b.pid].short):"not offered"}</b>${b.fallback?` · backup: ${esc(PROVIDERS[b.fallback].short.toLowerCase())}`:""}</span>`).join("")}</div>
-    <div class="whycards">${whyCards(best,res,mk).map(c=>`<div class="whycard ${c.w?"warn":""}"><div class="t"><span class="ico ${c.w?"warn":""}">${ICON(c.i)}</span>${esc(c.t)}</div><p>${esc(c.p)}</p></div>`).join("")}</div>
-    ${ownTxt}
+    <div class="provline">${provGroups(best)}</div>
+    <div class="whycards">${whyTop(best,res,mk).map(c=>`<div class="whycard ${c.w?"warn":""}"><div class="t"><span class="ico ${c.w?"warn":""}">${ICON(c.i)}</span>${esc(c.t)}</div><p>${esc(c.p)}</p></div>`).join("")}</div>
   </div>
   ${recoCharts(res,best,P)}
   <div class="panel" id="bridge">${bridgeHTML(res,ranked,P)}</div>
   <div class="summary">
     <div><span class="label">Next step</span><h3>Your team decides</h3><p>Check how safe this choice is in the decision canvas, then accept it or pick something else. Contracts and prices are negotiated by people.</p></div>
-    <div class="acts"><a class="btn ghost" href="#canvas">Open decision canvas</a><a class="btn" href="#decide">Record decision</a></div>
+    <div class="acts"><a class="btn ghost" href="#providers">Compare providers</a><a class="btn ghost" href="#canvas">Open decision canvas</a><a class="btn" href="#decide">Record decision</a></div>
   </div>
   <div class="panel" id="compare">
     <div class="controls"><h3 style="margin:0;flex:1 1 auto">Compare all options for ${esc(M.name)}</h3>
@@ -1383,12 +1423,312 @@ function renderReco(res){
     <p class="lead" style="margin-top:12px">We start from the results of similar ${esc(IND[P.ind].l.toLowerCase())} merchants in ${esc(M.name)}, adjust for this merchant's order size and risk${res.ownInfo?", then for its own results":""}. Groups of fewer than five merchants are never shown, to protect their privacy.</p>
     <div class="tablewrap"><table><thead><tr><th>Provider</th><th>Processing</th><th class="n">Similar merchants</th><th class="n">Their card approvals</th><th class="n">Estimate for you</th><th class="n">Likely range</th><th>Based on</th></tr></thead>
     <tbody>${Object.entries(res.est).map(([id,e])=>`<tr><td>${esc(PROVIDERS[id].name)}</td><td>${PROVIDERS[id].route==="local"?"In the country":"From abroad"}</td><td class="n">${e.cohort.thin?"fewer than 5":e.cohort.merchants}</td><td class="n">${pct(e.peer,0)}</td><td class="n"><b>${pct(e.mean,0)}</b></td><td class="n"><span class="sig">${rng(e)}</span></td><td>${srcPill(e)}</td></tr>`).join("")}</tbody></table></div>
+    ${ownTxt}
   </details>`;
+  $("#dlReport").addEventListener("click",downloadReport);
   $("#objSel").addEventListener("change",e=>{objective=e.target.value;renderAll();});
   wireBridge();
   document.querySelectorAll("#v-reco [id^='sm-']").forEach(b=>b.addEventListener("click",()=>{salesMode=b.dataset.k;renderAll();}));
   document.querySelectorAll("#v-reco [id^='pm-']").forEach(b=>b.addEventListener("click",()=>{profitMode=b.dataset.k;renderAll();}));
 }
+/* ---------- Short "why" list for the suggestion card (the full list goes in the report) ---------- */
+function whyTop(sim,res,mk){
+  const M=MARKETS[mk], out=[], c=sim.cardProv[0];
+  if(c){
+    const local=PROVIDERS[c.id].route==="local";
+    out.push({i:"route",t:local?`Cards processed in ${M.name}`:"Cards still processed abroad",
+      p:`About ${of100(sim.cardApproval)} of 100 approved (${of100(res.sq.cardApproval)} today).${sim.cardProv[1]?` Declined cards get a second try with ${PROVIDERS[sim.cardProv[1].id].a}.`:""}`});
+  }
+  const lm=M.methods.filter(m=>m.cat!=="card"), cov=lm.filter(m=>sim.byMethod.find(b=>b.m.id===m.id&&!b.lost)), miss=lm.filter(m=>!cov.includes(m));
+  if(cov.length) out.push({i:"wallet",t:"Local payment methods",p:`${cov.map(m=>m.label).join(", ")}. With cards, ${pct(sim.coverage,0)} of how people pay.`});
+  out.push({i:"clock",t:sim.weeks?`Live in about ${sim.weeks} weeks`:"Already live",p:sim.weeks?`One-off cost ${eur(sim.oneOff)}, contracts and checks included.`:"Nothing new to connect."});
+  if(miss.length) out.push({i:"gap",t:"Not offered",w:true,p:`${miss.map(m=>`${m.label} (${pct(m.share,0)})`).join(", ")}. Most of these shoppers leave.`});
+  if(M.installments&&!sim.instOK) out.push({i:"cal",t:"No installments",w:true,p:"About 1 in 10 card buyers drops out."});
+  return out;
+}
+function provGroups(sim){
+  const g=sim.ids.map(id=>{
+    const ms=sim.byMethod.filter(b=>b.pid===id).map(b=>b.m.label);
+    const backup=sim.byMethod.some(b=>b.fallback===id);
+    return `<span class="prov"><b>${esc(PROVIDERS[id].short)}</b> ${esc([...ms,...(backup?["card backup"]:[])].join(", ")||"no methods used")}</span>`;
+  });
+  const off=sim.byMethod.filter(b=>!b.pid).map(b=>`<span class="prov off">${esc(b.m.label)}: not offered</span>`);
+  return g.concat(off).join("");
+}
+
+/* ---------- Providers: anonymized vendors inside each provider type (synthetic) ---------- */
+// Vendor A of each type is the archetype used everywhere else, so the suggestion's numbers don't move.
+const VENDORS={
+  XS:{cat:"Latin America specialists",blurb:"One contract for cards and local methods across the region, no local company needed.",list:[
+    ["Specialist A","Balanced: good approvals, every local method",{}],
+    ["Specialist B","Lowest fees, but fewer cards approved",{adj:-.08,fees:{card:[.034,.15],instant:[.019,0],cash:[.016,.70],wallet:[.029,0]},onboard:4}],
+    ["Specialist C","Most cards approved, highest fees",{adj:0,fees:{card:[.046,.25],instant:[.029,0],cash:[.022,.95],wallet:[.038,0]}}],
+    ["Specialist D","No cash vouchers and no installments",{adj:.005,inst:false,covers:["card","instant","wallet"]}]]},
+  LA:{cat:"Brazilian acquirers",blurb:"Local banks' card processing. Strong approvals, but they need a Brazilian company.",list:[
+    ["Acquirer A","Balanced: strong approvals, installments",{}],
+    ["Acquirer B","Lowest fees, slowest onboarding",{fees:{card:[.030,.10],instant:[.016,0]},onboard:10,integ:8}],
+    ["Acquirer C","Most cards approved, no installments",{adj:.03,inst:false}]]},
+  GL:{cat:"Global providers with a local licence",blurb:"Large global platforms that process cards inside the country. They need a local company.",list:[
+    ["Global A","Balanced: good approvals and fees",{}],
+    ["Global B","Lowest fees, slower onboarding",{fees:{card:[.029,.20],instant:[.013,0]},onboard:8}],
+    ["Global C","Fastest onboarding, higher fees",{adj:.006,fees:{card:[.036,.25],instant:[.017,0]},onboard:5}]]},
+  AP:{cat:"Local payments add-ons",blurb:"Add local methods next to your current card provider. No cards.",list:[
+    ["Add-on A","Every local method",{}],
+    ["Add-on B","Lowest fees, no local wallets",{fees:{instant:[.018,0],cash:[.015,.70],wallet:[.026,0]},covers:["instant","cash"]}],
+    ["Add-on C","Fastest to connect, higher fees",{fees:{instant:[.025,0],cash:[.020,.90],wallet:[.033,0]},onboard:2,integ:2}]]}
+};
+const VSORT={v12:["Profit, first 12 months",v=>-v.sim.v12],approval:["Cards approved",v=>v.approval==null?1:-v.approval],cpa:["Payment cost per sale",v=>v.sim.cpa],weeks:["Time to go live",v=>v.sim.weeks],cov:["Payment methods covered",v=>-v.cov]};
+let provSort="v12";
+let rfp=new Set((()=>{try{return JSON.parse(store.get("rumbo-rfp")||"[]");}catch(e){return [];}})());
+const saveRfp=()=>store.set("rumbo-rfp",JSON.stringify([...rfp]));
+function vendorGroups(P,mk,pickIds){
+  const M=MARKETS[mk], out=[];
+  for(const b in VENDORS){
+    const p0=PROVIDERS[b]; if(!p0.markets.includes(mk)) continue;
+    const V=VENDORS[b];
+    const rows=V.list.map(([name,note,patch],i)=>{
+      const pv={...p0,...patch}; let r;
+      PROVIDERS[b]=pv; try{ r=enumerate(P,mk); } finally { PROVIDERS[b]=p0; }
+      const has=s=>s.ids.includes(b), by=(x,y)=>y.v12-x.v12;
+      const okS=r.ok.filter(has).sort(by)[0], sim=okS||r.blocked.filter(has).sort(by)[0];
+      const e=r.est[b];
+      return {id:`${b}-${"ABCD"[i]}`,base:b,name,note,cat:V.cat,sim,blocked:!okS,approval:e?sim.cardApproval:null,
+        cov:M.methods.filter(m=>pv.covers.includes(m.cat)).length,nMeth:M.methods.length,
+        noInst:M.installments&&pv.covers.includes("card")&&!pv.inst,entity:pv.entity,
+        pick:i===0&&pickIds.includes(b),partner:sim.ids.filter(x=>x!==b)};
+    });
+    out.push({b,cat:V.cat,blurb:V.blurb,rows});
+  }
+  return out;
+}
+const partnerTxt=v=>v.partner.length?`Best with ${PROVIDERS[v.partner[0]].a}`:"Best on its own";
+function renderProviders(res){
+  const P=profile(), M=MARKETS[market], pick=rank(res)[0];
+  const G=vendorGroups(P,market,pick.ids), key=v=>`${market}|${v.id}`;
+  const sorter=VSORT[provSort][1];
+  const all=G.flatMap(g=>g.rows), short=all.filter(v=>rfp.has(key(v)));
+  $("#v-providers").innerHTML=`
+  <div class="panel">
+    <div class="controls"><h3 style="margin:0;flex:1 1 auto">Best providers of each type in ${esc(M.name)}</h3>
+      <label class="muted" for="vSort">Rank by</label>
+      <select id="vSort">${Object.entries(VSORT).map(([k,[l]])=>`<option value="${k}" ${k===provSort?"selected":""}>${l}</option>`).join("")}</select></div>
+    <p class="lead">Each provider is scored inside its best setup for ${esc(P.name)}, with the same model as the suggestion. Names are anonymized and every number is synthetic. No provider can pay to rank higher.</p>
+    <div class="legend vlegend"><span><i style="background:var(--brand)"></i>In Rumbo's suggestion</span><span><i style="background:var(--warn)"></i>Needs a local company${P.entity?"":" (you don't have one yet)"}</span></div>
+  </div>
+  ${G.map(g=>{const rows=[...g.rows].sort((a,b)=>sorter(a)-sorter(b)||b.sim.v12-a.sim.v12);return `
+  <div class="panel vgroup">
+    <div class="card-h" style="margin-bottom:6px"><div><h3>${esc(g.cat)}</h3><span class="when">${esc(g.blurb)}</span></div></div>
+    <div class="tablewrap"><table class="vtable">
+      <thead><tr><th>Provider</th><th class="n">Cards approved</th><th class="n">Checkouts → sales</th><th class="n">Cost per sale</th><th class="n">Go-live</th><th class="n">Methods</th><th class="n">Profit, 12 months</th><th class="c">RFP</th></tr></thead>
+      <tbody>${rows.map((v,i)=>`<tr class="${v.pick?"top1":""} ${v.blocked?"vblk":""}">
+        <td class="setupname"><span class="vrank">${i+1}</span>${esc(v.name)}${v.pick?' <span class="pill brand">Suggested</span>':""}<small>${esc(v.note)} · ${esc(partnerTxt(v))}</small>
+          ${v.blocked||v.noInst?`<span class="vtags">${v.blocked?'<span class="pill warn">Needs a local company</span>':""}${v.noInst?'<span class="pill mute">No installments</span>':""}</span>`:""}</td>
+        <td class="n">${v.approval==null?'<span class="muted">No cards</span>':pct(v.approval,0)}</td>
+        <td class="n">${of100(v.sim.acceptance)} of 100</td>
+        <td class="n">${eur2(v.sim.cpa)}</td>
+        <td class="n">${v.sim.weeks} wks</td>
+        <td class="n">${v.cov} of ${v.nMeth}</td>
+        <td class="n"><b>${eurk(v.sim.v12)}</b></td>
+        <td class="c"><input type="checkbox" class="rfpcb" data-k="${key(v)}" aria-label="Add ${esc(v.name)} to the RFP shortlist" ${rfp.has(key(v))?"checked":""}></td></tr>`).join("")}</tbody>
+    </table></div>
+  </div>`;}).join("")}
+  <div class="panel" id="rfpPanel">
+    <div class="controls"><h3 style="margin:0;flex:1 1 auto">RFP shortlist for ${esc(M.name)} <span class="muted">(${short.length})</span></h3>
+      <button class="btn ghost sm" type="button" id="rfpClear" ${short.length?"":"disabled"}>Clear</button>
+      <button class="btn sm" type="button" id="rfpCsv" ${short.length?"":"disabled"}>${ICON("download")}Download shortlist (CSV)</button></div>
+    ${short.length?`<ul class="rfplist">${short.map(v=>`<li><b>${esc(v.name)}</b> <span class="muted">· ${esc(v.cat)}</span><span class="mono">${eurk(v.sim.v12)} · ${v.sim.weeks} wks · ${eur2(v.sim.cpa)} per sale</span></li>`).join("")}</ul>
+    <p class="cardfoot">Send these providers the same questions and ask for their real approval rates for merchants like you. Rumbo checks their answers against similar merchants' results.</p>`
+    :`<p class="lead" style="margin:0">Tick providers above to build the list your team sends a request for proposal to.</p>`}
+  </div>`;
+  $("#vSort").addEventListener("change",e=>{provSort=e.target.value;renderAll();});
+  document.querySelectorAll("#v-providers .rfpcb").forEach(cb=>cb.addEventListener("change",()=>{ cb.checked?rfp.add(cb.dataset.k):rfp.delete(cb.dataset.k); saveRfp(); renderAll(); }));
+  $("#rfpClear").addEventListener("click",()=>{ all.forEach(v=>rfp.delete(key(v))); saveRfp(); renderAll(); });
+  $("#rfpCsv").addEventListener("click",()=>{
+    const q=s=>`"${String(s).replace(/"/g,'""')}"`;
+    const lines=[["Market","Provider type","Provider","Trade-off","Best setup","Cards approved (%)","Checkouts that become sales (of 100)","Payment cost per sale (EUR)","Weeks to go live","Payment methods covered","Profit first 12 months (EUR)","Needs a local company"].map(q).join(",")]
+      .concat(short.map(v=>[M.name,v.cat,v.name,v.note,setupName(v.sim.ids),v.approval==null?"no cards":Math.round(v.approval*100),of100(v.sim.acceptance),v.sim.cpa.toFixed(2),v.sim.weeks,`${v.cov} of ${v.nMeth}`,Math.round(v.sim.v12),v.entity?"yes":"no"].map(q).join(",")));
+    lines.push(q("Class prototype: providers are anonymized archetypes and all figures are synthetic."));
+    download(`Rumbo_RFP_shortlist_${M.name}.csv`,"﻿"+lines.join("\r\n"),"text/csv");
+  });
+}
+
+/* ---------- Roll out (simulated: no live connections) ---------- */
+const SLUG={GP:"current_provider_eu",GL:"global_local_licence_a",XS:"latam_specialist_a",LA:"brazil_acquirer_a",AP:"local_payments_addon_a"};
+function rolloutModel(res){
+  const C=canvasModel(res), M=MARKETS[market];
+  const d=decisions.find(x=>x.mk===market&&x.key);
+  const dSim=d&&res.ok.find(s=>s.key===d.key);
+  const sim=dSim||C.acts[C.w];
+  const est=res.est[sim.cardProv[0]?.id];
+  const W=sim.weeks, fresh=sim.ids.filter(id=>!PROVIDERS[id].live), names=fresh.map(id=>PROVIDERS[id].a.replace(/^an? /,"the "));
+  const onb=fresh.length?Math.max(...fresh.map(id=>PROVIDERS[id].onboard)):0;
+  const wk=(a,b)=>a>=b?`Week ${a}`:`Weeks ${a}–${b}`;
+  const plan=!W?[]:[
+    [wk(1,1),`Sign contracts with ${names.join(" and ")}`,"Head of Payments, Legal",dSim?"Ready to start":"Waiting for decision"],
+    [wk(1,Math.max(1,Math.min(onb,W-1))),"Provider checks: company documents and risk review","Provider, Legal","Planned"],
+    [wk(Math.min(2,W),Math.max(2,W-1)),sim.orch?`Connect ${names.join(" and ")} to the integration hub in a test environment`:`Build the direct connection to ${names.join(" and ")}`,"Engineering","Planned"],
+    [wk(W,W),"Test every payment method and switch on the routing rules","Payments team","Planned"],
+    [wk(W,W),"Go live with 20% of checkouts (pilot)","Head of Payments","Planned"],
+    [wk(W+1,W+4),"Pilot: compare real results with the estimate every week","Rumbo, Finance","Planned"],
+    [wk(W+4,W+4),"Review: move to 100% of checkouts or roll back","Head of Payments, Finance","Planned"]];
+  const card=sim.byMethod.find(b=>b.m.cat==="card"&&b.pid);
+  const rules={
+    merchant:profile().name, market:market, version:"draft-1", status:"simulated, not deployed",
+    approved_by:dSim?"Head of Payments (recorded in Rumbo)":"pending team decision",
+    routes:sim.byMethod.filter(b=>b.pid).map(b=>Object.assign({payment_method:b.m.id,provider:SLUG[b.pid]},
+      b.m.cat==="card"?Object.assign({processing:PROVIDERS[b.pid].route==="local"?"in_country":"cross_border",installments:sim.instOK&&!!M.installments},b.fallback?{retry_soft_declines_with:SLUG[b.fallback]}:{}):{})),
+    not_offered:sim.byMethod.filter(b=>!b.pid).map(b=>b.m.id),
+    pilot:{traffic_share:0.2,weeks:4,control:SLUG.GP},
+    success_criteria:{card_approval_min:+(sim.cardApproval-.03).toFixed(3),checkout_to_sale_min:+(sim.acceptance-.03).toFixed(3),payment_cost_per_sale_max_eur:+(sim.cpa+.10).toFixed(2)},
+    alerts:[{signal:"card_approval_below_min",for_weeks:2,action:"notify_head_of_payments"},{signal:"method_mix_shift",threshold:0.05,action:"reopen_decision"},{signal:"peer_benchmark_better_by",threshold:0.025,action:"reopen_decision"}],
+    review_every_months:6};
+  return {C,M,sim,dSim,est,plan,rules,card};
+}
+function renderRollout(res){
+  const R=rolloutModel(res), {M,sim,dSim,plan,rules}=R;
+  const json=JSON.stringify(rules,null,2);
+  const st=s=>`<span class="pill ${s==="Ready to start"?"good":s==="Waiting for decision"?"warn":"mute"}">${s}</span>`;
+  const API=[["GET","/v1/benchmarks?market="+market,"Anonymized results of similar merchants per provider (approval, fees, payment mix)"],
+    ["POST","/v1/recommendations","Merchant profile in, ranked setups with ranges and the reasons out"],
+    ["PUT","/v1/routing-rules/"+market,"Writes the approved rules to the integration hub (only after a person approves)"],
+    ["POST","/v1/pilots","Starts the 20% pilot and its weekly comparison with the estimate"],
+    ["WEBHOOK","performance.alert","Tells the payments team when results drift and the decision should reopen"]];
+  $("#v-rollout").innerHTML=`
+  <div class="callout warn simbar">${ICON("info")}<span><b>Simulated roll out.</b> No live connections: this shows the steps, rules and connections Rumbo would set up for a real launch.</span></div>
+  <div class="panel">
+    <div class="pills"><span class="pill ${dSim?"good":"mute"}">${dSim?"Based on your team's decision":"Based on the suggestion · no decision recorded yet"}</span></div>
+    <h3 style="margin-top:8px">${esc(setupName(sim.ids))} in ${esc(M.name)}</h3>
+    <p class="lead">${sim.weeks?`About ${sim.weeks} weeks to go live, then a 4-week pilot with 20% of checkouts before moving everyone over.`:"Already live: nothing new to connect."}${dSim?"":` <a href="#decide">Record the team decision</a> to start.`}</p>
+    ${plan.length?`<div class="tablewrap"><table><thead><tr><th>When</th><th>Step</th><th>Owner</th><th>Status</th></tr></thead><tbody>
+      ${plan.map(r=>`<tr><td class="mono" style="white-space:nowrap">${r[0]}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${st(r[3])}</td></tr>`).join("")}</tbody></table></div>`:""}
+  </div>
+  <div class="panel">
+    <h3>Connections</h3><p class="lead">What each provider needs before payments can flow. Status is simulated.</p>
+    <div class="conns">${sim.ids.map(id=>{const p=PROVIDERS[id], ms=sim.byMethod.filter(b=>b.pid===id||b.fallback===id).map(b=>b.pid===id?b.m.label:"card backup");
+      const steps=p.live?["Contract","Test keys","Webhooks","Live"].map(s=>[s,true]):["Contract","Test keys","Webhooks","Live"].map(s=>[s,false]);
+      return `<div class="conn"><b>${esc(p.short)}</b><span class="muted">${esc(ms.join(", "))}</span>
+        <div class="csteps">${steps.map(([s,ok])=>`<span class="cstep ${ok?"ok":""}">${s}</span>`).join("")}</div>
+        <code class="mono">${SLUG[id]}</code></div>`;}).join("")}</div>
+  </div>
+  <div class="cards2">
+    <div class="panel">
+      <div class="controls"><h3 style="margin:0;flex:1 1 auto">Routing rules</h3>
+        <button class="btn ghost sm" type="button" id="rrCopy">Copy</button><button class="btn sm" type="button" id="rrDl">${ICON("download")}Download JSON</button></div>
+      <p class="lead">Which provider handles each payment method, ready to load into the integration hub once approved.</p>
+      <pre class="codeblock" tabindex="0" aria-label="Routing rules in JSON"><code>${esc(json)}</code></pre>
+    </div>
+    <div class="panel">
+      <h3>Pilot success criteria</h3>
+      <div class="tablewrap"><table><thead><tr><th>Measure</th><th class="n">Expected</th><th class="n">Roll back below</th></tr></thead><tbody>
+        <tr><td>Cards approved</td><td class="n">${pct(sim.cardApproval,0)}</td><td class="n">${pct(sim.cardApproval-.03,0)}</td></tr>
+        <tr><td>Checkouts that become sales</td><td class="n">${of100(sim.acceptance)} of 100</td><td class="n">${of100(sim.acceptance-.03)} of 100</td></tr>
+        <tr><td>Payment cost per sale</td><td class="n">${eur2(sim.cpa)}</td><td class="n">above ${eur2(sim.cpa+.10)}</td></tr>
+      </tbody></table></div>
+      <p class="cardfoot">Two weeks below the line triggers an alert; the Head of Payments decides whether to roll back.</p>
+      <h3 style="margin-top:18px">How Rumbo connects</h3>
+      <ul class="apilist">${API.map(([m,p,d])=>`<li><span class="http ${m.toLowerCase()}">${m}</span><code class="mono">${esc(p)}</code><span>${esc(d)}</span></li>`).join("")}</ul>
+      <p class="cardfoot">Rumbo reads anonymized results and writes rules only after a person approves. Endpoints are illustrative.</p>
+    </div>
+  </div>`;
+  $("#rrCopy").addEventListener("click",async e=>{ const b=e.currentTarget; try{ await navigator.clipboard.writeText(json); b.textContent="Copied"; }catch(err){ b.textContent="Select the text to copy"; } setTimeout(()=>{b.textContent="Copy";},1800); });
+  $("#rrDl").addEventListener("click",()=>download(`rumbo_routing_rules_${market}.json`,json,"application/json"));
+}
+
+/* ---------- Full report (download) ---------- */
+function download(name,text,type){
+  const url=URL.createObjectURL(new Blob([text],{type:type+";charset=utf-8"}));
+  const a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+function reportHTML(){
+  const P=profile(), M=MARKETS[market], res=enumerate(P,market), ranked=rank(res), best=ranked[0], sq=res.sq;
+  const C=canvasModel(res), N=optNames(C), parts=bridgeParts(sq,best,P), R=rolloutModel(res);
+  const G=vendorGroups(P,market,best.ids);
+  const today=new Date().toLocaleDateString("en-GB",{dateStyle:"long"});
+  const tbl=(h,rows,num=[],hl=-1)=>`<table><thead><tr>${h.map((x,i)=>`<th${num.includes(i)?' class="n"':""}>${x}</th>`).join("")}</tr></thead><tbody>${rows.map((r,j)=>`<tr${j===hl?' class="hl"':""}>${r.map((x,i)=>`<td${num.includes(i)?' class="n"':""}>${x}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  const byV=[...res.ok].sort((a,b)=>b.v12-a.v12);
+  const pts=v=>(Math.abs(v)*100).toFixed(0)+" points";
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rumbo report · ${esc(P.name)} · ${esc(M.name)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e1424;--ink2:#3a4256;--ink3:#5f677c;--line:#e1e4ea;--bg:#fff;--soft:#f6f7f9;--acc:#4338ca;--accs:#e8e9fb;--brand:#c2410c;--brands:#fff1e6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 Geist,system-ui,sans-serif}
+main{max-width:900px;margin:0 auto;padding:40px 24px 64px}
+h1{font-size:30px;line-height:1.15;margin:6px 0 6px;letter-spacing:-.01em}h2{font-size:19px;margin:34px 0 8px;padding-top:14px;border-top:1px solid var(--line)}h3{font-size:15px;margin:18px 0 6px}
+.eb{font:500 11px/1.4 "Geist Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+.mut{color:var(--ink3)}p{margin:6px 0;color:var(--ink2)}
+table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:13px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-weight:600;color:var(--ink3);font-size:12px;background:var(--soft)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:14px 0}.kpis div{padding:12px 14px;border-right:1px solid var(--line)}.kpis div:last-child{border:0}.kpis b{display:block;font-size:20px}.kpis span{font-size:12px;color:var(--ink3)}
+.pick{border:1.5px solid var(--brand);background:var(--brands);border-radius:10px;padding:14px 16px;margin:12px 0}.pick b{color:var(--ink)}
+tr.hl td{background:var(--brands)}
+.note{background:var(--accs);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--ink)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:2px solid var(--acc);padding-bottom:10px}
+.bar svg{height:22px}.pbtn{font:600 13px Geist,sans-serif;background:var(--acc);color:#fff;border:0;border-radius:8px;padding:9px 14px;cursor:pointer}
+pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px;font:12px/1.5 "Geist Mono",monospace;white-space:pre-wrap;word-break:break-word}
+ul{padding-left:18px;color:var(--ink2)}footer{margin-top:40px;font-size:12px;color:var(--ink3);border-top:1px solid var(--line);padding-top:12px}
+@media print{.pbtn{display:none}main{padding:0}h2{break-after:avoid}table,.pick,.kpis{break-inside:avoid}}
+@media (max-width:640px){.kpis{grid-template-columns:1fr 1fr}.kpis div:nth-child(2){border-right:0}}
+</style></head><body><main>
+<div class="bar"><span style="font-weight:700;font-size:20px;color:var(--acc)">Rumbo <span class="mut" style="font-weight:400;font-size:13px">· Your payments compass</span></span><button class="pbtn" onclick="window.print()">Print or save as PDF</button></div>
+<p class="eb" style="margin-top:22px">Evaluation report · ${esc(M.name)} · ${esc(today)}</p>
+<h1>Which payment providers ${esc(P.name)} should launch with in ${esc(M.name)}</h1>
+<p class="mut">Class prototype. Providers are anonymized archetypes and all figures are synthetic, except Brazil's checkout mix (EBANX 2025 via PYMNTS). The AI suggests; the team decides.</p>
+
+<h2>1. Summary</h2>
+<div class="pick"><b>Suggestion:</b> ${esc(setupName(best.ids))} (${esc(setupSub(best).toLowerCase())}). ${esc(headline(best,sq,M))}</div>
+<div class="kpis"><div><b>${of100(best.acceptance)} of 100</b><span>checkouts become sales (${of100(sq.acceptance)} today)</span></div><div><b>${pct(best.cardApproval,0)}</b><span>cards approved (${pct(sq.cardApproval,0)} today)</span></div><div><b>${eur2(best.cpa)}</b><span>payment cost per sale (${eur2(sq.cpa)} today)</span></div><div><b>${best.v12-sq.v12>=0?"+":""}${eurM(best.v12-sq.v12)}</b><span>profit, first 12 months (${eurk(sq.v12)} → ${eurk(best.v12)})</span></div></div>
+<h3>Why this option</h3><ul>${whyCards(best,res,market).map(c=>`<li><b>${esc(c.t)}.</b> ${esc(c.p)}</li>`).join("")}</ul>
+<h3>Which provider handles each payment method</h3>
+${tbl(["Payment method","Share of checkouts","Provider","Backup"],best.byMethod.map(b=>[esc(b.m.label),pct(b.m.share,0),b.pid?esc(PROVIDERS[b.pid].short):"Not offered",b.fallback?esc(PROVIDERS[b.fallback].short):"–"]),[1])}
+
+<h2>2. Merchant profile</h2>
+${tbl(["Field","Value"],[["Merchant",esc(P.name)],["Industry",esc(IND[P.ind].l)],["Target markets",P.markets.map(m=>MARKETS[m].name).join(", ")],["Average order",eur(P.ticket)],["Checkouts a month per market",NF0.format(P.vol)],["Fraud risk",{low:"Low",med:"Medium",high:"High"}[P.risk]],["Profit margin on sales",pct(P.margin,0)],["Local company in these markets",P.entity?"Yes":"No"],["Own payment history used",res.ownInfo?`Yes: ${NF0.format(res.ownInfo.n)} card payments tried, ${NF0.format(res.ownInfo.x)} approved`:"No"]])}
+
+<h2>3. All options compared</h2>
+<p>Every provider on its own and every pair, compared over the first 12 months. Highlighted: the suggestion.</p>
+${tbl(["Option","Connection","Cards approved","Checkouts → sales","Cost per sale","Go-live","One-off cost","Profit, 12 months"],byV.map(s=>[esc(setupName(s.ids)),esc(setupSub(s).replace("Connected ","")),pct(s.cardApproval,0),of100(s.acceptance)+" of 100",eur2(s.cpa),s.weeks+" wks",eur(s.oneOff),eurk(s.v12)]),[2,3,4,5,6,7],byV.indexOf(best))}
+${res.blocked.length?`<p class="mut">Need a local company (not available to this merchant yet): ${res.blocked.sort((a,b)=>b.v12-a.v12).slice(0,4).map(s=>`${esc(setupName(s.ids))} (${eurk(s.v12)})`).join(" · ")}.</p>`:""}
+
+<h2>4. Where the extra profit comes from</h2>
+${tbl(["Driver","Effect on 12-month profit"],[["Today's setup",eurk(sq.v12)],...parts.map(([l,v])=>[esc(l),(v>=0?"+":"−")+eurk(Math.abs(v))]),["<b>With the suggestion</b>","<b>"+eurk(best.v12)+"</b>"]],[1])}
+
+<h2>5. Card approval estimates</h2>
+<p>Starting point: results of similar ${esc(IND[P.ind].l.toLowerCase())} merchants in ${esc(M.name)}, adjusted for order size and fraud risk${res.ownInfo?", then for the merchant's own results":""}. Groups below five merchants are never shown.</p>
+${tbl(["Provider","Processing","Similar merchants","Their approvals","Estimate for you","Likely range","Based on"],Object.entries(res.est).map(([id,e])=>[esc(PROVIDERS[id].name),PROVIDERS[id].route==="local"?"In the country":"From abroad",e.cohort.thin?"fewer than 5":e.cohort.merchants,pct(e.peer,0),"<b>"+pct(e.mean,0)+"</b>",rng(e),e.cohort.thin?"Market average (few similar merchants)":/own data/.test(e.src)?"Similar merchants + your data":"Similar merchants"]),[2,3,4,5])}
+${res.ownInfo?`<p class="note">Your own results count: similar merchants get about ${of100(res.ownInfo.prior)} of 100 cards approved with your current provider; you get ${of100(res.ownInfo.obs)}. The estimates for every option move accordingly.</p>`:""}
+
+<h2>6. Decision canvas</h2>
+<p><b>Decision:</b> which providers and payment methods to launch with in ${esc(M.name)} · <b>Owner:</b> Head of Payments · <b>Horizon:</b> first 12 months.</p>
+${tbl(["Option",...C.states.map(s=>`${esc(s.l)} (${pct(s.p,0)})`),"Expected result"],C.acts.map((a,i)=>[`<b>Option ${i+1}.</b> ${esc(N[i])}<br><span class="mut">${esc(setupName(a.ids))}</span>`,...C.V[i].map(v=>eurk(v)),"<b>"+eurk(C.EV[i])+"</b>"]),[1,2,3,4],C.w)}
+<p class="mut">Scenarios: local card approval more than 3 points below the estimate, within −3/+2 points, or more than 2 points above. Chances from the estimate's range.</p>
+<h3>When the answer changes</h3><ul>
+${C.thrU!=null?`<li>Moving everything to local partners with no backup falls below keeping cards in Europe if local approvals come in ${pts(C.thrU)} lower than expected.</li>`:""}
+${C.thr!=null?`<li>The suggestion stays ahead of keeping cards in Europe unless local approvals come in ${pts(C.thr)} lower than expected.</li>`:""}
+${C.feeThr!=null?`<li>A direct connection beats the integration hub only if the hub costs more than ${eur2(C.feeThr)} per payment (assumed ${eur2(ORCH_BASE)}).</li>`:""}
+</ul>
+
+<h2>7. Provider shortlist</h2>
+<p>Anonymized providers of each type, each scored inside its best setup. Highlighted: in the suggestion.</p>
+${G.map(g=>`<h3>${esc(g.cat)}</h3>${tbl(["Provider","Trade-off","Cards approved","Checkouts → sales","Cost per sale","Go-live","Profit, 12 months"],[...g.rows].sort((a,b)=>b.sim.v12-a.sim.v12).map(v=>[esc(v.name)+(v.blocked?' <span class="mut">(needs a local company)</span>':""),esc(v.note),v.approval==null?"No cards":pct(v.approval,0),of100(v.sim.acceptance)+" of 100",eur2(v.sim.cpa),v.sim.weeks+" wks",eurk(v.sim.v12)]),[2,3,4,5,6],[...g.rows].sort((a,b)=>b.sim.v12-a.sim.v12).findIndex(v=>v.pick))}`).join("")}
+
+<h2>8. Roll out plan (simulated)</h2>
+${R.plan.length?tbl(["When","Step","Owner"],R.plan.map(r=>[r[0],esc(r[1]),esc(r[2])])):"<p>Already live: nothing new to connect.</p>"}
+<h3>Routing rules (draft, not deployed)</h3><pre>${esc(JSON.stringify(R.rules,null,2))}</pre>
+
+<h2>9. Method and assumptions</h2><ul>
+<li>Card approval per provider comes from a synthetic network of similar merchants (provider × market × industry), adjusted for order size and fraud risk, then blended with the merchant's own results (similar merchants count as 3,000 payments).</li>
+<li>Each payment method goes to the cheapest provider that offers it; cards go to the provider with the best approval, and a second card provider retries 30% of declines.</li>
+<li>If a method is missing, 35% of those shoppers pay by card and the rest leave. Without installments where they are expected, 90% of card sales remain.</li>
+<li>Costs: provider fees plus €0.03 per attempt. The integration hub adds €0.05 per attempt, €12,000 set-up and €5,000 per provider; a direct connection costs €30,000 per provider.</li>
+<li>Time to go live: via the hub, the longest onboarding (at least 4 weeks) plus 1 week per new provider; direct, the longest onboarding plus each integration.</li>
+<li>12-month profit: today's setup keeps earning until the new one is live, then the new monthly profit, minus one-off costs.</li></ul>
+<footer>Rumbo, your payments compass, is a group project for <i>Artificial Intelligence and Strategic Decisions</i> (IE Business School, 2026), not a commercial product. Provider names are anonymized archetypes; approval rates, fees and peer groups are synthetic. Contracts, pricing and the final choice stay with the payments team.</footer>
+</main></body></html>`;
+}
+function downloadReport(){ download(`Rumbo_report_${profile().name.replace(/[^\w]+/g,"_")}_${MARKETS[market].name}.html`,reportHTML(),"text/html"); }
+
 function renderHome(P){
   const mk=P.markets.includes("BR")?"BR":P.markets[0], M=MARKETS[mk];
   const r=enumerate(P,mk), sq=r.sq, best=[...r.ok].sort((a,b)=>b.v12-a.v12)[0];
@@ -1573,7 +1913,7 @@ function renderDecide(res){
   $("#dcSave").addEventListener("click",()=>{
     const ov=$("#dcOverride").checked, note=$("#dcNote").value.trim();
     const text= ov?`Chose ${setupName(C.acts[+$("#ovSetup").value].ids)} instead of the suggestion (${setupName(rec.ids)}). Reason: ${$("#ovReason").value}.`:`Accepted the suggestion: ${setupName(rec.ids)}.`;
-    decisions.unshift({when:new Date().toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"}),market:M.name,text:text+(note?` Note: ${note}`:"")});
+    decisions.unshift({when:new Date().toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"}),market:M.name,mk:market,key:(ov?C.acts[+$("#ovSetup").value]:rec).key,text:text+(note?` Note: ${note}`:"")});
     renderDecide(res);
   });
 }
@@ -1804,7 +2144,7 @@ function renderAll(){
   renderMarkets();
   $("#ownBox").hidden=!$("#mOwn").checked;
   const res=enumerate(profile(),market);
-  renderReco(res);renderCanvas(res);renderDecide(res);renderMonitor(res);renderHow();renderHome(profile());renderFlow(profile());renderTimeline(profile());
+  renderReco(res);renderProviders(res);renderCanvas(res);renderDecide(res);renderRollout(res);renderMonitor(res);renderHow();renderHome(profile());renderFlow(profile());renderTimeline(profile());
   const onHome=view==="home";
   $("#v-home").hidden=!onHome; $("#workspace").hidden=onHome; document.body.classList.toggle("ws",!onHome);
   document.querySelectorAll(".topnav a").forEach(a=>{ if((a.dataset.nav==="home")===onHome) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
@@ -1822,7 +2162,7 @@ function renderAll(){
   $("#crumb").innerHTML=`<b>${esc(nm)}</b>${ICON("chev")}<span>${esc(view==="how"?"How it works":MARKETS[market].name)}</span>`;
   restoreFocus(fk);
 }
-const VIEWS=["home","reco","canvas","decide","monitor","how"];
+const VIEWS=["home","reco","providers","canvas","decide","rollout","monitor","how"];
 function setView(v,focusTab){ if(!VIEWS.includes(v))return; const page=(view==="home")!==(v==="home"); view=v;
   try{ history.replaceState(null,"","#"+v); }catch(e){}
   renderAll(); window.scrollTo(0,0); if(focusTab&&v!=="home") $("#nav-"+v).focus(); }
