@@ -2263,7 +2263,7 @@ markFound();
 
 // guided demo
 const TOUR=[
- {v:"reco",sel:"#acctBtn",t:"Meet the merchant",x:"Lumen Atelier, a Spanish fashion shop expanding into Latin America. Its profile drives everything: change it any time and every number updates."},
+ {v:"reco",sel:"#profileDrawer",drawer:true,t:"Meet the merchant",x:"Lumen Atelier, a Spanish fashion shop expanding into Latin America. Its profile drives everything: markets, order size, fraud risk and its own payment history. Change any field and every number updates."},
  {v:"reco",sel:"#mktSwitch",t:"Pick a market",x:"Each target market gets its own suggestion. We start with Brazil, where Pix and cards each make up about 4 in 10 online payments."},
  {v:"reco",sel:".reco",t:"Rumbo's suggestion",x:"Keep the current provider and add a Latin America specialist. About 85 of every 100 checkouts would become sales, up from 33 today."},
  {v:"reco",sel:"#dlReport",t:"Download the full report",x:"Every option, estimate, scenario and assumption behind the suggestion in one report, ready to print or save as PDF for Finance and Legal."},
@@ -2281,6 +2281,7 @@ function tourPlace(){
   if(ok){ const top=Math.max(4,r.top-pad), h=Math.min(r.height+pad*2, vh-top-4);
     hole.classList.remove("none"); Object.assign(hole.style,{left:(r.left-pad)+"px",top:top+"px",width:(r.width+pad*2)+"px",height:h+"px"});
     let cx=Math.min(Math.max(16,r.left),vw-cw-16), cy=r.bottom+pad+12;
+    if(r.height>vh*.6&&r.left>cw+40){ Object.assign(card.style,{left:(r.left-pad-cw-20)+"px",top:Math.max(12,(vh-ch)/2)+"px"}); return; }
     if(cy+ch>vh-12){ cy=r.top-pad-12-ch; } if(cy<12){ cy=Math.max(12,vh-ch-16); cx=vw-cw-16; }
     Object.assign(card.style,{left:cx+"px",top:cy+"px"}); }
   else { hole.classList.add("none"); Object.assign(card.style,{left:((vw-cw)/2)+"px",top:((vh-ch)/2)+"px"}); }
@@ -2292,11 +2293,18 @@ function tourGo(i){
   $("#tourDots").innerHTML=TOUR.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("");
   $("#tourBack").disabled=i===0; $("#tourNext").textContent=i===TOUR.length-1?"Finish":"Next";
   if(view!==st.v){ location.hash="#"+st.v; }
+  tourDrawer(!!st.drawer);
   setTimeout(()=>{ const el=document.querySelector(st.sel); if(el&&el.getBoundingClientRect().width>0) el.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"}); setTimeout(tourPlace, reduceMotion()?30:420); },60);
   setTimeout(tourPlace,30);
 }
+let tourOpened=false;
+function tourDrawer(on){
+  const d=$("#profileDrawer");
+  if(on&&d.hidden){ d.hidden=false; tourOpened=true; document.querySelectorAll("[data-edit]").forEach(b=>b.setAttribute("aria-expanded","true")); syncScrim(); d.scrollTop=0; }
+  else if(!on&&tourOpened){ tourOpened=false; d.hidden=true; document.querySelectorAll("[data-edit]").forEach(b=>b.setAttribute("aria-expanded","false")); syncScrim(); }
+}
 function tourStart(from){ tourFrom=from||null; closeDrawer(); closeSide(true); $("#tour").hidden=false; tourGo(0); setTimeout(()=>$("#tourNext").focus(),80); }
-function tourEnd(){ tourI=-1; $("#tour").hidden=true; const f=tourFrom&&document.contains(tourFrom)&&tourFrom.offsetParent?tourFrom:$("#demoBtn"); f&&f.focus(); }
+function tourEnd(){ tourDrawer(false); tourI=-1; $("#tour").hidden=true; const f=tourFrom&&document.contains(tourFrom)&&tourFrom.offsetParent?tourFrom:$("#demoBtn"); f&&f.focus(); }
 $("#demoBtn").addEventListener("click",e=>tourStart(e.currentTarget));
 $("#heroDemo").addEventListener("click",()=>{ location.hash="#reco"; setTimeout(()=>tourStart($("#demoBtn")),120); });
 $("#tourNext").addEventListener("click",()=>tourGo(tourI+1));
