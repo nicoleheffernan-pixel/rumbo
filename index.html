@@ -991,7 +991,7 @@ aside.rail.drawer[hidden]{display:none}
 <div class="tour" id="tour" hidden>
   <div class="tour-hole" id="tourHole"></div>
   <div class="tour-card" id="tourCard" role="dialog" aria-modal="false" aria-labelledby="tourTitle">
-    <span class="k" id="tourStep">Step 1 of 7</span>
+    <span class="k" id="tourStep">Step 1 of 10</span>
     <h2 id="tourTitle"></h2>
     <p id="tourText"></p>
     <div class="tour-dots" id="tourDots" aria-hidden="true"></div>
@@ -2266,9 +2266,12 @@ const TOUR=[
  {v:"reco",sel:"#acctBtn",t:"Meet the merchant",x:"Lumen Atelier, a Spanish fashion shop expanding into Latin America. Its profile drives everything: change it any time and every number updates."},
  {v:"reco",sel:"#mktSwitch",t:"Pick a market",x:"Each target market gets its own suggestion. We start with Brazil, where Pix and cards each make up about 4 in 10 online payments."},
  {v:"reco",sel:".reco",t:"Rumbo's suggestion",x:"Keep the current provider and add a Latin America specialist. About 85 of every 100 checkouts would become sales, up from 33 today."},
+ {v:"reco",sel:"#dlReport",t:"Download the full report",x:"Every option, estimate, scenario and assumption behind the suggestion in one report, ready to print or save as PDF for Finance and Legal."},
  {v:"reco",sel:"#bridge",t:"Why this option",x:"Where the extra profit comes from: more cards approved, local payment methods, minus fees, set-up and the weeks before going live."},
+ {v:"providers",sel:"#v-providers .vgroup",t:"Compare providers",x:"The best providers of each type, ranked by profit, approvals, cost or time to go live. Tick the ones to invite and download your RFP shortlist."},
  {v:"canvas",sel:"#whatif",t:"Stress-test the choice",x:"Drag the sliders: what if local banks approve fewer payments, or the hub costs more? Watch where the best option changes."},
  {v:"decide",sel:"#v-decide .panel",t:"Your team decides",x:"The Head of Payments accepts the suggestion or picks something else, with a reason. Rumbo never decides on its own."},
+ {v:"rollout",sel:"#v-rollout .panel",t:"Roll out",x:"The chosen setup becomes a week-by-week plan, routing rules for the integration hub and a 20% pilot with clear pass marks. Simulated: no live connections."},
  {v:"monitor",sel:"#v-monitor .alerts",t:"After launch",x:"Rumbo keeps watching real results and flags when it's time to look at the decision again."}];
 let tourI=-1, tourFrom=null;
 function tourPlace(){
