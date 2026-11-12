@@ -1195,8 +1195,8 @@ function actionPhrase(s){
   return s.ids.includes("GP") ? `keep your current provider and add ${others.join(" and ")}` : `switch to ${others.join(" plus ")}`;
 }
 function headline(best, sq, M){
-  const gain=best.v12-sq.v12;
-  return `In ${M.name}, ${actionPhrase(best)}. About ${of100(best.acceptance)} of every 100 checkouts would become sales (${of100(sq.acceptance)} today), worth about ${eurM(gain)} ${gain>=0?"more":"less"} profit in the first year.`;
+  // the KPI tiles right underneath carry the numbers, so the headline states only the decision
+  return `In ${M.name}, ${actionPhrase(best)}.`;
 }
 function whyCards(sim, res, mk){
   const M=MARKETS[mk], out=[];
