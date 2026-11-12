@@ -808,7 +808,7 @@ aside.rail.drawer[hidden]{display:none}
         <p>Tenders and sales pitches stretch the decision before any integration starts. With a ranked suggestion and one integration hub, most of that waiting goes away.</p>
       </div>
       <div class="tl reveal" id="timeline"></div>
-      <p class="muted" style="margin:18px 0 0">Today's 12 to 20 weeks is a team assumption to validate in interviews. Rumbo's time comes from the prototype for the example merchant in <span id="tlMarket">Brazil</span>.</p>
+      <p class="muted" style="margin:18px 0 0">Today's 12 to 20 weeks was confirmed in interviews with people working in payments, and published guides put it on the conservative side: a payments RFP alone takes about 3 to 4 months (<a href="https://gocardless.com/guides/rfp/process" target="_blank" rel="noopener">GoCardless</a>, <a href="https://apexx.global/blog/the-orchestration-rfp-timeline-why-short-rfps-fail/" target="_blank" rel="noopener">APEXX</a>) and a direct API integration 4 to 8 weeks more (<a href="https://spd.tech/fintech-development/fintech-payment-integration-timeline/" target="_blank" rel="noopener">SPD Technology</a>). Rumbo's time comes from the prototype for the example merchant in <span id="tlMarket">Brazil</span>.</p>
     </div>
   </section>
 
@@ -1966,7 +1966,7 @@ function renderMonitor(res){
       <tr><td>Time to go live</td><td>From decision to the first real payment</td><td class="n">12–20 weeks</td><td class="n">${s.weeks} weeks</td></tr>
       <tr><td>How often people change the AI's choice</td><td>Tracked to learn from, not as a target</td><td class="n">n/a</td><td class="n">Tracked</td></tr>
     </tbody></table></div>
-    <p class="muted" style="margin:8px 0 0">Today's 12–20 weeks (via tenders and sales pitches) is a team assumption to check in interviews.</p>
+    <p class="muted" style="margin:8px 0 0">Today's 12–20 weeks (via tenders and sales pitches) was confirmed in industry interviews; published guides put an RFP alone at 3 to 4 months plus 4 to 8 weeks of integration.</p>
   </div>`;
 }
 
@@ -2093,7 +2093,7 @@ function renderTimeline(P){
   $("#timeline").innerHTML=`
     <div class="tl-row tl-now"><div class="tl-name"><b>Today</b><span>RFPs, pitches, spreadsheets</span></div>
       ${bar(today,"Today: about 16 weeks (12 to 20): "+today.map(([l,x])=>l+" "+x+" weeks").join(", "),"now")}
-      <div class="tl-total">12 to 20 weeks<small>assumption</small></div></div>
+      <div class="tl-total">12 to 20 weeks<small>industry interviews</small></div></div>
     <div class="tl-row tl-rum"><div class="tl-name"><b>With Rumbo</b><span>ranked suggestion, one hub</span></div>
       ${bar(rum,`With Rumbo: about ${best.weeks} weeks: `+rum.map(([l,x])=>l+" "+x+(x===1?" week":" weeks")).join(", "),"rum")}
       <div class="tl-total">${best.weeks} weeks<small>from the prototype</small></div></div>
